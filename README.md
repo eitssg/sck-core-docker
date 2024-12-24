@@ -1,1 +1,1 @@
-# core-automation-docker
+# core-docker
