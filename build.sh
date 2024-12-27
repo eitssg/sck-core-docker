@@ -1,7 +1,6 @@
 #!/bin/zsh
 
-# Navigate to the directory containing the Dockerfile
-cd /Users/jbarwick/Development/simple-cloud-kit/core-docker
+ARCH=$(uname -m)
 
 # Build the Docker image
 docker build -t core-docker:latest .
