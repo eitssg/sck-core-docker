@@ -1,0 +1,42 @@
+core_api.item.branch
+====================
+
+.. automodule:: core_api.item.branch
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+      delete_branch_action
+      get_branch_action
+      get_branch_list_action
+      post_branch_action
+      put_branch_action
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      ApiBranchActions
+   
+   
+
+   
+   
+   
+
+
+

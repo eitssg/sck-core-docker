@@ -1,0 +1,6 @@
+core\_invoker.invoker.copy\_to\_artefacts
+=========================================
+
+.. currentmodule:: core_invoker.invoker
+
+.. autofunction:: copy_to_artefacts

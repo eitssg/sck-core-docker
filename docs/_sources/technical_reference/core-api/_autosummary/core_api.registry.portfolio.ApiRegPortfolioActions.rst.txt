@@ -1,0 +1,29 @@
+core\_api.registry.portfolio.ApiRegPortfolioActions
+===================================================
+
+.. currentmodule:: core_api.registry.portfolio
+
+.. autoclass:: ApiRegPortfolioActions
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ApiRegPortfolioActions.__init__
+      ~ApiRegPortfolioActions.create
+      ~ApiRegPortfolioActions.delete
+      ~ApiRegPortfolioActions.get
+      ~ApiRegPortfolioActions.list
+      ~ApiRegPortfolioActions.patch
+      ~ApiRegPortfolioActions.update
+   
+   

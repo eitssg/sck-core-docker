@@ -1,0 +1,35 @@
+core\_renderer.renderer.Jinja2Renderer
+======================================
+
+.. currentmodule:: core_renderer.renderer
+
+.. autoclass:: Jinja2Renderer
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Jinja2Renderer.template_path
+      ~Jinja2Renderer.env
+      ~Jinja2Renderer.dictionary
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Jinja2Renderer.__init__
+      ~Jinja2Renderer.render_file
+      ~Jinja2Renderer.render_files
+      ~Jinja2Renderer.render_object
+      ~Jinja2Renderer.render_string
+   
+   

@@ -1,0 +1,225 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>core_logging.log_interface &mdash; SCK Core Automation 1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a3c9731c" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=45d66dd6" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=29a6c3e3"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="core_logging.log_interface.clear_identity" href="core_logging.log_interface.clear_identity.html" />
+    <link rel="prev" title="core_logging.log_classes.CoreLoggerHandler" href="core_logging.log_classes.CoreLoggerHandler.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            SCK Core Automation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../user_guide/index.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developer_guide/index.html">Developer Guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Technical Reference Guide</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../modules.html">Modules</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../core-logging.html">core-logging</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../core-logging.html#log-classes">Log Classes</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="../core-logging.html#log-functions">Log functions</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-framework/core-framework.html">core-framework</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-db/core-db.html">core-db</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-helper/core-helper.html">core-helper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-renderer/core-renderer.html">core-renderer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-component-compiler/core-component-compiler.html">core-component-compiler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-deployspec-compiler/core-deployspec-compiler.html">core-deployspec-compiler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-execute/core-execute.html">core-execute</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-organization/core-organization.html">core-organization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-runner/core-runner.html">core-runner</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-invoker/core-invoker.html">core-invoker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-report/core-report.html">core-report</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-api-auth/core-api-auth.html">core-api-auth</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-api/core-api.html">core-api</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-codecommit-listener/core-codecommit-listener.html">core-codecommit-listener</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-automation/core-automation.html">core-automation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../core-db/db_schema.html">Database Schema</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SCK Core Automation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Technical Reference Guide</a></li>
+          <li class="breadcrumb-item"><a href="../../modules.html">Modules</a></li>
+          <li class="breadcrumb-item"><a href="../core-logging.html">core-logging</a></li>
+      <li class="breadcrumb-item active">core_logging.log_interface</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/technical_reference/core-logging/_autosummary/core_logging.log_interface.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-core_logging.log_interface">
+<span id="core-logging-log-interface"></span><h1>core_logging.log_interface<a class="headerlink" href="#module-core_logging.log_interface" title="Link to this heading"></a></h1>
+<p>This module provides the log helper functions for the core_logging library. Such as log.debug, log.error, log.warning, log.warn, log.fatal, log.critical, log.info, log.trace, log.message, etc.</p>
+<p class="rubric">Functions</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_logging.log_interface.clear_identity.html#core_logging.log_interface.clear_identity" title="core_logging.log_interface.clear_identity"><code class="xref py py-obj docutils literal notranslate"><span class="pre">clear_identity</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_logging.log_interface.critical.html#core_logging.log_interface.critical" title="core_logging.log_interface.critical"><code class="xref py py-obj docutils literal notranslate"><span class="pre">critical</span></code></a>([message])</p></td>
+<td><p>Log a message at the CRITICAL level The log identity is taken from the kwargs parameter if it exists, else it's taken from the _identity variable.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_logging.log_interface.debug.html#core_logging.log_interface.debug" title="core_logging.log_interface.debug"><code class="xref py py-obj docutils literal notranslate"><span class="pre">debug</span></code></a>([message])</p></td>
+<td><p>Log a message at the DEBUG level The log identity is taken from the kwargs parameter if it exists, else it's taken from the _identity variable.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_logging.log_interface.error.html#core_logging.log_interface.error" title="core_logging.log_interface.error"><code class="xref py py-obj docutils literal notranslate"><span class="pre">error</span></code></a>([message])</p></td>
+<td><p>Log a message at the ERROR level The log identity is taken from the kwargs parameter if it exists, else it's taken from the _identity variable.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_logging.log_interface.fatal.html#core_logging.log_interface.fatal" title="core_logging.log_interface.fatal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fatal</span></code></a>([message])</p></td>
+<td><p>Log a message at the FATAL level The log identity is taken from the kwargs parameter if it exists, else it's taken from the _identity variable.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_logging.log_interface.getLevel.html#core_logging.log_interface.getLevel" title="core_logging.log_interface.getLevel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getLevel</span></code></a>()</p></td>
+<td><p>Return the current logging level for the log module.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_logging.log_interface.getLevelFromName.html#core_logging.log_interface.getLevelFromName" title="core_logging.log_interface.getLevelFromName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getLevelFromName</span></code></a>(level)</p></td>
+<td><p>Return the logging level for the name provided.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_logging.log_interface.getLevelName.html#core_logging.log_interface.getLevelName" title="core_logging.log_interface.getLevelName"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getLevelName</span></code></a>(level)</p></td>
+<td><p>Return the name of the logging level for the specified level.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_logging.log_interface.getLogger.html#core_logging.log_interface.getLogger" title="core_logging.log_interface.getLogger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getLogger</span></code></a>(name, **kwargs)</p></td>
+<td><p>Return a logging object with the specified name.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_logging.log_interface.getRootLevel.html#core_logging.log_interface.getRootLevel" title="core_logging.log_interface.getRootLevel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">getRootLevel</span></code></a>()</p></td>
+<td><p>Return the current logging level for the logger.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_logging.log_interface.get_caller_info.html#core_logging.log_interface.get_caller_info" title="core_logging.log_interface.get_caller_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_caller_info</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_logging.log_interface.get_default_identity.html#core_logging.log_interface.get_default_identity" title="core_logging.log_interface.get_default_identity"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_default_identity</span></code></a>()</p></td>
+<td><p>Return the threadlocal default identity for the logger.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_logging.log_interface.get_identity.html#core_logging.log_interface.get_identity" title="core_logging.log_interface.get_identity"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_identity</span></code></a>()</p></td>
+<td><p>Return the default identity for the logger.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_logging.log_interface.get_logger_identity.html#core_logging.log_interface.get_logger_identity" title="core_logging.log_interface.get_logger_identity"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_logger_identity</span></code></a>(**kwargs)</p></td>
+<td><p>Attempts to retrieve the identity from the kwargs parameter.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_logging.log_interface.info.html#core_logging.log_interface.info" title="core_logging.log_interface.info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">info</span></code></a>([message])</p></td>
+<td><p>Log a message at the INFO level The log identity is taken from the kwargs parameter if it exists, else it's taken from the _identity variable.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_logging.log_interface.log.html#core_logging.log_interface.log" title="core_logging.log_interface.log"><code class="xref py py-obj docutils literal notranslate"><span class="pre">log</span></code></a>(level[, message])</p></td>
+<td><p>Log a message at the specified level.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_logging.log_interface.msg.html#core_logging.log_interface.msg" title="core_logging.log_interface.msg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">msg</span></code></a>([message])</p></td>
+<td><p>Log a message at the MSG level The log identity is taken from the kwargs parameter if it exists, else it's taken from the _identity variable.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_logging.log_interface.reset_identity.html#core_logging.log_interface.reset_identity" title="core_logging.log_interface.reset_identity"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reset_identity</span></code></a>()</p></td>
+<td><p>Deprecated: use the &quot;getLogger()&quot; method to get a logger with the specified identity.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_logging.log_interface.setLevel.html#core_logging.log_interface.setLevel" title="core_logging.log_interface.setLevel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setLevel</span></code></a>(level)</p></td>
+<td><p>Set the logging level for the log module.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_logging.log_interface.setLevelForLogger.html#core_logging.log_interface.setLevelForLogger" title="core_logging.log_interface.setLevelForLogger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setLevelForLogger</span></code></a>(name, level)</p></td>
+<td><p>Sets the log level for the specified logger.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_logging.log_interface.setRootLevel.html#core_logging.log_interface.setRootLevel" title="core_logging.log_interface.setRootLevel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setRootLevel</span></code></a>(level)</p></td>
+<td><p>Set the logging level for the logger.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_logging.log_interface.set_identity.html#core_logging.log_interface.set_identity" title="core_logging.log_interface.set_identity"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_identity</span></code></a>(identity)</p></td>
+<td><p>Hold an identity for the logger.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_logging.log_interface.setup.html#core_logging.log_interface.setup" title="core_logging.log_interface.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setup</span></code></a>(identity)</p></td>
+<td><p>Initialize the logger with the specified identity.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_logging.log_interface.status.html#core_logging.log_interface.status" title="core_logging.log_interface.status"><code class="xref py py-obj docutils literal notranslate"><span class="pre">status</span></code></a>([code, reason])</p></td>
+<td><p>Log a message at the STATUS level The log identity is taken from the kwargs parameter if it exists, else it's taken from the _identity variable.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_logging.log_interface.trace.html#core_logging.log_interface.trace" title="core_logging.log_interface.trace"><code class="xref py py-obj docutils literal notranslate"><span class="pre">trace</span></code></a>([message])</p></td>
+<td><p>Log a message at the TRACE level The log identity is taken from the kwargs parameter if it exists, else it's taken from the _identity variable.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_logging.log_interface.warn.html#core_logging.log_interface.warn" title="core_logging.log_interface.warn"><code class="xref py py-obj docutils literal notranslate"><span class="pre">warn</span></code></a>([message])</p></td>
+<td><p>Log a message at the WARNING level The log identity is taken from the kwargs parameter if it exists, else it's taken from the _identity variable.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_logging.log_interface.warning.html#core_logging.log_interface.warning" title="core_logging.log_interface.warning"><code class="xref py py-obj docutils literal notranslate"><span class="pre">warning</span></code></a>([message])</p></td>
+<td><p>Log a message at the WARNING level The log identity is taken from the kwargs parameter if it exists, else it's taken from the _identity variable.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="core_logging.log_classes.CoreLoggerHandler.html" class="btn btn-neutral float-left" title="core_logging.log_classes.CoreLoggerHandler" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="core_logging.log_interface.clear_identity.html" class="btn btn-neutral float-right" title="core_logging.log_interface.clear_identity" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

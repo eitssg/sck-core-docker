@@ -1,0 +1,6 @@
+core\_framework.models.actions.action\_params.TEMPLATE\_URL
+===========================================================
+
+.. currentmodule:: core_framework.models.actions.action_params
+
+.. autodata:: TEMPLATE_URL

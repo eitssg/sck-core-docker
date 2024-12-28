@@ -1,0 +1,804 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>core_helper.aws &mdash; SCK Core Automation 1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a3c9731c" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=45d66dd6" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=29a6c3e3"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            SCK Core Automation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/index.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/index.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../technical_reference/index.html">Technical Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">SCK Core Automation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">core_helper.aws</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for core_helper.aws</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; AWS Helper functions that provide Automation Role switching for all deployment functions and Lambda&#39;s &quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">boto3</span>
+<span class="kn">import</span> <span class="nn">uuid</span>
+
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+<span class="kn">from</span> <span class="nn">boto3.session</span> <span class="kn">import</span> <span class="n">Session</span>
+
+<span class="kn">from</span> <span class="nn">botocore.config</span> <span class="kn">import</span> <span class="n">Config</span>
+<span class="kn">from</span> <span class="nn">botocore.exceptions</span> <span class="kn">import</span> <span class="n">ClientError</span>
+
+<span class="kn">import</span> <span class="nn">core_framework</span> <span class="k">as</span> <span class="nn">util</span>
+<span class="kn">from</span> <span class="nn">core_framework.constants</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">TR_RESPONSE</span><span class="p">,</span>
+    <span class="n">TR_STATUS</span><span class="p">,</span>
+    <span class="n">CORE_AUTOMATION_SESSION_ID_PREFIX</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">core_logging</span> <span class="k">as</span> <span class="nn">log</span>
+
+<span class="n">__credentials</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">__session</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">__session_id</span> <span class="o">=</span> <span class="kc">None</span>
+
+
+<div class="viewcode-block" id="transform_stack_parameter_dict">
+<a class="viewcode-back" href="../../technical_reference/core-helper/_autosummary/core_helper.aws.transform_stack_parameter_dict.html#core_helper.aws.transform_stack_parameter_dict">[docs]</a>
+<span class="k">def</span> <span class="nf">transform_stack_parameter_dict</span><span class="p">(</span><span class="n">keyvalues</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+    <span class="n">rv</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">keyvalues</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">keyvalues</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">rv</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+    <span class="k">return</span> <span class="n">rv</span></div>
+
+
+
+<div class="viewcode-block" id="transform_stack_parameter_hash">
+<a class="viewcode-back" href="../../technical_reference/core-helper/_autosummary/core_helper.aws.transform_stack_parameter_hash.html#core_helper.aws.transform_stack_parameter_hash">[docs]</a>
+<span class="k">def</span> <span class="nf">transform_stack_parameter_hash</span><span class="p">(</span><span class="n">keyvalues</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Translate a basic dictionary into CloudFormation stack paramters object</span>
+
+<span class="sd">    Input:  { &quot;Name&quot;: &quot;My Name&quot; }</span>
+
+<span class="sd">    Output: [{&quot;ParameterKey&quot;: &quot;Name&quot;, &quot;ParameterValue: &quot;My Name&quot;}]</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        keyvalues (dict[str, str]): Simple Key/Value Pairs</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list[dict[str, str]]: List of Parameters to be passed to Cloudformation stack actions.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">__transform_keyvalues_to_array</span><span class="p">(</span><span class="n">keyvalues</span><span class="p">,</span> <span class="s2">&quot;ParameterKey&quot;</span><span class="p">,</span> <span class="s2">&quot;ParameterValue&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="transform_tag_hash">
+<a class="viewcode-back" href="../../technical_reference/core-helper/_autosummary/core_helper.aws.transform_tag_hash.html#core_helper.aws.transform_tag_hash">[docs]</a>
+<span class="k">def</span> <span class="nf">transform_tag_hash</span><span class="p">(</span><span class="n">keyvalues</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Tranlate a basic dictionary into a list of Tags values that can be applied</span>
+<span class="sd">    to CloudFormation Resources:</span>
+
+<span class="sd">    Input:  { &quot;Name&quot;: &quot;My Name&quot; }</span>
+
+<span class="sd">    Output:</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">__transform_keyvalues_to_array</span><span class="p">(</span><span class="n">keyvalues</span><span class="p">,</span> <span class="s2">&quot;Key&quot;</span><span class="p">,</span> <span class="s2">&quot;Value&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="get_session">
+<a class="viewcode-back" href="../../technical_reference/core-helper/_autosummary/core_helper.aws.get_session.html#core_helper.aws.get_session">[docs]</a>
+<span class="k">def</span> <span class="nf">get_session</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Session</span><span class="p">:</span>
+    <span class="k">global</span> <span class="n">__session</span><span class="p">,</span> <span class="n">__session_id</span>
+    <span class="k">if</span> <span class="n">__session</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">__session</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">boto3</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+        <span class="p">)</span>  <span class="c1"># Use the name we will &quot;patch&quot; with in pytest</span>
+        <span class="n">__session_id</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">__session</span></div>
+
+
+
+<div class="viewcode-block" id="get_session_credentials">
+<a class="viewcode-back" href="../../technical_reference/core-helper/_autosummary/core_helper.aws.get_session_credentials.html#core_helper.aws.get_session_credentials">[docs]</a>
+<span class="k">def</span> <span class="nf">get_session_credentials</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    REturns the credentials information for the current session/role that has been assumed.</span>
+<span class="sd">    If no role assumed, then this is the user&#39;s credentials.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: A dictionary with the following keys:</span>
+<span class="sd">            - AccessKeyId</span>
+<span class="sd">            - SecretAccessKey</span>
+<span class="sd">            - SessionToken</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">session</span> <span class="o">=</span> <span class="n">get_session</span><span class="p">()</span>
+    <span class="n">credentials</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">get_credentials</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">credentials</span><span class="p">:</span>
+        <span class="n">frozen_credentials</span> <span class="o">=</span> <span class="n">credentials</span><span class="o">.</span><span class="n">get_frozen_credentials</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">frozen_credentials</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="s2">&quot;AccessKeyId&quot;</span><span class="p">:</span> <span class="n">frozen_credentials</span><span class="o">.</span><span class="n">access_key</span><span class="p">,</span>
+                <span class="s2">&quot;SecretAccessKey&quot;</span><span class="p">:</span> <span class="n">frozen_credentials</span><span class="o">.</span><span class="n">secret_key</span><span class="p">,</span>
+                <span class="s2">&quot;SessionToken&quot;</span><span class="p">:</span> <span class="n">frozen_credentials</span><span class="o">.</span><span class="n">token</span><span class="p">,</span>
+                <span class="s2">&quot;Expiration&quot;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">fromordinal</span><span class="p">(</span>
+                    <span class="mi">1</span>
+                <span class="p">),</span>  <span class="c1"># ALWAYS expire defauult credentials</span>
+            <span class="p">}</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="login_to_aws">
+<a class="viewcode-back" href="../../technical_reference/core-helper/_autosummary/core_helper.aws.login_to_aws.html#core_helper.aws.login_to_aws">[docs]</a>
+<span class="k">def</span> <span class="nf">login_to_aws</span><span class="p">(</span><span class="n">auth</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">role</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+
+    <span class="n">sts_client</span> <span class="o">=</span> <span class="n">get_session</span><span class="p">()</span><span class="o">.</span><span class="n">client</span><span class="p">(</span>
+        <span class="s2">&quot;sts&quot;</span><span class="p">,</span>
+        <span class="n">aws_access_key_id</span><span class="o">=</span><span class="n">auth</span><span class="p">[</span><span class="s2">&quot;AccessKeyId&quot;</span><span class="p">],</span>
+        <span class="n">aws_secret_access_key</span><span class="o">=</span><span class="n">auth</span><span class="p">[</span><span class="s2">&quot;SecretAccessKey&quot;</span><span class="p">],</span>
+        <span class="n">aws_session_token</span><span class="o">=</span><span class="n">auth</span><span class="p">[</span><span class="s2">&quot;SessionToken&quot;</span><span class="p">],</span>
+    <span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="n">sts_client</span><span class="o">.</span><span class="n">assume_role</span><span class="p">(</span>
+            <span class="n">RoleArn</span><span class="o">=</span><span class="n">role</span><span class="p">,</span> <span class="n">RoleSessionName</span><span class="o">=</span><span class="s2">&quot;AssumeRoleSession1&quot;</span>
+        <span class="p">)</span>
+
+    <span class="k">except</span> <span class="n">ClientError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Failed to get identity: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">return</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;Credentials&quot;</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="check_if_user_authorised">
+<a class="viewcode-back" href="../../technical_reference/core-helper/_autosummary/core_helper.aws.check_if_user_authorised.html#core_helper.aws.check_if_user_authorised">[docs]</a>
+<span class="k">def</span> <span class="nf">check_if_user_authorised</span><span class="p">(</span><span class="n">auth</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">role</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Validate the provided AWS credentials and check if they have permissions to assume the specified role.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        auth (Dict[str, Any]): User credentials object containing AccessKeyId, SecretAccessKey, and SessionToken.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: True if the credentials are valid and can assume the specified role, False otherwise.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">auth</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="n">auth</span> <span class="o">=</span> <span class="n">get_identity</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="kc">True</span>  <span class="c1"># FIXME Actually authorize the user</span>
+
+        <span class="c1"># if &#39;accountId&#39; not in auth or &#39;accessKey&#39; not in auth or &#39;user&#39; not in auth:</span>
+        <span class="c1">#     raise ValueError(&#39;Missing required credentials&#39;)</span>
+
+        <span class="c1"># return True</span>
+
+    <span class="k">except</span> <span class="n">ClientError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Authorization failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+
+<div class="viewcode-block" id="assume_role">
+<a class="viewcode-back" href="../../technical_reference/core-helper/_autosummary/core_helper.aws.assume_role.html#core_helper.aws.assume_role">[docs]</a>
+<span class="k">def</span> <span class="nf">assume_role</span><span class="p">(</span><span class="n">role</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Assume a role using the current session credentials and get the credentials.</span>
+
+<span class="sd">    If the role is None, the function will return the current session credentials.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        role (str | None, optional): A role to assume. Defaults to None.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict[str, str] | None: credetials object containing AccessKeyId, SecretAccessKey, and SessionToken.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">__credentials</span>
+    <span class="k">global</span> <span class="n">__session_id</span>
+
+    <span class="k">if</span> <span class="n">role</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">get_session_credentials</span><span class="p">()</span>
+
+    <span class="c1"># Generate a unique session name if not provided</span>
+    <span class="n">session_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">CORE_AUTOMATION_SESSION_ID_PREFIX</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">__session_id</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="c1"># Assume the role if no role credentials exist or existing credentials have expired</span>
+    <span class="k">if</span> <span class="n">role</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">__credentials</span> <span class="ow">or</span> <span class="n">__should_renew</span><span class="p">(</span><span class="n">__credentials</span><span class="p">[</span><span class="n">role</span><span class="p">][</span><span class="s2">&quot;Expiration&quot;</span><span class="p">]):</span>
+
+        <span class="n">session</span> <span class="o">=</span> <span class="n">get_session</span><span class="p">()</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Assume / re-assume the role to get new credentials</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Assuming IAM Role (role: </span><span class="si">{}</span><span class="s2">)&quot;</span><span class="p">,</span> <span class="n">role</span><span class="p">)</span>
+
+            <span class="n">client</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">client</span><span class="p">(</span>
+                <span class="s2">&quot;sts&quot;</span><span class="p">,</span>
+                <span class="n">config</span><span class="o">=</span><span class="n">Config</span><span class="p">(</span>
+                    <span class="n">connect_timeout</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">read_timeout</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">retries</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">max_attempts</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+                <span class="p">),</span>
+            <span class="p">)</span>
+
+            <span class="n">sts_response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">assume_role</span><span class="p">(</span>
+                <span class="n">RoleArn</span><span class="o">=</span><span class="n">role</span><span class="p">,</span> <span class="n">RoleSessionName</span><span class="o">=</span><span class="n">session_name</span>
+            <span class="p">)</span>
+            <span class="n">__credentials</span><span class="p">[</span><span class="n">role</span><span class="p">]</span> <span class="o">=</span> <span class="n">sts_response</span><span class="p">[</span><span class="s2">&quot;Credentials&quot;</span><span class="p">]</span>
+
+        <span class="k">except</span> <span class="n">ClientError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Failed to assume role </span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">role</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+            <span class="n">__credentials</span><span class="p">[</span><span class="n">role</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_session_credentials</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">__credentials</span><span class="p">[</span><span class="n">role</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="get_identity">
+<a class="viewcode-back" href="../../technical_reference/core-helper/_autosummary/core_helper.aws.get_identity.html#core_helper.aws.get_identity">[docs]</a>
+<span class="k">def</span> <span class="nf">get_identity</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">client</span> <span class="o">=</span> <span class="n">sts_client</span><span class="p">()</span>
+
+        <span class="c1"># Call the get_caller_identity method</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_caller_identity</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;UserId&quot;</span><span class="p">:</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;UserId&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;Account&quot;</span><span class="p">:</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;Account&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;Arn&quot;</span><span class="p">:</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;Arn&quot;</span><span class="p">],</span>
+        <span class="p">}</span>
+    <span class="k">except</span> <span class="n">ClientError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Failed to get identity: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="get_client">
+<a class="viewcode-back" href="../../technical_reference/core-helper/_autosummary/core_helper.aws.get_client.html#core_helper.aws.get_client">[docs]</a>
+<span class="k">def</span> <span class="nf">get_client</span><span class="p">(</span><span class="n">service</span><span class="p">,</span> <span class="n">region</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">role</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+
+    <span class="n">session</span> <span class="o">=</span> <span class="n">get_session</span><span class="p">()</span>
+
+    <span class="n">credentials</span> <span class="o">=</span> <span class="n">assume_role</span><span class="p">(</span><span class="n">role</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">credentials</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">client</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">client</span><span class="p">(</span>
+            <span class="n">service</span><span class="p">,</span>
+            <span class="n">region_name</span><span class="o">=</span><span class="n">region</span><span class="p">,</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">Config</span><span class="p">(</span>
+                <span class="n">connect_timeout</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">read_timeout</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">retries</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">max_attempts</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">client</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">client</span><span class="p">(</span>
+            <span class="n">service</span><span class="p">,</span>
+            <span class="n">region_name</span><span class="o">=</span><span class="n">region</span><span class="p">,</span>
+            <span class="n">aws_access_key_id</span><span class="o">=</span><span class="n">credentials</span><span class="p">[</span><span class="s2">&quot;AccessKeyId&quot;</span><span class="p">],</span>
+            <span class="n">aws_secret_access_key</span><span class="o">=</span><span class="n">credentials</span><span class="p">[</span><span class="s2">&quot;SecretAccessKey&quot;</span><span class="p">],</span>
+            <span class="n">aws_session_token</span><span class="o">=</span><span class="n">credentials</span><span class="p">[</span><span class="s2">&quot;SessionToken&quot;</span><span class="p">],</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">Config</span><span class="p">(</span>
+                <span class="n">connect_timeout</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">read_timeout</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">retries</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">max_attempts</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">client</span></div>
+
+
+
+<div class="viewcode-block" id="sts_client">
+<a class="viewcode-back" href="../../technical_reference/core-helper/_autosummary/core_helper.aws.sts_client.html#core_helper.aws.sts_client">[docs]</a>
+<span class="k">def</span> <span class="nf">sts_client</span><span class="p">(</span><span class="n">region</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">role</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">get_client</span><span class="p">(</span><span class="s2">&quot;sts&quot;</span><span class="p">,</span> <span class="n">region</span><span class="p">,</span> <span class="n">role</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="cfn_client">
+<a class="viewcode-back" href="../../technical_reference/core-helper/_autosummary/core_helper.aws.cfn_client.html#core_helper.aws.cfn_client">[docs]</a>
+<span class="k">def</span> <span class="nf">cfn_client</span><span class="p">(</span><span class="n">region</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">role</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">get_client</span><span class="p">(</span><span class="s2">&quot;cloudformation&quot;</span><span class="p">,</span> <span class="n">region</span><span class="p">,</span> <span class="n">role</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="cloudwatch_client">
+<a class="viewcode-back" href="../../technical_reference/core-helper/_autosummary/core_helper.aws.cloudwatch_client.html#core_helper.aws.cloudwatch_client">[docs]</a>
+<span class="k">def</span> <span class="nf">cloudwatch_client</span><span class="p">(</span><span class="n">region</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">role</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">get_client</span><span class="p">(</span><span class="s2">&quot;cloudwatch&quot;</span><span class="p">,</span> <span class="n">region</span><span class="p">,</span> <span class="n">role</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="cloudfront_client">
+<a class="viewcode-back" href="../../technical_reference/core-helper/_autosummary/core_helper.aws.cloudfront_client.html#core_helper.aws.cloudfront_client">[docs]</a>
+<span class="k">def</span> <span class="nf">cloudfront_client</span><span class="p">(</span><span class="n">region</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">role</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">get_client</span><span class="p">(</span><span class="s2">&quot;cloudfront&quot;</span><span class="p">,</span> <span class="n">region</span><span class="p">,</span> <span class="n">role</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="ec2_client">
+<a class="viewcode-back" href="../../technical_reference/core-helper/_autosummary/core_helper.aws.ec2_client.html#core_helper.aws.ec2_client">[docs]</a>
+<span class="k">def</span> <span class="nf">ec2_client</span><span class="p">(</span><span class="n">region</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">role</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">get_client</span><span class="p">(</span><span class="s2">&quot;ec2&quot;</span><span class="p">,</span> <span class="n">region</span><span class="p">,</span> <span class="n">role</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="ecr_client">
+<a class="viewcode-back" href="../../technical_reference/core-helper/_autosummary/core_helper.aws.ecr_client.html#core_helper.aws.ecr_client">[docs]</a>
+<span class="k">def</span> <span class="nf">ecr_client</span><span class="p">(</span><span class="n">region</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">role</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">get_client</span><span class="p">(</span><span class="s2">&quot;ecr&quot;</span><span class="p">,</span> <span class="n">region</span><span class="p">,</span> <span class="n">role</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="elb_client">
+<a class="viewcode-back" href="../../technical_reference/core-helper/_autosummary/core_helper.aws.elb_client.html#core_helper.aws.elb_client">[docs]</a>
+<span class="k">def</span> <span class="nf">elb_client</span><span class="p">(</span><span class="n">region</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">role</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">get_client</span><span class="p">(</span><span class="s2">&quot;elb&quot;</span><span class="p">,</span> <span class="n">region</span><span class="p">,</span> <span class="n">role</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="elbv2_client">
+<a class="viewcode-back" href="../../technical_reference/core-helper/_autosummary/core_helper.aws.elbv2_client.html#core_helper.aws.elbv2_client">[docs]</a>
+<span class="k">def</span> <span class="nf">elbv2_client</span><span class="p">(</span><span class="n">region</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">role</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">get_client</span><span class="p">(</span><span class="s2">&quot;elbv2&quot;</span><span class="p">,</span> <span class="n">region</span><span class="p">,</span> <span class="n">role</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="iam_client">
+<a class="viewcode-back" href="../../technical_reference/core-helper/_autosummary/core_helper.aws.iam_client.html#core_helper.aws.iam_client">[docs]</a>
+<span class="k">def</span> <span class="nf">iam_client</span><span class="p">(</span><span class="n">region</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">role</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">get_client</span><span class="p">(</span><span class="s2">&quot;iam&quot;</span><span class="p">,</span> <span class="n">region</span><span class="p">,</span> <span class="n">role</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="kms_client">
+<a class="viewcode-back" href="../../technical_reference/core-helper/_autosummary/core_helper.aws.kms_client.html#core_helper.aws.kms_client">[docs]</a>
+<span class="k">def</span> <span class="nf">kms_client</span><span class="p">(</span><span class="n">region</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">role</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">get_client</span><span class="p">(</span><span class="s2">&quot;kms&quot;</span><span class="p">,</span> <span class="n">region</span><span class="p">,</span> <span class="n">role</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="lambda_client">
+<a class="viewcode-back" href="../../technical_reference/core-helper/_autosummary/core_helper.aws.lambda_client.html#core_helper.aws.lambda_client">[docs]</a>
+<span class="k">def</span> <span class="nf">lambda_client</span><span class="p">(</span><span class="n">region</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">role</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">get_client</span><span class="p">(</span><span class="s2">&quot;lambda&quot;</span><span class="p">,</span> <span class="n">region</span><span class="p">,</span> <span class="n">role</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="rds_client">
+<a class="viewcode-back" href="../../technical_reference/core-helper/_autosummary/core_helper.aws.rds_client.html#core_helper.aws.rds_client">[docs]</a>
+<span class="k">def</span> <span class="nf">rds_client</span><span class="p">(</span><span class="n">region</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">role</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">get_client</span><span class="p">(</span><span class="s2">&quot;rds&quot;</span><span class="p">,</span> <span class="n">region</span><span class="p">,</span> <span class="n">role</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="s3_client">
+<a class="viewcode-back" href="../../technical_reference/core-helper/_autosummary/core_helper.aws.s3_client.html#core_helper.aws.s3_client">[docs]</a>
+<span class="k">def</span> <span class="nf">s3_client</span><span class="p">(</span><span class="n">region</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">role</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">get_client</span><span class="p">(</span><span class="s2">&quot;s3&quot;</span><span class="p">,</span> <span class="n">region</span><span class="p">,</span> <span class="n">role</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="org_client">
+<a class="viewcode-back" href="../../technical_reference/core-helper/_autosummary/core_helper.aws.org_client.html#core_helper.aws.org_client">[docs]</a>
+<span class="k">def</span> <span class="nf">org_client</span><span class="p">(</span><span class="n">region</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">role</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">get_client</span><span class="p">(</span><span class="s2">&quot;organizations&quot;</span><span class="p">,</span> <span class="n">region</span><span class="p">,</span> <span class="n">role</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="step_functions_client">
+<a class="viewcode-back" href="../../technical_reference/core-helper/_autosummary/core_helper.aws.step_functions_client.html#core_helper.aws.step_functions_client">[docs]</a>
+<span class="k">def</span> <span class="nf">step_functions_client</span><span class="p">(</span><span class="n">region</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">role</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">get_client</span><span class="p">(</span><span class="s2">&quot;stepfunctions&quot;</span><span class="p">,</span> <span class="n">region</span><span class="p">,</span> <span class="n">role</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="get_resource">
+<a class="viewcode-back" href="../../technical_reference/core-helper/_autosummary/core_helper.aws.get_resource.html#core_helper.aws.get_resource">[docs]</a>
+<span class="k">def</span> <span class="nf">get_resource</span><span class="p">(</span><span class="n">service</span><span class="p">,</span> <span class="n">region</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">role</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+
+    <span class="n">session</span> <span class="o">=</span> <span class="n">get_session</span><span class="p">()</span>
+
+    <span class="n">credentials</span> <span class="o">=</span> <span class="n">assume_role</span><span class="p">(</span><span class="n">role</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">credentials</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">resource</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">resource</span><span class="p">(</span>
+            <span class="n">service</span><span class="p">,</span>
+            <span class="n">region_name</span><span class="o">=</span><span class="n">region</span><span class="p">,</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">Config</span><span class="p">(</span>
+                <span class="n">connect_timeout</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">read_timeout</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">retries</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">max_attempts</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">resource</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">resource</span><span class="p">(</span>
+            <span class="n">service</span><span class="p">,</span>
+            <span class="n">region_name</span><span class="o">=</span><span class="n">region</span><span class="p">,</span>
+            <span class="n">aws_access_key_id</span><span class="o">=</span><span class="n">credentials</span><span class="p">[</span><span class="s2">&quot;AccessKeyId&quot;</span><span class="p">],</span>
+            <span class="n">aws_secret_access_key</span><span class="o">=</span><span class="n">credentials</span><span class="p">[</span><span class="s2">&quot;SecretAccessKey&quot;</span><span class="p">],</span>
+            <span class="n">aws_session_token</span><span class="o">=</span><span class="n">credentials</span><span class="p">[</span><span class="s2">&quot;SessionToken&quot;</span><span class="p">],</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">Config</span><span class="p">(</span>
+                <span class="n">connect_timeout</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">read_timeout</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">retries</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">max_attempts</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">resource</span></div>
+
+
+
+<div class="viewcode-block" id="s3_resource">
+<a class="viewcode-back" href="../../technical_reference/core-helper/_autosummary/core_helper.aws.s3_resource.html#core_helper.aws.s3_resource">[docs]</a>
+<span class="k">def</span> <span class="nf">s3_resource</span><span class="p">(</span><span class="n">region</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">role</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">get_resource</span><span class="p">(</span><span class="s2">&quot;s3&quot;</span><span class="p">,</span> <span class="n">region</span><span class="p">,</span> <span class="n">role</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="dynamodb_resource">
+<a class="viewcode-back" href="../../technical_reference/core-helper/_autosummary/core_helper.aws.dynamodb_resource.html#core_helper.aws.dynamodb_resource">[docs]</a>
+<span class="k">def</span> <span class="nf">dynamodb_resource</span><span class="p">(</span><span class="n">region</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">role</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">region</span><span class="p">:</span>
+        <span class="n">region</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;DYNAMODB_REGION&quot;</span><span class="p">,</span> <span class="s2">&quot;us-east-1&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">get_resource</span><span class="p">(</span><span class="s2">&quot;dynamodb&quot;</span><span class="p">,</span> <span class="n">region</span><span class="p">,</span> <span class="n">role</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="invoke_lambda">
+<a class="viewcode-back" href="../../technical_reference/core-helper/_autosummary/core_helper.aws.invoke_lambda.html#core_helper.aws.invoke_lambda">[docs]</a>
+<span class="k">def</span> <span class="nf">invoke_lambda</span><span class="p">(</span>
+    <span class="n">arn</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">request_payload</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">role</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+
+    <span class="n">region</span> <span class="o">=</span> <span class="n">arn</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)[</span><span class="mi">3</span><span class="p">]</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">lambda_client</span><span class="p">(</span><span class="n">region</span><span class="p">,</span> <span class="n">role</span><span class="p">)</span>
+
+    <span class="n">log</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span>
+        <span class="s2">&quot;Invoking Lambda&quot;</span><span class="p">,</span> <span class="n">details</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;FunctionName&quot;</span><span class="p">:</span> <span class="n">arn</span><span class="p">,</span> <span class="s2">&quot;Payload&quot;</span><span class="p">:</span> <span class="n">request_payload</span><span class="p">}</span>
+    <span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+
+        <span class="n">request</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">request_payload</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="n">FunctionName</span><span class="o">=</span><span class="n">arn</span><span class="p">,</span> <span class="n">Payload</span><span class="o">=</span><span class="n">request</span><span class="p">)</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Failed to invoke FunctionName=</span><span class="si">{}</span><span class="s2">, e=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">arn</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="n">TR_STATUS</span><span class="p">:</span> <span class="s2">&quot;error&quot;</span><span class="p">,</span>
+            <span class="n">TR_RESPONSE</span><span class="p">:</span> <span class="s2">&quot;Failed to invoke Lambda - </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">),</span>
+        <span class="p">}</span>
+
+    <span class="n">status_code</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;StatusCode&quot;</span><span class="p">))</span> <span class="k">if</span> <span class="s2">&quot;StatusCode&quot;</span> <span class="ow">in</span> <span class="n">response</span> <span class="k">else</span> <span class="mi">0</span>
+
+    <span class="k">if</span> <span class="s2">&quot;Payload&quot;</span> <span class="ow">in</span> <span class="n">response</span><span class="p">:</span>
+        <span class="n">raw_data</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Payload&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="n">decoded_data</span> <span class="o">=</span> <span class="n">raw_data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+
+    <span class="n">response_payload</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span><span class="n">decoded_data</span><span class="p">)</span> <span class="k">if</span> <span class="n">decoded_data</span> <span class="k">else</span> <span class="kc">None</span>
+
+    <span class="n">function_error</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;FunctionError&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+    <span class="c1"># Build the detaisl for the log message</span>
+    <span class="n">details</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;StatusCode&quot;</span><span class="p">:</span> <span class="n">status_code</span><span class="p">,</span> <span class="s2">&quot;Payload&quot;</span><span class="p">:</span> <span class="n">response_payload</span><span class="p">}</span>
+
+    <span class="k">if</span> <span class="n">function_error</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">details</span><span class="p">[</span><span class="s2">&quot;FunctionError&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">function_error</span>
+
+    <span class="c1"># Log the details</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="s2">&quot;Lambda invoked response: &quot;</span><span class="p">,</span> <span class="n">details</span><span class="o">=</span><span class="n">details</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">status_code</span> <span class="o">&lt;</span> <span class="mi">200</span> <span class="ow">or</span> <span class="n">status_code</span> <span class="o">&gt;=</span> <span class="mi">300</span><span class="p">:</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Lambda invocation failed (status code </span><span class="si">{}</span><span class="s2">)&quot;</span><span class="p">,</span> <span class="n">status_code</span><span class="p">)</span>
+        <span class="n">status</span> <span class="o">=</span> <span class="s2">&quot;error&quot;</span>
+
+    <span class="k">elif</span> <span class="n">function_error</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+            <span class="s2">&quot;The invoked Lambda encountered an error (</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="p">,</span>
+            <span class="n">function_error</span><span class="p">,</span>
+            <span class="n">details</span><span class="o">=</span><span class="n">response_payload</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">status</span> <span class="o">=</span> <span class="s2">&quot;error&quot;</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">status</span> <span class="o">=</span> <span class="s2">&quot;ok&quot;</span>
+
+    <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+        <span class="s2">&quot;Invoked Lambda: status (</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="p">,</span>
+        <span class="n">status</span><span class="p">,</span>
+        <span class="n">details</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;FunctionName&quot;</span><span class="p">:</span> <span class="n">arn</span><span class="p">,</span> <span class="s2">&quot;Payload&quot;</span><span class="p">:</span> <span class="n">response_payload</span><span class="p">},</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="n">TR_STATUS</span><span class="p">:</span> <span class="n">status</span><span class="p">,</span> <span class="n">TR_RESPONSE</span><span class="p">:</span> <span class="n">response_payload</span><span class="p">}</span></div>
+
+
+
+<span class="c1"># Determine if credentials should be renewed</span>
+<span class="c1"># Returns true if expiration date has passed or is less than 5 minutes away</span>
+<span class="k">def</span> <span class="nf">__should_renew</span><span class="p">(</span><span class="n">expiration</span><span class="p">:</span> <span class="n">datetime</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">expiration</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">expiration</span> <span class="o">-</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">expiration</span><span class="o">.</span><span class="n">tzinfo</span><span class="p">))</span> <span class="o">&lt;</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">__transform_keyvalues_to_array</span><span class="p">(</span>
+    <span class="n">keyvalues</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">key_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value_key</span><span class="p">:</span> <span class="nb">str</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
+
+    <span class="k">if</span> <span class="n">keyvalues</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">return</span> <span class="p">[{</span><span class="n">key_key</span><span class="p">:</span> <span class="n">key</span><span class="p">,</span> <span class="n">value_key</span><span class="p">:</span> <span class="n">value</span><span class="p">}</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">keyvalues</span><span class="o">.</span><span class="n">items</span><span class="p">()]</span>
+
+
+<div class="viewcode-block" id="generate_context">
+<a class="viewcode-back" href="../../technical_reference/core-helper/_autosummary/core_helper.aws.generate_context.html#core_helper.aws.generate_context">[docs]</a>
+<span class="k">def</span> <span class="nf">generate_context</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This should be used to begin an authorization_context to provide</span>
+<span class="sd">    access tokens and temporary credentials for boto3 aws service access</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;DeliveredBy&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;AuthorizationToken&quot;</span><span class="p">:</span> <span class="s2">&quot;temp cred auth token id&quot;</span><span class="p">}</span></div>
+
+
+
+<div class="viewcode-block" id="grant_assume_role_permission">
+<a class="viewcode-back" href="../../technical_reference/core-helper/_autosummary/core_helper.aws.grant_assume_role_permission.html#core_helper.aws.grant_assume_role_permission">[docs]</a>
+<span class="k">def</span> <span class="nf">grant_assume_role_permission</span><span class="p">(</span>
+    <span class="n">user_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">role_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">account_id</span><span class="p">:</span> <span class="nb">str</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function grants the user the ability to assume the role sepecified in the account</span>
+<span class="sd">    specified.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        user_name (str): The username of the user to grant the permission to</span>
+<span class="sd">        role_name (str): The name of the role the user should be able to assume</span>
+<span class="sd">        account_id (str): The account ID where this role is defined</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Define the policy name</span>
+    <span class="n">policy_name</span> <span class="o">=</span> <span class="s2">&quot;AssumeRolePolicy&quot;</span>
+
+    <span class="n">client</span> <span class="o">=</span> <span class="n">iam_client</span><span class="p">()</span>
+
+    <span class="c1"># Try to retrieve the existing user policy</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">existing_policy</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_user_policy</span><span class="p">(</span>
+            <span class="n">UserName</span><span class="o">=</span><span class="n">user_name</span><span class="p">,</span> <span class="n">PolicyName</span><span class="o">=</span><span class="n">policy_name</span>
+        <span class="p">)</span>
+        <span class="n">policy_document</span> <span class="o">=</span> <span class="n">existing_policy</span><span class="p">[</span><span class="s2">&quot;PolicyDocument&quot;</span><span class="p">]</span>
+    <span class="k">except</span> <span class="n">client</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">NoSuchEntityException</span><span class="p">:</span>
+        <span class="c1"># If the policy does not exist, create a new one</span>
+        <span class="n">policy_document</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Version&quot;</span><span class="p">:</span> <span class="s2">&quot;2012-10-17&quot;</span><span class="p">,</span> <span class="s2">&quot;Statement&quot;</span><span class="p">:</span> <span class="p">[]}</span>
+
+    <span class="c1"># Ensure the policy has a statement for sts:AssumeRole</span>
+    <span class="n">assume_role_statement</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span>
+        <span class="p">(</span>
+            <span class="n">stmt</span>
+            <span class="k">for</span> <span class="n">stmt</span> <span class="ow">in</span> <span class="n">policy_document</span><span class="p">[</span><span class="s2">&quot;Statement&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">stmt</span><span class="p">[</span><span class="s2">&quot;Action&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;sts:AssumeRole&quot;</span>
+        <span class="p">),</span>
+        <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">assume_role_statement</span><span class="p">:</span>
+        <span class="n">assume_role_statement</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;Effect&quot;</span><span class="p">:</span> <span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Action&quot;</span><span class="p">:</span> <span class="s2">&quot;sts:AssumeRole&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Resource&quot;</span><span class="p">:</span> <span class="p">[],</span>
+        <span class="p">}</span>
+        <span class="n">policy_document</span><span class="p">[</span><span class="s2">&quot;Statement&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">assume_role_statement</span><span class="p">)</span>
+
+    <span class="c1"># Add the role ARNs to the assume role statement</span>
+    <span class="n">role_arn</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;arn:aws:iam::</span><span class="si">{</span><span class="n">account_id</span><span class="si">}</span><span class="s2">:role/</span><span class="si">{</span><span class="n">role_name</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="c1"># Bail out if the arn is already in the policy.</span>
+    <span class="k">if</span> <span class="n">role_arn</span> <span class="ow">in</span> <span class="n">assume_role_statement</span><span class="p">[</span><span class="s2">&quot;Resource&quot;</span><span class="p">]:</span>
+        <span class="k">return</span>
+
+    <span class="n">assume_role_statement</span><span class="p">[</span><span class="s2">&quot;Resource&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">role_arn</span><span class="p">)</span>
+
+    <span class="c1"># Attach the updated policy to the user</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">put_user_policy</span><span class="p">(</span>
+        <span class="n">UserName</span><span class="o">=</span><span class="n">user_name</span><span class="p">,</span>
+        <span class="n">PolicyName</span><span class="o">=</span><span class="n">policy_name</span><span class="p">,</span>
+        <span class="n">PolicyDocument</span><span class="o">=</span><span class="n">util</span><span class="o">.</span><span class="n">to_json</span><span class="p">(</span><span class="n">policy_document</span><span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Update the trust policy for each role</span>
+    <span class="n">role</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_role</span><span class="p">(</span><span class="n">RoleName</span><span class="o">=</span><span class="n">role_name</span><span class="p">)</span>
+    <span class="n">trust_policy</span> <span class="o">=</span> <span class="n">role</span><span class="p">[</span><span class="s2">&quot;Role&quot;</span><span class="p">][</span><span class="s2">&quot;AssumeRolePolicyDocument&quot;</span><span class="p">]</span>
+
+    <span class="c1"># Check if the user is already in the trust policy</span>
+    <span class="n">user_arn</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;arn:aws:iam::</span><span class="si">{</span><span class="n">account_id</span><span class="si">}</span><span class="s2">:user/</span><span class="si">{</span><span class="n">user_name</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span>
+        <span class="n">stmt</span>
+        <span class="k">for</span> <span class="n">stmt</span> <span class="ow">in</span> <span class="n">trust_policy</span><span class="p">[</span><span class="s2">&quot;Statement&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">stmt</span><span class="p">[</span><span class="s2">&quot;Effect&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Allow&quot;</span> <span class="ow">and</span> <span class="n">stmt</span><span class="p">[</span><span class="s2">&quot;Principal&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;AWS&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">user_arn</span>
+    <span class="p">):</span>
+        <span class="n">trust_policy</span><span class="p">[</span><span class="s2">&quot;Statement&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;Effect&quot;</span><span class="p">:</span> <span class="s2">&quot;Allow&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;Principal&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;AWS&quot;</span><span class="p">:</span> <span class="n">user_arn</span><span class="p">},</span>
+                <span class="s2">&quot;Action&quot;</span><span class="p">:</span> <span class="s2">&quot;sts:AssumeRole&quot;</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+
+    <span class="c1"># Update the role&#39;s trust policy</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">update_assume_role_policy</span><span class="p">(</span>
+        <span class="n">RoleName</span><span class="o">=</span><span class="n">role_name</span><span class="p">,</span> <span class="n">PolicyDocument</span><span class="o">=</span><span class="n">util</span><span class="o">.</span><span class="n">to_json</span><span class="p">(</span><span class="n">trust_policy</span><span class="p">)</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="revoke_assume_role_permission">
+<a class="viewcode-back" href="../../technical_reference/core-helper/_autosummary/core_helper.aws.revoke_assume_role_permission.html#core_helper.aws.revoke_assume_role_permission">[docs]</a>
+<span class="k">def</span> <span class="nf">revoke_assume_role_permission</span><span class="p">(</span><span class="n">user_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">role_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">account_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+
+    <span class="n">client</span> <span class="o">=</span> <span class="n">iam_client</span><span class="p">()</span>
+
+    <span class="c1"># Define the policy name</span>
+    <span class="n">policy_name</span> <span class="o">=</span> <span class="s2">&quot;AssumeRolePolicy&quot;</span>
+
+    <span class="c1"># Try to retrieve the existing user policy</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">existing_policy</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_user_policy</span><span class="p">(</span>
+            <span class="n">UserName</span><span class="o">=</span><span class="n">user_name</span><span class="p">,</span> <span class="n">PolicyName</span><span class="o">=</span><span class="n">policy_name</span>
+        <span class="p">)</span>
+        <span class="n">policy_document</span> <span class="o">=</span> <span class="n">existing_policy</span><span class="p">[</span><span class="s2">&quot;PolicyDocument&quot;</span><span class="p">]</span>
+
+        <span class="c1"># Ensure the policy has a statement for sts:AssumeRole</span>
+        <span class="n">assume_role_statement</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span>
+            <span class="p">(</span>
+                <span class="n">stmt</span>
+                <span class="k">for</span> <span class="n">stmt</span> <span class="ow">in</span> <span class="n">policy_document</span><span class="p">[</span><span class="s2">&quot;Statement&quot;</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">stmt</span><span class="p">[</span><span class="s2">&quot;Action&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;sts:AssumeRole&quot;</span>
+            <span class="p">),</span>
+            <span class="kc">None</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">role_arn</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;arn:aws:iam::</span><span class="si">{</span><span class="n">account_id</span><span class="si">}</span><span class="s2">:role/</span><span class="si">{</span><span class="n">role_name</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="c1"># Bail out if the role is not in the policy</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="ow">not</span> <span class="n">assume_role_statement</span>
+            <span class="ow">or</span> <span class="n">role_arn</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">assume_role_statement</span><span class="p">[</span><span class="s2">&quot;Resource&quot;</span><span class="p">]</span>
+        <span class="p">):</span>
+            <span class="k">return</span>
+
+        <span class="n">assume_role_statement</span><span class="p">[</span><span class="s2">&quot;Resource&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">role_arn</span><span class="p">)</span>
+
+        <span class="c1"># Remove the assume role statement if no resources are left</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">assume_role_statement</span><span class="p">[</span><span class="s2">&quot;Resource&quot;</span><span class="p">]:</span>
+            <span class="n">policy_document</span><span class="p">[</span><span class="s2">&quot;Statement&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">assume_role_statement</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">policy_document</span><span class="p">[</span><span class="s2">&quot;Statement&quot;</span><span class="p">]:</span>
+            <span class="n">client</span><span class="o">.</span><span class="n">delete_user_policy</span><span class="p">(</span><span class="n">UserName</span><span class="o">=</span><span class="n">user_name</span><span class="p">,</span> <span class="n">PolicyName</span><span class="o">=</span><span class="n">policy_name</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Attach the updated policy to the user</span>
+            <span class="n">client</span><span class="o">.</span><span class="n">put_user_policy</span><span class="p">(</span>
+                <span class="n">UserName</span><span class="o">=</span><span class="n">user_name</span><span class="p">,</span>
+                <span class="n">PolicyName</span><span class="o">=</span><span class="n">policy_name</span><span class="p">,</span>
+                <span class="n">PolicyDocument</span><span class="o">=</span><span class="n">util</span><span class="o">.</span><span class="n">to_json</span><span class="p">(</span><span class="n">policy_document</span><span class="p">),</span>
+            <span class="p">)</span>
+
+    <span class="k">except</span> <span class="n">client</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">NoSuchEntityException</span><span class="p">:</span>
+        <span class="c1"># If the policy does not exist, there&#39;s nothing to revoke.</span>
+        <span class="k">return</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Update the trust policy for the role</span>
+        <span class="n">role</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_role</span><span class="p">(</span><span class="n">RoleName</span><span class="o">=</span><span class="n">role_name</span><span class="p">)</span>
+        <span class="n">trust_policy</span> <span class="o">=</span> <span class="n">role</span><span class="p">[</span><span class="s2">&quot;Role&quot;</span><span class="p">][</span><span class="s2">&quot;AssumeRolePolicyDocument&quot;</span><span class="p">]</span>
+
+        <span class="c1"># Remove the user from the trust policy</span>
+        <span class="n">user_arn</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;arn:aws:iam::</span><span class="si">{</span><span class="n">account_id</span><span class="si">}</span><span class="s2">:user/</span><span class="si">{</span><span class="n">user_name</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="n">trust_policy</span><span class="p">[</span><span class="s2">&quot;Statement&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">stmt</span>
+            <span class="k">for</span> <span class="n">stmt</span> <span class="ow">in</span> <span class="n">trust_policy</span><span class="p">[</span><span class="s2">&quot;Statement&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">stmt</span><span class="p">[</span><span class="s2">&quot;Action&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;sts:AssumeRole&quot;</span>
+            <span class="ow">or</span> <span class="n">stmt</span><span class="p">[</span><span class="s2">&quot;Effect&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;Allow&quot;</span>
+            <span class="ow">or</span> <span class="n">stmt</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Principal&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;AWS&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="n">user_arn</span>
+        <span class="p">]</span>
+
+        <span class="c1"># Update the role&#39;s trust policy with the new policy</span>
+        <span class="n">client</span><span class="o">.</span><span class="n">update_assume_role_policy</span><span class="p">(</span>
+            <span class="n">RoleName</span><span class="o">=</span><span class="n">role_name</span><span class="p">,</span> <span class="n">PolicyDocument</span><span class="o">=</span><span class="n">util</span><span class="o">.</span><span class="n">to_json</span><span class="p">(</span><span class="n">trust_policy</span><span class="p">)</span>
+        <span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Error updating trust policy for role </span><span class="si">{}</span><span class="s2">: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">role_name</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

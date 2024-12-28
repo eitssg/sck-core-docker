@@ -1,0 +1,229 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>core_db.item.models &mdash; SCK Core Automation 1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a3c9731c" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=45d66dd6" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=29a6c3e3"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            SCK Core Automation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_guide/index.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developer_guide/index.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../technical_reference/index.html">Technical Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SCK Core Automation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">core_db.item.models</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for core_db.item.models</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; Defines the generic model for items stored in the core-automation-items table.</span>
+
+<span class="sd">This will be subclassed by portfolio, app, branch, build, component modesl to implmeent their</span>
+<span class="sd">specific field extentions.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">dateutil</span> <span class="kn">import</span> <span class="n">parser</span>
+
+<span class="kn">from</span> <span class="nn">pynamodb.models</span> <span class="kn">import</span> <span class="n">Model</span>
+<span class="kn">from</span> <span class="nn">pynamodb.indexes</span> <span class="kn">import</span> <span class="n">GlobalSecondaryIndex</span><span class="p">,</span> <span class="n">AllProjection</span>
+<span class="kn">from</span> <span class="nn">pynamodb.attributes</span> <span class="kn">import</span> <span class="n">UnicodeAttribute</span><span class="p">,</span> <span class="n">UTCDateTimeAttribute</span>
+
+<span class="kn">import</span> <span class="nn">core_framework</span> <span class="k">as</span> <span class="nn">util</span>
+
+<span class="kn">from</span> <span class="nn">core_framework.time_utils</span> <span class="kn">import</span> <span class="n">make_default_time</span>
+
+<span class="kn">from</span> <span class="nn">..constants</span> <span class="kn">import</span> <span class="n">ITEMS</span>
+<span class="kn">from</span> <span class="nn">..config</span> <span class="kn">import</span> <span class="n">get_table_name</span>
+
+
+<div class="viewcode-block" id="ParentCreatedAtIndexMeta">
+<a class="viewcode-back" href="../../../technical_reference/core-db/_autosummary/core_db.item.models.ParentCreatedAtIndexMeta.html#core_db.item.models.ParentCreatedAtIndexMeta">[docs]</a>
+<span class="k">class</span> <span class="nc">ParentCreatedAtIndexMeta</span><span class="p">:</span>
+    <span class="n">index_name</span> <span class="o">=</span> <span class="s2">&quot;parent-created_at-index&quot;</span>
+    <span class="n">projection</span> <span class="o">=</span> <span class="n">AllProjection</span><span class="p">()</span>
+    <span class="n">read_capacity_units</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">write_capacity_units</span> <span class="o">=</span> <span class="mi">1</span></div>
+
+
+
+<div class="viewcode-block" id="ParentCreatedAtIndex">
+<a class="viewcode-back" href="../../../technical_reference/core-db/_autosummary/core_db.item.models.ParentCreatedAtIndex.html#core_db.item.models.ParentCreatedAtIndex">[docs]</a>
+<span class="k">class</span> <span class="nc">ParentCreatedAtIndex</span><span class="p">(</span><span class="n">GlobalSecondaryIndex</span><span class="p">):</span>
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">(</span><span class="n">ParentCreatedAtIndexMeta</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="n">parent_prn</span> <span class="o">=</span> <span class="n">UnicodeAttribute</span><span class="p">(</span><span class="n">hash_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;str: Parent Pipeline Reference Number (PRN) of the item (a.k.a identity) &quot;&quot;&quot;</span>
+
+    <span class="n">created_at</span> <span class="o">=</span> <span class="n">UTCDateTimeAttribute</span><span class="p">(</span><span class="n">range_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;datetime: Timestamp of the item creation.  Let the system auto-generate.  This is a RANGE key for the index. &quot;&quot;&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="ItemModel">
+<a class="viewcode-back" href="../../../technical_reference/core-db/_autosummary/core_db.item.models.ItemModel.html#core_db.item.models.ItemModel">[docs]</a>
+<span class="k">class</span> <span class="nc">ItemModel</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Defines the generic model for items stored in the core-automation-items table.</span>
+
+<span class="sd">    References:</span>
+<span class="sd">        * :class:`core_db.item.portfolio.models.PortfolioModel`</span>
+<span class="sd">        * :class:`core_db.item.app.models.AppModel`</span>
+<span class="sd">        * :class:`core_db.item.branch.models.BranchModel`</span>
+<span class="sd">        * :class:`core_db.item.build.models.BuildModel`</span>
+<span class="sd">        * :class:`core_db.item.component.models.ComponentModel`</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        Model (Model): Pynamodb Model class</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ItemModel: The Item Model representing the core-automation-items table</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ItemModel.Meta">
+<a class="viewcode-back" href="../../../technical_reference/core-db/_autosummary/core_db.item.models.ItemModel.html#core_db.item.models.ItemModel.Meta">[docs]</a>
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The metadata is used to configure the table for the ItemModel</span>
+<span class="sd">        Item Model maintains the table documenting all deployments from</span>
+<span class="sd">        portfolios through components segments.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">table_name</span> <span class="o">=</span> <span class="n">get_table_name</span><span class="p">(</span><span class="n">ITEMS</span><span class="p">)</span>  <span class="c1"># e.g. &quot;core-automation-items&quot;</span>
+        <span class="n">region</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">get_dynamodb_region</span><span class="p">()</span>  <span class="c1"># e.g. &quot;us-east-1&quot;</span>
+        <span class="n">host</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">util</span><span class="o">.</span><span class="n">get_dynamodb_host</span><span class="p">()</span>
+        <span class="p">)</span>  <span class="c1"># e.g. &quot;https://dynamodb.us-east-1.amazonaws.com&quot;</span>
+        <span class="n">read_capacity_units</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">write_capacity_units</span> <span class="o">=</span> <span class="mi">1</span></div>
+
+
+    <span class="n">prn</span> <span class="o">=</span> <span class="n">UnicodeAttribute</span><span class="p">(</span><span class="n">hash_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;str: Pipeline Reference Number (PRN) of the item (a.k.a identity) &quot;&quot;&quot;</span>
+
+    <span class="n">parent_prn</span> <span class="o">=</span> <span class="n">UnicodeAttribute</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;str: Parent Pipeline Reference Number (PRN) of the item (a.k.a identity) &quot;&quot;&quot;</span>
+
+    <span class="n">item_type</span> <span class="o">=</span> <span class="n">UnicodeAttribute</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;str: Type of item this event relates to such as portfolio, app, branch, build, component, account, etc. &quot;&quot;&quot;</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="n">UnicodeAttribute</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;str: Name of the item.  This is the human readable name of the item. &quot;&quot;&quot;</span>
+
+    <span class="n">created_at</span> <span class="o">=</span> <span class="n">UTCDateTimeAttribute</span><span class="p">(</span><span class="n">default_for_new</span><span class="o">=</span><span class="n">make_default_time</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;datetime: Timestamp of the item creation.  Let the system auto-generate &quot;&quot;&quot;</span>
+
+    <span class="n">updated_at</span> <span class="o">=</span> <span class="n">UTCDateTimeAttribute</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="n">make_default_time</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;datetime: Timestamp of the item update.  Let the system auto-generate &quot;&quot;&quot;</span>
+
+    <span class="n">parent_created_at_index</span> <span class="o">=</span> <span class="n">ParentCreatedAtIndex</span><span class="p">()</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;GlobalSecondaryIndex: Index for parent_prn and created_at fields.  Used for querying items by parent and creation date.  &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="s2">&quot;created_at&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;created_at&quot;</span><span class="p">],</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;created_at&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;created_at&quot;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="s2">&quot;updated_at&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;updated_at&quot;</span><span class="p">],</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;updated_at&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;updated_at&quot;</span><span class="p">])</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&lt;Item(prn=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">prn</span><span class="si">}</span><span class="s2">,item_type=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">item_type</span><span class="si">}</span><span class="s2">,name=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">)&gt;&quot;</span>
+
+<div class="viewcode-block" id="ItemModel.save">
+<a class="viewcode-back" href="../../../technical_reference/core-db/_autosummary/core_db.item.models.ItemModel.html#core_db.item.models.ItemModel.save">[docs]</a>
+    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">updated_at</span> <span class="o">=</span> <span class="n">make_default_time</span><span class="p">()</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ItemModel</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ItemModel.update">
+<a class="viewcode-back" href="../../../technical_reference/core-db/_autosummary/core_db.item.models.ItemModel.html#core_db.item.models.ItemModel.update">[docs]</a>
+    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actions</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">condition</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">updated_at</span> <span class="o">=</span> <span class="n">make_default_time</span><span class="p">()</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ItemModel</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">actions</span><span class="o">=</span><span class="n">actions</span><span class="p">,</span> <span class="n">condition</span><span class="o">=</span><span class="n">condition</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

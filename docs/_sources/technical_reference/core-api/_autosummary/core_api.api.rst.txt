@@ -1,0 +1,35 @@
+core_api.api
+============
+
+.. automodule:: core_api.api
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :template: custom-module-template.rst
+   :recursive:
+   
+      apis
+      fast_api
+      tools
+
+

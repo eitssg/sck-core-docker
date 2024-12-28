@@ -1,0 +1,26 @@
+core\_execute.actionlib.action.StatusCode
+=========================================
+
+.. currentmodule:: core_execute.actionlib.action
+
+.. autoclass:: StatusCode
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~StatusCode.PENDING
+      ~StatusCode.RUNNING
+      ~StatusCode.COMPLETE
+      ~StatusCode.FAILED
+   
+   
+
+   
+   
+   

@@ -1,0 +1,6 @@
+core\_framework.status.TEARDOWN\_IN\_PROGRESS
+=============================================
+
+.. currentmodule:: core_framework.status
+
+.. autodata:: TEARDOWN_IN_PROGRESS

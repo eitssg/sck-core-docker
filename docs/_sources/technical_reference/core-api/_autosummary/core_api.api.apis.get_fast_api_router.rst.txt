@@ -1,0 +1,6 @@
+core\_api.api.apis.get\_fast\_api\_router
+=========================================
+
+.. currentmodule:: core_api.api.apis
+
+.. autofunction:: get_fast_api_router

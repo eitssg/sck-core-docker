@@ -1,0 +1,29 @@
+core\_db.actions.TableActions
+=============================
+
+.. currentmodule:: core_db.actions
+
+.. autoclass:: TableActions
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~TableActions.__init__
+      ~TableActions.create
+      ~TableActions.delete
+      ~TableActions.get
+      ~TableActions.list
+      ~TableActions.patch
+      ~TableActions.update
+   
+   

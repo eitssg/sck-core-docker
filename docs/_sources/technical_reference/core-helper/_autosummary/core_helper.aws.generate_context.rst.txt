@@ -1,0 +1,6 @@
+core\_helper.aws.generate\_context
+==================================
+
+.. currentmodule:: core_helper.aws
+
+.. autofunction:: generate_context

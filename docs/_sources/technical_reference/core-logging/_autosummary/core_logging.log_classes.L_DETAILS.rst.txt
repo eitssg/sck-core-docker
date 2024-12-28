@@ -1,0 +1,6 @@
+core\_logging.log\_classes.L\_DETAILS
+=====================================
+
+.. currentmodule:: core_logging.log_classes
+
+.. autodata:: L_DETAILS

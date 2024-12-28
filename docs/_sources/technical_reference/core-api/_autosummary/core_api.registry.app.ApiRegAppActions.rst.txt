@@ -1,0 +1,30 @@
+core\_api.registry.app.ApiRegAppActions
+=======================================
+
+.. currentmodule:: core_api.registry.app
+
+.. autoclass:: ApiRegAppActions
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ApiRegAppActions.__init__
+      ~ApiRegAppActions.create
+      ~ApiRegAppActions.delete
+      ~ApiRegAppActions.get
+      ~ApiRegAppActions.get_client_portfolio_app
+      ~ApiRegAppActions.list
+      ~ApiRegAppActions.patch
+      ~ApiRegAppActions.update
+   
+   

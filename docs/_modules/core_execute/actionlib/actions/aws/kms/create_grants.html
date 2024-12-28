@@ -1,0 +1,262 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>core_execute.actionlib.actions.aws.kms.create_grants &mdash; SCK Core Automation 1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/pygments.css?v=a3c9731c" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../../../_static/custom.css?v=45d66dd6" />
+
+  
+      <script src="../../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../../_static/documentation_options.js?v=29a6c3e3"></script>
+      <script src="../../../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../../index.html" class="icon icon-home">
+            SCK Core Automation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../user_guide/index.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../developer_guide/index.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../../technical_reference/index.html">Technical Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../../index.html">SCK Core Automation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">core_execute.actionlib.actions.aws.kms.create_grants</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for core_execute.actionlib.actions.aws.kms.create_grants</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Grant access to KMS keys to principals&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
+
+<span class="kn">import</span> <span class="nn">core_logging</span> <span class="k">as</span> <span class="nn">log</span>
+
+<span class="kn">import</span> <span class="nn">core_helper.aws</span> <span class="k">as</span> <span class="nn">aws</span>
+
+<span class="kn">from</span> <span class="nn">core_framework.models</span> <span class="kn">import</span> <span class="n">DeploymentDetails</span><span class="p">,</span> <span class="n">ActionDefinition</span><span class="p">,</span> <span class="n">ActionParams</span>
+
+<span class="kn">import</span> <span class="nn">core_framework</span> <span class="k">as</span> <span class="nn">util</span>
+<span class="kn">from</span> <span class="nn">core_execute.actionlib.action</span> <span class="kn">import</span> <span class="n">BaseAction</span>
+
+<span class="kn">import</span> <span class="nn">re</span>
+
+
+<div class="viewcode-block" id="generate_template">
+<a class="viewcode-back" href="../../../../../../technical_reference/core-execute/_autosummary/core_execute.actionlib.actions.aws.kms.create_grants.generate_template.html#core_execute.actionlib.actions.aws.kms.create_grants.generate_template">[docs]</a>
+<span class="k">def</span> <span class="nf">generate_template</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">ActionDefinition</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate the action definition&quot;&quot;&quot;</span>
+
+    <span class="n">definition</span> <span class="o">=</span> <span class="n">ActionDefinition</span><span class="p">(</span>
+        <span class="n">Label</span><span class="o">=</span><span class="s2">&quot;action-definition-label&quot;</span><span class="p">,</span>
+        <span class="n">Type</span><span class="o">=</span><span class="s2">&quot;AWS::KMS::CreateGrants&quot;</span><span class="p">,</span>
+        <span class="n">DependsOn</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;put-a-label-here&quot;</span><span class="p">],</span>
+        <span class="n">Params</span><span class="o">=</span><span class="n">ActionParams</span><span class="p">(</span>
+            <span class="n">Account</span><span class="o">=</span><span class="s2">&quot;The account to use for the action (required)&quot;</span><span class="p">,</span>
+            <span class="n">Region</span><span class="o">=</span><span class="s2">&quot;The region to create the stack in (required)&quot;</span><span class="p">,</span>
+            <span class="n">KmsKeyId</span><span class="o">=</span><span class="s2">&quot;The ID of the KMS key to create grants for (optionally required)&quot;</span><span class="p">,</span>
+            <span class="n">KmsKeyArn</span><span class="o">=</span><span class="s2">&quot;The ARN of the KMS key to create grants for (optionally required)&quot;</span><span class="p">,</span>
+            <span class="n">GranteePrincipals</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;The principals to grant access to (required)&quot;</span><span class="p">],</span>
+            <span class="n">Operations</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;The operations to grant access for (required)&quot;</span><span class="p">],</span>
+            <span class="n">IgnoreFailedGrants</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="n">Scope</span><span class="o">=</span><span class="s2">&quot;Based on your deployment details, it one of &#39;portfolio&#39;, &#39;app&#39;, &#39;branch&#39;, or &#39;build&#39;&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">definition</span></div>
+
+
+
+<div class="viewcode-block" id="CreateGrantsAction">
+<a class="viewcode-back" href="../../../../../../technical_reference/core-execute/_autosummary/core_execute.actionlib.actions.aws.kms.create_grants.CreateGrantsAction.html#core_execute.actionlib.actions.aws.kms.create_grants.CreateGrantsAction">[docs]</a>
+<span class="k">class</span> <span class="nc">CreateGrantsAction</span><span class="p">(</span><span class="n">BaseAction</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create Grans for an AWS KMS Key</span>
+
+<span class="sd">    This action will create grants for KMS Keys.  The action will wait for the modifications to complete before returning.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        Label: Enter a label to define this action instance</span>
+<span class="sd">        Type: Use the value: ``AWS::KMS::CreateGrants``</span>
+<span class="sd">        Params.Account: The accoutn where KMS keys are centraly stored</span>
+<span class="sd">        Params.Region: The region where KMS keys are located</span>
+<span class="sd">        Params.KmsKeyArn: The ID of the KMS key to create grants for (required if KmsKeyId is not provided)</span>
+<span class="sd">        Params.KmsKeyId: The ARN of the KMS key to create grants for (required if KmsKeyArn is not provided)</span>
+<span class="sd">        Params.GranteePrincipals: The principals to grant access to (required)</span>
+<span class="sd">        Params.Operations: The operations to grant access for (required)</span>
+<span class="sd">        Params.IgnoreFailedGrants: If true, ignore failed grants, otherwise fail the action if a grant fails</span>
+
+<span class="sd">    .. rubric: ActionDefinition:</span>
+
+<span class="sd">    .. tip:: s3:/&lt;bucket&gt;/artfacts/&lt;deployment_details&gt;/{task}.actions:</span>
+
+<span class="sd">        .. code-block:: yaml</span>
+
+<span class="sd">            - Label: action-aws-kms-creategrants-label</span>
+<span class="sd">              Type: &quot;AWS::KMS::CreateGrants&quot;</span>
+<span class="sd">              Params:</span>
+<span class="sd">                Account: &quot;123456789012&quot;</span>
+<span class="sd">                Region: &quot;ap-southeast-1&quot;</span>
+<span class="sd">                KmsKeyArn: &quot;arn:aws:kms:ap-southeast-1:123456789012:key/your-kms-key-id&quot;</span>
+<span class="sd">                GrantPrincipals: [&quot;arn:aws:iam::123456789012:role/YourRole&quot;]</span>
+<span class="sd">                Operations: [&quot;Encrypt&quot;, &quot;Decrypt&quot;, &quot;GenerateDataKey&quot;]</span>
+<span class="sd">                IgnoreFailedGrants: false</span>
+<span class="sd">              Scope: &quot;build&quot;</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">definition</span><span class="p">:</span> <span class="n">ActionDefinition</span><span class="p">,</span>
+        <span class="n">context</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+        <span class="n">deployment_details</span><span class="p">:</span> <span class="n">DeploymentDetails</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">definition</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">deployment_details</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">account</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">Account</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">region</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">Region</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kms_key_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">KmsKeyId</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">KmsKeyArn</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">grantee_principals</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">GranteePrincipals</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">operations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">Operations</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ignore_failed_grants</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">IgnoreFailedGrants</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">IgnoreFailedGrants</span> <span class="k">else</span> <span class="kc">True</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_execute</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Obtain an EC2 client</span>
+        <span class="n">kms_client</span> <span class="o">=</span> <span class="n">aws</span><span class="o">.</span><span class="n">kms_client</span><span class="p">(</span>
+            <span class="n">region</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">region</span><span class="p">,</span> <span class="n">role</span><span class="o">=</span><span class="n">util</span><span class="o">.</span><span class="n">get_provisioning_role_arn</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">account</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Create the grants</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_running</span><span class="p">(</span>
+            <span class="s2">&quot;Creating grants for KMS key &#39;</span><span class="si">{}</span><span class="s2">&#39; in account &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">kms_key_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">account</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">principal</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">grantee_principals</span><span class="p">:</span>
+            <span class="c1"># Use the grantee principal as the grant name, with unsupported characters replaced with &#39;-&#39;</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;[^a-zA-Z0-9:/_-]&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="n">principal</span><span class="p">)</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;GranteePrincipal&quot;</span><span class="p">:</span> <span class="n">principal</span><span class="p">,</span>
+                    <span class="s2">&quot;KeyId&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">kms_key_id</span><span class="p">,</span>
+                    <span class="s2">&quot;Name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
+                    <span class="s2">&quot;Operations&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">operations</span><span class="p">,</span>
+                <span class="p">}</span>
+
+                <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Creating grant&quot;</span><span class="p">,</span> <span class="n">details</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+
+                <span class="n">response</span> <span class="o">=</span> <span class="n">kms_client</span><span class="o">.</span><span class="n">create_grant</span><span class="p">(</span><span class="o">**</span><span class="n">params</span><span class="p">)</span>
+
+                <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                    <span class="s2">&quot;Grant creation was successful&quot;</span><span class="p">,</span>
+                    <span class="n">details</span><span class="o">=</span><span class="p">{</span>
+                        <span class="s2">&quot;GrantId&quot;</span><span class="p">:</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;GrantId&quot;</span><span class="p">],</span>
+                        <span class="s2">&quot;GrantToken&quot;</span><span class="p">:</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;GrantToken&quot;</span><span class="p">],</span>
+                    <span class="p">},</span>
+                <span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ignore_failed_grants</span><span class="p">:</span>
+                    <span class="n">log</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span>
+                        <span class="s2">&quot;Failed to create grant, but configured to ignore - </span><span class="si">{}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">e</span>
+                    <span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Failed to create grant - </span><span class="si">{}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">set_failed</span><span class="p">(</span><span class="s2">&quot;Failed to create grant, principal may not exist&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_complete</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_failed</span><span class="p">(</span><span class="s2">&quot;Internal error - _check() should not have been called&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_unexecute</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">_cancel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">_resolve</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">account</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">render_string</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">account</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">region</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">render_string</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">region</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kms_key_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">render_string</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">kms_key_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">grantee_principals</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">render_object</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">grantee_principals</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ignore_failed_grants</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">render_string</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ignore_failed_grants</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span>
+        <span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

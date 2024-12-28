@@ -1,0 +1,6 @@
+core\_framework.common.split\_prn
+=================================
+
+.. currentmodule:: core_framework.common
+
+.. autofunction:: split_prn

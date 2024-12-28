@@ -1,0 +1,239 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>core_helper.aws &mdash; SCK Core Automation 1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a3c9731c" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=45d66dd6" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=29a6c3e3"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="core_helper.aws.assume_role" href="core_helper.aws.assume_role.html" />
+    <link rel="prev" title="core-helper" href="../core-helper.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            SCK Core Automation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../user_guide/index.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developer_guide/index.html">Developer Guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Technical Reference Guide</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../modules.html">Modules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../core-logging/core-logging.html">core-logging</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-framework/core-framework.html">core-framework</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-db/core-db.html">core-db</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../core-helper.html">core-helper</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../core-helper.html#aws-helper-functions">AWS Helper functions</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-renderer/core-renderer.html">core-renderer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-component-compiler/core-component-compiler.html">core-component-compiler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-deployspec-compiler/core-deployspec-compiler.html">core-deployspec-compiler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-execute/core-execute.html">core-execute</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-organization/core-organization.html">core-organization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-runner/core-runner.html">core-runner</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-invoker/core-invoker.html">core-invoker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-report/core-report.html">core-report</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-api-auth/core-api-auth.html">core-api-auth</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-api/core-api.html">core-api</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-codecommit-listener/core-codecommit-listener.html">core-codecommit-listener</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-automation/core-automation.html">core-automation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../core-db/db_schema.html">Database Schema</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SCK Core Automation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Technical Reference Guide</a></li>
+          <li class="breadcrumb-item"><a href="../../modules.html">Modules</a></li>
+          <li class="breadcrumb-item"><a href="../core-helper.html">core-helper</a></li>
+      <li class="breadcrumb-item active">core_helper.aws</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/technical_reference/core-helper/_autosummary/core_helper.aws.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-core_helper.aws">
+<span id="core-helper-aws"></span><h1>core_helper.aws<a class="headerlink" href="#module-core_helper.aws" title="Link to this heading"></a></h1>
+<p>AWS Helper functions that provide Automation Role switching for all deployment functions and Lambda’s</p>
+<p class="rubric">Functions</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_helper.aws.assume_role.html#core_helper.aws.assume_role" title="core_helper.aws.assume_role"><code class="xref py py-obj docutils literal notranslate"><span class="pre">assume_role</span></code></a>([role])</p></td>
+<td><p>Assume a role using the current session credentials and get the credentials.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_helper.aws.cfn_client.html#core_helper.aws.cfn_client" title="core_helper.aws.cfn_client"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cfn_client</span></code></a>([region, role])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_helper.aws.check_if_user_authorised.html#core_helper.aws.check_if_user_authorised" title="core_helper.aws.check_if_user_authorised"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_if_user_authorised</span></code></a>(auth, role)</p></td>
+<td><p>Validate the provided AWS credentials and check if they have permissions to assume the specified role.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_helper.aws.cloudfront_client.html#core_helper.aws.cloudfront_client" title="core_helper.aws.cloudfront_client"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cloudfront_client</span></code></a>([region, role])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_helper.aws.cloudwatch_client.html#core_helper.aws.cloudwatch_client" title="core_helper.aws.cloudwatch_client"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cloudwatch_client</span></code></a>([region, role])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_helper.aws.dynamodb_resource.html#core_helper.aws.dynamodb_resource" title="core_helper.aws.dynamodb_resource"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dynamodb_resource</span></code></a>([region, role])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_helper.aws.ec2_client.html#core_helper.aws.ec2_client" title="core_helper.aws.ec2_client"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ec2_client</span></code></a>([region, role])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_helper.aws.ecr_client.html#core_helper.aws.ecr_client" title="core_helper.aws.ecr_client"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ecr_client</span></code></a>([region, role])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_helper.aws.elb_client.html#core_helper.aws.elb_client" title="core_helper.aws.elb_client"><code class="xref py py-obj docutils literal notranslate"><span class="pre">elb_client</span></code></a>([region, role])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_helper.aws.elbv2_client.html#core_helper.aws.elbv2_client" title="core_helper.aws.elbv2_client"><code class="xref py py-obj docutils literal notranslate"><span class="pre">elbv2_client</span></code></a>([region, role])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_helper.aws.generate_context.html#core_helper.aws.generate_context" title="core_helper.aws.generate_context"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generate_context</span></code></a>()</p></td>
+<td><p>This should be used to begin an authorization_context to provide access tokens and temporary credentials for boto3 aws service access</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_helper.aws.get_client.html#core_helper.aws.get_client" title="core_helper.aws.get_client"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_client</span></code></a>(service, region, role)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_helper.aws.get_identity.html#core_helper.aws.get_identity" title="core_helper.aws.get_identity"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_identity</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_helper.aws.get_resource.html#core_helper.aws.get_resource" title="core_helper.aws.get_resource"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_resource</span></code></a>(service[, region, role])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_helper.aws.get_session.html#core_helper.aws.get_session" title="core_helper.aws.get_session"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_session</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_helper.aws.get_session_credentials.html#core_helper.aws.get_session_credentials" title="core_helper.aws.get_session_credentials"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_session_credentials</span></code></a>()</p></td>
+<td><p>REturns the credentials information for the current session/role that has been assumed.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_helper.aws.grant_assume_role_permission.html#core_helper.aws.grant_assume_role_permission" title="core_helper.aws.grant_assume_role_permission"><code class="xref py py-obj docutils literal notranslate"><span class="pre">grant_assume_role_permission</span></code></a>(user_name, ...)</p></td>
+<td><p>This function grants the user the ability to assume the role sepecified in the account specified.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_helper.aws.iam_client.html#core_helper.aws.iam_client" title="core_helper.aws.iam_client"><code class="xref py py-obj docutils literal notranslate"><span class="pre">iam_client</span></code></a>([region, role])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_helper.aws.invoke_lambda.html#core_helper.aws.invoke_lambda" title="core_helper.aws.invoke_lambda"><code class="xref py py-obj docutils literal notranslate"><span class="pre">invoke_lambda</span></code></a>(arn, request_payload[, role])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_helper.aws.kms_client.html#core_helper.aws.kms_client" title="core_helper.aws.kms_client"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kms_client</span></code></a>([region, role])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_helper.aws.lambda_client.html#core_helper.aws.lambda_client" title="core_helper.aws.lambda_client"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lambda_client</span></code></a>([region, role])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_helper.aws.login_to_aws.html#core_helper.aws.login_to_aws" title="core_helper.aws.login_to_aws"><code class="xref py py-obj docutils literal notranslate"><span class="pre">login_to_aws</span></code></a>(auth, role)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_helper.aws.org_client.html#core_helper.aws.org_client" title="core_helper.aws.org_client"><code class="xref py py-obj docutils literal notranslate"><span class="pre">org_client</span></code></a>([region, role])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_helper.aws.rds_client.html#core_helper.aws.rds_client" title="core_helper.aws.rds_client"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rds_client</span></code></a>([region, role])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_helper.aws.revoke_assume_role_permission.html#core_helper.aws.revoke_assume_role_permission" title="core_helper.aws.revoke_assume_role_permission"><code class="xref py py-obj docutils literal notranslate"><span class="pre">revoke_assume_role_permission</span></code></a>(user_name, ...)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_helper.aws.s3_client.html#core_helper.aws.s3_client" title="core_helper.aws.s3_client"><code class="xref py py-obj docutils literal notranslate"><span class="pre">s3_client</span></code></a>([region, role])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_helper.aws.s3_resource.html#core_helper.aws.s3_resource" title="core_helper.aws.s3_resource"><code class="xref py py-obj docutils literal notranslate"><span class="pre">s3_resource</span></code></a>([region, role])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_helper.aws.step_functions_client.html#core_helper.aws.step_functions_client" title="core_helper.aws.step_functions_client"><code class="xref py py-obj docutils literal notranslate"><span class="pre">step_functions_client</span></code></a>([region, role])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_helper.aws.sts_client.html#core_helper.aws.sts_client" title="core_helper.aws.sts_client"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sts_client</span></code></a>([region, role])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_helper.aws.transform_stack_parameter_dict.html#core_helper.aws.transform_stack_parameter_dict" title="core_helper.aws.transform_stack_parameter_dict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">transform_stack_parameter_dict</span></code></a>(keyvalues)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_helper.aws.transform_stack_parameter_hash.html#core_helper.aws.transform_stack_parameter_hash" title="core_helper.aws.transform_stack_parameter_hash"><code class="xref py py-obj docutils literal notranslate"><span class="pre">transform_stack_parameter_hash</span></code></a>(keyvalues)</p></td>
+<td><p>Translate a basic dictionary into CloudFormation stack paramters object</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_helper.aws.transform_tag_hash.html#core_helper.aws.transform_tag_hash" title="core_helper.aws.transform_tag_hash"><code class="xref py py-obj docutils literal notranslate"><span class="pre">transform_tag_hash</span></code></a>(keyvalues)</p></td>
+<td><p>Tranlate a basic dictionary into a list of Tags values that can be applied to CloudFormation Resources:</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../core-helper.html" class="btn btn-neutral float-left" title="core-helper" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="core_helper.aws.assume_role.html" class="btn btn-neutral float-right" title="core_helper.aws.assume_role" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

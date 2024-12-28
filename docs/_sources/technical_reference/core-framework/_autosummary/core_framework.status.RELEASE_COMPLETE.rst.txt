@@ -1,0 +1,6 @@
+core\_framework.status.RELEASE\_COMPLETE
+========================================
+
+.. currentmodule:: core_framework.status
+
+.. autodata:: RELEASE_COMPLETE

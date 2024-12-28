@@ -1,0 +1,6 @@
+core\_api.item.app.get\_app\_action
+===================================
+
+.. currentmodule:: core_api.item.app
+
+.. autofunction:: get_app_action

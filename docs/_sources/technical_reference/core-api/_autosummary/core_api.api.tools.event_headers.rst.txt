@@ -1,0 +1,6 @@
+core\_api.api.tools.event\_headers
+==================================
+
+.. currentmodule:: core_api.api.tools
+
+.. autofunction:: event_headers

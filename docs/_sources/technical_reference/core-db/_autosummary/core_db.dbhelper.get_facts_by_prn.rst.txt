@@ -1,0 +1,6 @@
+core\_db.dbhelper.get\_facts\_by\_prn
+=====================================
+
+.. currentmodule:: core_db.dbhelper
+
+.. autofunction:: get_facts_by_prn

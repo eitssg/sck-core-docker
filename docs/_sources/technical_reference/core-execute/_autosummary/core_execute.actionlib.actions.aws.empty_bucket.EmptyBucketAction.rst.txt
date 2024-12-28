@@ -1,0 +1,54 @@
+core\_execute.actionlib.actions.aws.empty\_bucket.EmptyBucketAction
+===================================================================
+
+.. currentmodule:: core_execute.actionlib.actions.aws.empty_bucket
+
+.. autoclass:: EmptyBucketAction
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~EmptyBucketAction.label
+      ~EmptyBucketAction.context
+      ~EmptyBucketAction.action_name
+      ~EmptyBucketAction.output_namespace
+      ~EmptyBucketAction.state_namespace
+      ~EmptyBucketAction.type
+      ~EmptyBucketAction.condition
+      ~EmptyBucketAction.after
+      ~EmptyBucketAction.params
+      ~EmptyBucketAction.lifecycle_hooks
+      ~EmptyBucketAction.deployment_details
+      ~EmptyBucketAction.renderer
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~EmptyBucketAction.__init__
+      ~EmptyBucketAction.check
+      ~EmptyBucketAction.execute
+      ~EmptyBucketAction.get_output
+      ~EmptyBucketAction.get_state
+      ~EmptyBucketAction.is_complete
+      ~EmptyBucketAction.is_failed
+      ~EmptyBucketAction.is_init
+      ~EmptyBucketAction.is_running
+      ~EmptyBucketAction.set_complete
+      ~EmptyBucketAction.set_failed
+      ~EmptyBucketAction.set_output
+      ~EmptyBucketAction.set_running
+      ~EmptyBucketAction.set_skipped
+      ~EmptyBucketAction.set_state
+   
+   

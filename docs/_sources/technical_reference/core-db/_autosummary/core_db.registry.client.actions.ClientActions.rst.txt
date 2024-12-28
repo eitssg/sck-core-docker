@@ -1,0 +1,29 @@
+core\_db.registry.client.actions.ClientActions
+==============================================
+
+.. currentmodule:: core_db.registry.client.actions
+
+.. autoclass:: ClientActions
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ClientActions.__init__
+      ~ClientActions.create
+      ~ClientActions.delete
+      ~ClientActions.get
+      ~ClientActions.list
+      ~ClientActions.patch
+      ~ClientActions.update
+   
+   

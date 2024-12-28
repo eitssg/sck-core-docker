@@ -1,0 +1,6 @@
+core\_runner.handler.local\_start\_execution
+============================================
+
+.. currentmodule:: core_runner.handler
+
+.. autofunction:: local_start_execution

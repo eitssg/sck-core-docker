@@ -1,0 +1,6 @@
+core\_framework.constants.PKG\_VERSION\_ID
+==========================================
+
+.. currentmodule:: core_framework.constants
+
+.. autodata:: PKG_VERSION_ID

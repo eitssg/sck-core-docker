@@ -1,0 +1,750 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>core_framework.prn_utils &mdash; SCK Core Automation 1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a3c9731c" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=45d66dd6" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=29a6c3e3"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            SCK Core Automation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/index.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/index.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../technical_reference/index.html">Technical Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">SCK Core Automation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">core_framework.prn_utils</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for core_framework.prn_utils</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; Utilities to validate or generate PRN Identifiers&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
+
+<span class="kn">import</span> <span class="nn">re</span>
+
+<span class="kn">from</span> <span class="nn">.constants</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">SCOPE_CLIENT</span><span class="p">,</span>
+    <span class="n">SCOPE_PORTFOLIO</span><span class="p">,</span>
+    <span class="n">SCOPE_APP</span><span class="p">,</span>
+    <span class="n">SCOPE_BRANCH</span><span class="p">,</span>
+    <span class="n">SCOPE_BUILD</span><span class="p">,</span>
+    <span class="n">SCOPE_COMPONENT</span><span class="p">,</span>
+    <span class="n">V_EMPTY</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">PRN_REGEX</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;(prn)(:[a-zA-Z0-9\-]+)*&quot;</span>
+<span class="n">PORTFOLIO_PRN_REGEX</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;(prn)(:[a-zA-Z0-9\-]+)&quot;</span>
+<span class="n">APP_PRN_REGEX</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;(prn)(:[a-zA-Z0-9\-]+)(:[a-zA-Z0-9\-]+)&quot;</span>
+<span class="n">BRANCH_PRN_REGEX</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;(prn)(:[a-zA-Z0-9\-]+)(:[a-zA-Z0-9\-]+)(:[a-zA-Z0-9\-]+)&quot;</span>
+<span class="n">BUILD_PRN_REGEX</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="sa">r</span><span class="s2">&quot;(prn)(:[a-zA-Z0-9\-]+)(:[a-zA-Z0-9\-]+)(:[a-zA-Z0-9\-]+)(:[a-zA-Z0-9\-]+)&quot;</span>
+<span class="p">)</span>
+<span class="n">COMPONENT_PRN_REGEX</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;(prn)(:[a-zA-Z0-9\-]+)(:[a-zA-Z0-9\-]+)(:[a-zA-Z0-9\-]+)(:[a-zA-Z0-9\-]+)(:[a-zA-Z0-9\-]+)&quot;</span>
+
+<span class="c1"># Constant for the PRN key</span>
+<span class="n">PRN</span> <span class="o">=</span> <span class="s2">&quot;prn&quot;</span>
+<span class="n">DELIMITER</span> <span class="o">=</span> <span class="s2">&quot;:&quot;</span>
+
+<span class="c1"># These would typically come in API calles as paramters to a request</span>
+<span class="n">ARG_PORTFOLIO_PRN</span> <span class="o">=</span> <span class="s2">&quot;portfolio_prn&quot;</span>
+<span class="n">ARG_APP_PRN</span> <span class="o">=</span> <span class="s2">&quot;app_prn&quot;</span>
+<span class="n">ARG_BRANCH_PRN</span> <span class="o">=</span> <span class="s2">&quot;branch_prn&quot;</span>
+<span class="n">ARG_BUILD_PRN</span> <span class="o">=</span> <span class="s2">&quot;build_prn&quot;</span>
+<span class="n">ARG_COMPONENT_PRN</span> <span class="o">=</span> <span class="s2">&quot;component_prn&quot;</span>
+<span class="n">ARG_NAME</span> <span class="o">=</span> <span class="s2">&quot;name&quot;</span>
+
+
+<div class="viewcode-block" id="get_prn_scope">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.prn_utils.get_prn_scope.html#core_framework.prn_utils.get_prn_scope">[docs]</a>
+<span class="k">def</span> <span class="nf">get_prn_scope</span><span class="p">(</span><span class="n">prn</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns the scope of the PRN.  The copses are &quot;client&quot;, &quot;portfolio&quot;, &quot;app&quot;, &quot;branch&quot;, &quot;build&quot;, &quot;component&quot;.</span>
+
+<span class="sd">    If there are no colons, then the scope is &quot;client&quot;</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        prn (str): The PRN to extract the scope from</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str | None: The scope of the PRN or None if the PRN is invalid</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Define the mapping of colon counts to scopes</span>
+    <span class="n">scope_mapping</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="mi">0</span><span class="p">:</span> <span class="n">SCOPE_CLIENT</span><span class="p">,</span>
+        <span class="mi">1</span><span class="p">:</span> <span class="n">SCOPE_PORTFOLIO</span><span class="p">,</span>
+        <span class="mi">2</span><span class="p">:</span> <span class="n">SCOPE_APP</span><span class="p">,</span>
+        <span class="mi">3</span><span class="p">:</span> <span class="n">SCOPE_BRANCH</span><span class="p">,</span>
+        <span class="mi">4</span><span class="p">:</span> <span class="n">SCOPE_BUILD</span><span class="p">,</span>
+        <span class="mi">5</span><span class="p">:</span> <span class="n">SCOPE_COMPONENT</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="c1"># Count the number of colons in the prn</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">prn</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Return the corresponding scope or None if the count is greater than 5</span>
+    <span class="k">return</span> <span class="n">scope_mapping</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="extract_prn">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.prn_utils.extract_prn.html#core_framework.prn_utils.extract_prn">[docs]</a>
+<span class="k">def</span> <span class="nf">extract_prn</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A little helper that will extract a prn based on various input:</span>
+
+<span class="sd">    obj: dict = { &quot;prn&quot;: &#39;prn:portfolio:app:branch:build:component&#39; }</span>
+<span class="sd">    and return the obj[&#39;prn&#39;] value</span>
+
+<span class="sd">    obj: str = &#39;prn:portfolio:app:branch:build:component&#39;</span>
+<span class="sd">    and return the obj value</span>
+
+<span class="sd">    obj: class = Class namespace</span>
+<span class="sd">    and return the obj.prn vaue</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        obj (Any): dict, string, or class namespace</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: the prn value</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="n">prn</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">PRN</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">obj</span>
+    <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">PRN</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="n">prn</span>
+    <span class="k">return</span> <span class="n">prn</span></div>
+
+
+
+<div class="viewcode-block" id="extract_portfolio">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.prn_utils.extract_portfolio.html#core_framework.prn_utils.extract_portfolio">[docs]</a>
+<span class="k">def</span> <span class="nf">extract_portfolio</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Extract the portfolio from the provided Object which can be a string or dictionary</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        obj (Any): The Identity or PRN information</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str | None: The portfolio name or None if not found</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">prn_sections</span> <span class="o">=</span> <span class="n">extract_prn</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">DELIMITER</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">prn_sections</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">prn_sections</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="extract_app">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.prn_utils.extract_app.html#core_framework.prn_utils.extract_app">[docs]</a>
+<span class="k">def</span> <span class="nf">extract_app</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Extract the app from the provided Object which can be a string or dictionary</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        obj (Any): The Identity or PRN information</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str | None: The app name or None if not found</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">prn_sections</span> <span class="o">=</span> <span class="n">extract_prn</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">DELIMITER</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">prn_sections</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">prn_sections</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span> <span class="k">else</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="extract_branch">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.prn_utils.extract_branch.html#core_framework.prn_utils.extract_branch">[docs]</a>
+<span class="k">def</span> <span class="nf">extract_branch</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Extract the branch from the provided Object which can be a string or dictionary</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        obj (Any): The Identity or PRN information</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str | None: The branch name or None if not found</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">prn_sections</span> <span class="o">=</span> <span class="n">extract_prn</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">DELIMITER</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">prn_sections</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">prn_sections</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">3</span> <span class="k">else</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="extract_build">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.prn_utils.extract_build.html#core_framework.prn_utils.extract_build">[docs]</a>
+<span class="k">def</span> <span class="nf">extract_build</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Extract the build from the provided Object which can be a string or dictionary</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        obj (Any): The Identity or PRN information</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str | None: The build name or None if not found</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">prn_sections</span> <span class="o">=</span> <span class="n">extract_prn</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">DELIMITER</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">prn_sections</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">prn_sections</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">4</span> <span class="k">else</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="extract_component">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.prn_utils.extract_component.html#core_framework.prn_utils.extract_component">[docs]</a>
+<span class="k">def</span> <span class="nf">extract_component</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Extract the component from the provided Object which can be a string or dictionary</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        obj (Any): The Identity or PRN information</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str | None: The component name or None if not found</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">prn_sections</span> <span class="o">=</span> <span class="n">extract_prn</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">DELIMITER</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">prn_sections</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">prn_sections</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">5</span> <span class="k">else</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="extract_portfolio_prn">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.prn_utils.extract_portfolio_prn.html#core_framework.prn_utils.extract_portfolio_prn">[docs]</a>
+<span class="k">def</span> <span class="nf">extract_portfolio_prn</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Uses a regular expression to extract the portfolio prn from the provided object</span>
+<span class="sd">    after calling the extract_prn function to get the prn value.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        obj (Any): The PRN information</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The portfolio prn in the formatn &quot;prn:portfolio&quot; or &quot;&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">matches</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">PORTFOLIO_PRN_REGEX</span><span class="p">,</span> <span class="n">extract_prn</span><span class="p">(</span><span class="n">obj</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">matches</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">V_EMPTY</span>
+    <span class="n">portfolio_prn</span> <span class="o">=</span> <span class="n">V_EMPTY</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">matches</span><span class="o">.</span><span class="n">groups</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">portfolio_prn</span></div>
+
+
+
+<div class="viewcode-block" id="extract_app_prn">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.prn_utils.extract_app_prn.html#core_framework.prn_utils.extract_app_prn">[docs]</a>
+<span class="k">def</span> <span class="nf">extract_app_prn</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Uses a regular expression to extract the app prn from the provided object</span>
+<span class="sd">    after calling the extract_prn function to get the prn value.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        obj (Any): The PRN information</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The app prn in the formatn &quot;prn:portfolio:app&quot; or &quot;&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">matches</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">APP_PRN_REGEX</span><span class="p">,</span> <span class="n">extract_prn</span><span class="p">(</span><span class="n">obj</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">matches</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">V_EMPTY</span>
+    <span class="n">app_prn</span> <span class="o">=</span> <span class="n">V_EMPTY</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">matches</span><span class="o">.</span><span class="n">groups</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">app_prn</span></div>
+
+
+
+<div class="viewcode-block" id="extract_branch_prn">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.prn_utils.extract_branch_prn.html#core_framework.prn_utils.extract_branch_prn">[docs]</a>
+<span class="k">def</span> <span class="nf">extract_branch_prn</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Uses a regular expression to extract the branch prn from the provided object</span>
+<span class="sd">    after calling the extract_prn function to get the prn value.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        obj (Any): The PRN information</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The branch prn in the formatn &quot;prn:portfolio:app:branch&quot; or &quot;&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">matches</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">BRANCH_PRN_REGEX</span><span class="p">,</span> <span class="n">extract_prn</span><span class="p">(</span><span class="n">obj</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">matches</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">V_EMPTY</span>
+    <span class="n">branch_prn</span> <span class="o">=</span> <span class="n">V_EMPTY</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">matches</span><span class="o">.</span><span class="n">groups</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">branch_prn</span></div>
+
+
+
+<div class="viewcode-block" id="extract_build_prn">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.prn_utils.extract_build_prn.html#core_framework.prn_utils.extract_build_prn">[docs]</a>
+<span class="k">def</span> <span class="nf">extract_build_prn</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Uses a regular expression to extract the build prn from the provided object</span>
+<span class="sd">    after calling the extract_prn function to get the prn value.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        obj (Any): The PRN information</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The build prn in the formatn &quot;prn:portfolio:app:branch:build&quot; or &quot;&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">matches</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">BUILD_PRN_REGEX</span><span class="p">,</span> <span class="n">extract_prn</span><span class="p">(</span><span class="n">obj</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">matches</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">V_EMPTY</span>
+    <span class="n">build_prn</span> <span class="o">=</span> <span class="n">V_EMPTY</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">matches</span><span class="o">.</span><span class="n">groups</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">build_prn</span></div>
+
+
+
+<div class="viewcode-block" id="extract_component_prn">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.prn_utils.extract_component_prn.html#core_framework.prn_utils.extract_component_prn">[docs]</a>
+<span class="k">def</span> <span class="nf">extract_component_prn</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Uses a regular expression to extract the component prn from the provided object</span>
+<span class="sd">    after calling the extract_prn function to get the prn value.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        obj (Any): The PRN information</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The component prn in the formatn &quot;prn:portfolio:app:branch:build:component&quot; or &quot;&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">matches</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">COMPONENT_PRN_REGEX</span><span class="p">,</span> <span class="n">extract_prn</span><span class="p">(</span><span class="n">obj</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">matches</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">V_EMPTY</span>
+    <span class="n">component_prn</span> <span class="o">=</span> <span class="n">V_EMPTY</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">matches</span><span class="o">.</span><span class="n">groups</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">component_prn</span></div>
+
+
+
+<div class="viewcode-block" id="generate_prn">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.prn_utils.generate_prn.html#core_framework.prn_utils.generate_prn">[docs]</a>
+<span class="k">def</span> <span class="nf">generate_prn</span><span class="p">(</span><span class="n">scope</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generate a prn from the item_type which is &quot;portfolio&quot;, &quot;app&quot;, &quot;branch&quot;, &quot;build&quot;, or &quot;component&quot;</span>
+<span class="sd">    and the request informatin such as:</span>
+
+<span class="sd">    request should contain PRN&#39;s at the top level including one or more of the following:</span>
+
+<span class="sd">    .. code-block:: json</span>
+
+<span class="sd">            {</span>
+<span class="sd">                &quot;prn&quot;: &quot;prn:portfolio:app:branch:build&quot;,</span>
+<span class="sd">                &quot;portfolio_prn&quot;: &quot;prn:portfolio&quot;,</span>
+<span class="sd">                &quot;app_prn&quot;: &quot;prn:portfolio:app&quot;,</span>
+<span class="sd">                &quot;branch_prn&quot;: &quot;prn:portfolio:app:branch&quot;,</span>
+<span class="sd">                &quot;build_prn&quot;: &quot;prn:portfolip:app:branch:build&quot;,</span>
+<span class="sd">                &quot;component_prn&quot;: &quot;prn:portfolio:app:branch:build:component&quot;,</span>
+<span class="sd">            }</span>
+
+<span class="sd">    The primary attribute in requests object is &quot;prn&quot; and if not present, the other keys</span>
+<span class="sd">    will be insspected based on the scope.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        scope (str): The type/scope of item: &quot;portfolio&quot;, &quot;app&quot;, &quot;branch&quot;, &quot;build&quot;, or &quot;component&quot;</span>
+<span class="sd">        request (dict): The input dictionary</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str | None: The generated PRN or None if the item_type is invalid or the prn cannot be determined.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">scope</span> <span class="o">==</span> <span class="n">SCOPE_PORTFOLIO</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">generate_portfolio_prn</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">scope</span> <span class="o">==</span> <span class="n">SCOPE_APP</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">generate_app_prn</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">scope</span> <span class="o">==</span> <span class="n">SCOPE_BRANCH</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">generate_branch_prn</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">scope</span> <span class="o">==</span> <span class="n">SCOPE_BUILD</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">generate_build_prn</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">scope</span> <span class="o">==</span> <span class="n">SCOPE_COMPONENT</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">generate_component_prn</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="validate_prn">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.prn_utils.validate_prn.html#core_framework.prn_utils.validate_prn">[docs]</a>
+<span class="k">def</span> <span class="nf">validate_prn</span><span class="p">(</span><span class="n">scope</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">prn</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Validate the PRN based on the scope of the item.  The scopes are &quot;portfolio&quot;, &quot;app&quot;, &quot;branch&quot;, &quot;build&quot;, or &quot;component&quot;</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        scope (str): The type/scope of item: &quot;portfolio&quot;, &quot;app&quot;, &quot;branch&quot;, &quot;build&quot;, or &quot;component&quot;</span>
+<span class="sd">        prn (Any): The Pipeline Reference Number (PRN) to validate.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: True if the PRN is valid for the scope.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">scope</span> <span class="o">==</span> <span class="n">SCOPE_PORTFOLIO</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">validate_portfolio_prn</span><span class="p">(</span><span class="n">prn</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">scope</span> <span class="o">==</span> <span class="n">SCOPE_APP</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">validate_app_prn</span><span class="p">(</span><span class="n">prn</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">scope</span> <span class="o">==</span> <span class="n">SCOPE_BRANCH</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">validate_branch_prn</span><span class="p">(</span><span class="n">prn</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">scope</span> <span class="o">==</span> <span class="n">SCOPE_BUILD</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">validate_build_prn</span><span class="p">(</span><span class="n">prn</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">scope</span> <span class="o">==</span> <span class="n">SCOPE_COMPONENT</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">validate_component_prn</span><span class="p">(</span><span class="n">prn</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+
+<div class="viewcode-block" id="validate_item_type">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.prn_utils.validate_item_type.html#core_framework.prn_utils.validate_item_type">[docs]</a>
+<span class="k">def</span> <span class="nf">validate_item_type</span><span class="p">(</span><span class="n">scope</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Validate the scope to ensure it is one of the valid values: &quot;portfolio&quot;, &quot;app&quot;, &quot;branch&quot;, &quot;build&quot;, or &quot;component&quot;</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        scope (str): A string to inspect</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: True if the scope is one of the valid values</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">scope</span> <span class="ow">in</span> <span class="p">[</span>
+        <span class="n">SCOPE_PORTFOLIO</span><span class="p">,</span>
+        <span class="n">SCOPE_APP</span><span class="p">,</span>
+        <span class="n">SCOPE_BRANCH</span><span class="p">,</span>
+        <span class="n">SCOPE_BUILD</span><span class="p">,</span>
+        <span class="n">SCOPE_COMPONENT</span><span class="p">,</span>
+    <span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="generate_portfolio_prn">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.prn_utils.generate_portfolio_prn.html#core_framework.prn_utils.generate_portfolio_prn">[docs]</a>
+<span class="k">def</span> <span class="nf">generate_portfolio_prn</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Inspects the rqeust dictionary and looks for a prn that can be considered a &quot;portfolio&quot; prn.</span>
+
+<span class="sd">    It will inspect &quot;prn&quot; first, and if that is not a portfolio prn, it will generate a portfolio</span>
+<span class="sd">    prn from one of the following keys: &quot;portfolio_prn&quot;, &quot;app_prn&quot;, &quot;branch_prn&quot;, or &quot;build_prn&quot;</span>
+
+<span class="sd">    If none of the supplied prn&#39;s are valid, a PRN will be constructed using the &quot;name&quot; attribute</span>
+<span class="sd">    of the request object. &quot;prn:&lt;name&gt;&quot;</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        request (dict): The object containing PRN&#39;s</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The extracted or generated portfolio prn</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">PRN</span> <span class="ow">in</span> <span class="n">request</span> <span class="ow">and</span> <span class="n">validate_portfolio_prn</span><span class="p">(</span><span class="n">request</span><span class="p">[</span><span class="n">PRN</span><span class="p">]):</span>
+        <span class="k">return</span> <span class="n">request</span><span class="p">[</span><span class="n">PRN</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">ARG_PORTFOLIO_PRN</span> <span class="ow">in</span> <span class="n">request</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">extract_portfolio_prn</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">ARG_PORTFOLIO_PRN</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="n">ARG_APP_PRN</span> <span class="ow">in</span> <span class="n">request</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">extract_portfolio_prn</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">ARG_APP_PRN</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="n">ARG_BRANCH_PRN</span> <span class="ow">in</span> <span class="n">request</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">extract_portfolio_prn</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">ARG_BRANCH_PRN</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="n">ARG_BUILD_PRN</span> <span class="ow">in</span> <span class="n">request</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">extract_portfolio_prn</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">ARG_BUILD_PRN</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">:</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">PRN</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">ARG_NAME</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="generate_app_prn">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.prn_utils.generate_app_prn.html#core_framework.prn_utils.generate_app_prn">[docs]</a>
+<span class="k">def</span> <span class="nf">generate_app_prn</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Inspects the rqeust dictionary and looks for a prn that can be considered a &quot;app&quot; prn.</span>
+
+<span class="sd">    It will inspect &quot;prn&quot; first, and if that is not a app prn, it will generate a app</span>
+<span class="sd">    prn from one of the following keys: &quot;portfolio_prn&quot;, &quot;app_prn&quot;, &quot;branch_prn&quot;, or &quot;build_prn&quot;</span>
+
+<span class="sd">    If none of the supplied prn&#39;s are valid, a PRN will be constructed using the &quot;name&quot; attribute</span>
+<span class="sd">    of the request object. &quot;prn:portfolio:&lt;name&gt;&quot;</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        request (dict): The object containing PRN&#39;s</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The extracted or generated app prn</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">PRN</span> <span class="ow">in</span> <span class="n">request</span> <span class="ow">and</span> <span class="n">validate_app_prn</span><span class="p">(</span><span class="n">request</span><span class="p">[</span><span class="n">PRN</span><span class="p">]):</span>
+        <span class="k">return</span> <span class="n">request</span><span class="p">[</span><span class="n">PRN</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">ARG_APP_PRN</span> <span class="ow">in</span> <span class="n">request</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">extract_app_prn</span><span class="p">(</span><span class="n">request</span><span class="p">[</span><span class="n">ARG_APP_PRN</span><span class="p">])</span>
+    <span class="k">elif</span> <span class="n">ARG_BRANCH_PRN</span> <span class="ow">in</span> <span class="n">request</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">extract_app_prn</span><span class="p">(</span><span class="n">request</span><span class="p">[</span><span class="n">ARG_BRANCH_PRN</span><span class="p">])</span>
+    <span class="k">elif</span> <span class="n">ARG_BUILD_PRN</span> <span class="ow">in</span> <span class="n">request</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">extract_app_prn</span><span class="p">(</span><span class="n">request</span><span class="p">[</span><span class="n">ARG_BUILD_PRN</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">:</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">request</span><span class="p">[</span><span class="n">ARG_PORTFOLIO_PRN</span><span class="p">],</span> <span class="n">request</span><span class="p">[</span><span class="n">ARG_NAME</span><span class="p">])</span></div>
+
+
+
+<div class="viewcode-block" id="branch_short_name">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.prn_utils.branch_short_name.html#core_framework.prn_utils.branch_short_name">[docs]</a>
+<span class="k">def</span> <span class="nf">branch_short_name</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Geneerate a short name for a branch based on the name attribute.  The name will be lower case</span>
+<span class="sd">    and should contain only letters, numbers, and hyphens.  The name will be truncated to 20 characters.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name (str): The name to shorten.  Usually the name of the branch</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The shortened name.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;[^a-z0-9</span><span class="se">\\</span><span class="s2">-]&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">())[</span><span class="mi">0</span><span class="p">:</span><span class="mi">20</span><span class="p">]</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="generate_branch_prn">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.prn_utils.generate_branch_prn.html#core_framework.prn_utils.generate_branch_prn">[docs]</a>
+<span class="k">def</span> <span class="nf">generate_branch_prn</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Inspects the rqeust dictionary and looks for a prn that can be considered a &quot;branch&quot; prn.</span>
+
+<span class="sd">    It will inspect &quot;prn&quot; first, and if that is not a branch prn, it will generate a branch</span>
+<span class="sd">    prn from one of the following keys: &quot;portfolio_prn&quot;, &quot;app_prn&quot;, &quot;branch_prn&quot;, or &quot;build_prn&quot;</span>
+
+<span class="sd">    If none of the supplied prn&#39;s are valid, a PRN will be constructed using the &quot;name&quot; attribute</span>
+<span class="sd">    of the request object. &quot;prn:portfolio:app:&lt;name&gt;&quot;</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        request (dict): The object containing PRN&#39;s</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The extracted or generated branch prn</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">PRN</span> <span class="ow">in</span> <span class="n">request</span> <span class="ow">and</span> <span class="n">validate_branch_prn</span><span class="p">(</span><span class="n">request</span><span class="p">[</span><span class="n">PRN</span><span class="p">]):</span>
+        <span class="k">return</span> <span class="n">request</span><span class="p">[</span><span class="n">PRN</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">ARG_BRANCH_PRN</span> <span class="ow">in</span> <span class="n">request</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">extract_branch_prn</span><span class="p">(</span><span class="n">request</span><span class="p">[</span><span class="n">ARG_BRANCH_PRN</span><span class="p">])</span>
+    <span class="k">elif</span> <span class="n">ARG_BUILD_PRN</span> <span class="ow">in</span> <span class="n">request</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">extract_branch_prn</span><span class="p">(</span><span class="n">request</span><span class="p">[</span><span class="n">ARG_BUILD_PRN</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">short_name</span> <span class="o">=</span> <span class="n">branch_short_name</span><span class="p">(</span><span class="n">request</span><span class="p">[</span><span class="n">ARG_NAME</span><span class="p">])</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">:</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">request</span><span class="p">[</span><span class="n">ARG_APP_PRN</span><span class="p">],</span> <span class="n">short_name</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="generate_build_prn">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.prn_utils.generate_build_prn.html#core_framework.prn_utils.generate_build_prn">[docs]</a>
+<span class="k">def</span> <span class="nf">generate_build_prn</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Inspects the rqeust dictionary and looks for a prn that can be considered a &quot;build&quot; prn.</span>
+
+<span class="sd">    It will inspect &quot;prn&quot; first, and if that is not a build prn, it will generate a build</span>
+<span class="sd">    prn from one of the following keys: &quot;portfolio_prn&quot;, &quot;app_prn&quot;, &quot;branch_prn&quot;, or &quot;build_prn&quot;</span>
+
+<span class="sd">    If none of the supplied prn&#39;s are valid, a PRN will be constructed using the &quot;name&quot; attribute</span>
+<span class="sd">    of the request object. &quot;prn:portfolio:app:branch:&lt;name&gt;&quot;</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        request (dict): The object containing PRN&#39;s</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The extracted or generated build prn</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">PRN</span> <span class="ow">in</span> <span class="n">request</span> <span class="ow">and</span> <span class="n">validate_build_prn</span><span class="p">(</span><span class="n">request</span><span class="p">[</span><span class="n">PRN</span><span class="p">]):</span>
+        <span class="k">return</span> <span class="n">request</span><span class="p">[</span><span class="n">PRN</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">ARG_BUILD_PRN</span> <span class="ow">in</span> <span class="n">request</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">extract_build_prn</span><span class="p">(</span><span class="n">request</span><span class="p">[</span><span class="n">ARG_BUILD_PRN</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">:</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">request</span><span class="p">[</span><span class="n">ARG_BRANCH_PRN</span><span class="p">],</span> <span class="n">request</span><span class="p">[</span><span class="n">ARG_NAME</span><span class="p">])</span></div>
+
+
+
+<div class="viewcode-block" id="generate_component_prn">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.prn_utils.generate_component_prn.html#core_framework.prn_utils.generate_component_prn">[docs]</a>
+<span class="k">def</span> <span class="nf">generate_component_prn</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Inspects the rqeust dictionary and looks for a prn that can be considered a &quot;componnent&quot; prn.</span>
+
+<span class="sd">    It will inspect &quot;prn&quot; first, and if that is not a component prn, it will generate a component</span>
+<span class="sd">    prn from one of the following keys: &quot;portfolio_prn&quot;, &quot;app_prn&quot;, &quot;branch_prn&quot;, or &quot;build_prn&quot;</span>
+
+<span class="sd">    If none of the supplied prn&#39;s are valid, a PRN will be constructed using the &quot;name&quot; attribute</span>
+<span class="sd">    of the request object. &quot;prn:portfolio:app:branch:build:&lt;name&gt;&quot;</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        request (dict): The object containing PRN&#39;s</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The extracted or generated component prn</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">PRN</span> <span class="ow">in</span> <span class="n">request</span> <span class="ow">and</span> <span class="n">validate_component_prn</span><span class="p">(</span><span class="n">request</span><span class="p">[</span><span class="n">PRN</span><span class="p">]):</span>
+        <span class="k">return</span> <span class="n">request</span><span class="p">[</span><span class="n">PRN</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">ARG_COMPONENT_PRN</span> <span class="ow">in</span> <span class="n">request</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">extract_component_prn</span><span class="p">(</span><span class="n">request</span><span class="p">[</span><span class="n">ARG_COMPONENT_PRN</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">:</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">request</span><span class="p">[</span><span class="n">ARG_BUILD_PRN</span><span class="p">],</span> <span class="n">request</span><span class="p">[</span><span class="n">ARG_NAME</span><span class="p">])</span></div>
+
+
+
+<div class="viewcode-block" id="validate_item_prn">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.prn_utils.validate_item_prn.html#core_framework.prn_utils.validate_item_prn">[docs]</a>
+<span class="k">def</span> <span class="nf">validate_item_prn</span><span class="p">(</span><span class="n">prn</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Uses the regular express PRN_REGEX to determine if the PRN is valid.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        prn (str): A Pipeline Reference Number</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: Ture if the PRN is valid</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="n">PRN_REGEX</span><span class="p">,</span> <span class="n">prn</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="validate_portfolio_prn">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.prn_utils.validate_portfolio_prn.html#core_framework.prn_utils.validate_portfolio_prn">[docs]</a>
+<span class="k">def</span> <span class="nf">validate_portfolio_prn</span><span class="p">(</span><span class="n">prn</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Uses the regular express PORTFOLIO_PRN_REGEX to determine if the PRN is valid</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        prn (str): A Pipeline Reference Number</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: True if the PRN is valid</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="n">PORTFOLIO_PRN_REGEX</span><span class="p">,</span> <span class="n">prn</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="validate_app_prn">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.prn_utils.validate_app_prn.html#core_framework.prn_utils.validate_app_prn">[docs]</a>
+<span class="k">def</span> <span class="nf">validate_app_prn</span><span class="p">(</span><span class="n">prn</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Uses the regular express APP_PRN_REGEX to determine if the PRN is valid</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        prn (str): A Pipeline Reference Number</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: True if the PRN is valid</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="n">APP_PRN_REGEX</span><span class="p">,</span> <span class="n">prn</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="validate_branch_prn">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.prn_utils.validate_branch_prn.html#core_framework.prn_utils.validate_branch_prn">[docs]</a>
+<span class="k">def</span> <span class="nf">validate_branch_prn</span><span class="p">(</span><span class="n">prn</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Uses the regular express BRANCH_PRN_REGEX to determine if the PRN is valid</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        prn (str): A Pipeline Reference Number</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: True if the PRN is valid</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="n">BRANCH_PRN_REGEX</span><span class="p">,</span> <span class="n">prn</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="validate_build_prn">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.prn_utils.validate_build_prn.html#core_framework.prn_utils.validate_build_prn">[docs]</a>
+<span class="k">def</span> <span class="nf">validate_build_prn</span><span class="p">(</span><span class="n">prn</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Uses the regular express BUILD_PRN_REGEX to determine if the PRN is valid</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        prn (str): A Pipeline Reference Number</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: True if the PRN is valid</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="n">BUILD_PRN_REGEX</span><span class="p">,</span> <span class="n">prn</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="validate_component_prn">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.prn_utils.validate_component_prn.html#core_framework.prn_utils.validate_component_prn">[docs]</a>
+<span class="k">def</span> <span class="nf">validate_component_prn</span><span class="p">(</span><span class="n">prn</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Uses the regular express COMPONENT_PRN_REGEX to determine if the PRN is valid</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        prn (str): A Pipeline Reference Number</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: True if the PRN is valid</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">fullmatch</span><span class="p">(</span><span class="n">COMPONENT_PRN_REGEX</span><span class="p">,</span> <span class="n">prn</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

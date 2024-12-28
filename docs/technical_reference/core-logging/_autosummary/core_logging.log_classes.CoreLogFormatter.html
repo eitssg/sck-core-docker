@@ -1,0 +1,282 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>core_logging.log_classes.CoreLogFormatter &mdash; SCK Core Automation 1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a3c9731c" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=45d66dd6" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=29a6c3e3"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="core_logging.log_classes.CoreLogJsonFormatter" href="core_logging.log_classes.CoreLogJsonFormatter.html" />
+    <link rel="prev" title="core_logging.log_classes.L_PRN" href="core_logging.log_classes.L_PRN.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            SCK Core Automation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../user_guide/index.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developer_guide/index.html">Developer Guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Technical Reference Guide</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../modules.html">Modules</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../core-logging.html">core-logging</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../core-logging.html#log-classes">Log Classes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../core-logging.html#log-functions">Log functions</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-framework/core-framework.html">core-framework</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-db/core-db.html">core-db</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-helper/core-helper.html">core-helper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-renderer/core-renderer.html">core-renderer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-component-compiler/core-component-compiler.html">core-component-compiler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-deployspec-compiler/core-deployspec-compiler.html">core-deployspec-compiler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-execute/core-execute.html">core-execute</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-organization/core-organization.html">core-organization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-runner/core-runner.html">core-runner</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-invoker/core-invoker.html">core-invoker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-report/core-report.html">core-report</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-api-auth/core-api-auth.html">core-api-auth</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-api/core-api.html">core-api</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-codecommit-listener/core-codecommit-listener.html">core-codecommit-listener</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-automation/core-automation.html">core-automation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../core-db/db_schema.html">Database Schema</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SCK Core Automation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Technical Reference Guide</a></li>
+          <li class="breadcrumb-item"><a href="../../modules.html">Modules</a></li>
+          <li class="breadcrumb-item"><a href="../core-logging.html">core-logging</a></li>
+          <li class="breadcrumb-item"><a href="core_logging.log_classes.html">core_logging.log_classes</a></li>
+      <li class="breadcrumb-item active">core_logging.log_classes.CoreLogFormatter</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/technical_reference/core-logging/_autosummary/core_logging.log_classes.CoreLogFormatter.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="core-logging-log-classes-corelogformatter">
+<h1>core_logging.log_classes.CoreLogFormatter<a class="headerlink" href="#core-logging-log-classes-corelogformatter" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="core_logging.log_classes.CoreLogFormatter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">core_logging.log_classes.</span></span><span class="sig-name descname"><span class="pre">CoreLogFormatter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fmt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datefmt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/core_logging/log_classes.html#CoreLogFormatter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core_logging.log_classes.CoreLogFormatter" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Formatter</span></code></p>
+<p>Base Class for the CoreLogJsonFormatter and CoreLogTextFormatter classes.</p>
+<p class="rubric">Attributes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">default_msec_format</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">default_time_format</span></code></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code>(fmt, datefmt)</p></td>
+<td><p>Initialize the formatter with the specified format and date format.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#core_logging.log_classes.CoreLogFormatter.converter" title="core_logging.log_classes.CoreLogFormatter.converter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">converter</span></code></a></p></td>
+<td><p>localtime([seconds]) -&gt; (tm_year,tm_mon,tm_mday,tm_hour,tm_min,</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#core_logging.log_classes.CoreLogFormatter.format" title="core_logging.log_classes.CoreLogFormatter.format"><code class="xref py py-obj docutils literal notranslate"><span class="pre">format</span></code></a>(record)</p></td>
+<td><p>Format the specified record as text.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#core_logging.log_classes.CoreLogFormatter.formatException" title="core_logging.log_classes.CoreLogFormatter.formatException"><code class="xref py py-obj docutils literal notranslate"><span class="pre">formatException</span></code></a>(ei)</p></td>
+<td><p>Format and return the specified exception information as a string.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">formatMessage</span></code>(record)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#core_logging.log_classes.CoreLogFormatter.formatStack" title="core_logging.log_classes.CoreLogFormatter.formatStack"><code class="xref py py-obj docutils literal notranslate"><span class="pre">formatStack</span></code></a>(stack_info)</p></td>
+<td><p>This method is provided as an extension point for specialized formatting of stack information.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#core_logging.log_classes.CoreLogFormatter.formatTime" title="core_logging.log_classes.CoreLogFormatter.formatTime"><code class="xref py py-obj docutils literal notranslate"><span class="pre">formatTime</span></code></a>(record[, date_format])</p></td>
+<td><p>Exracts the &quot;created&quot; field from the logging.LogRecord object and converts it to a datetime object.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#core_logging.log_classes.CoreLogFormatter.format_datetime" title="core_logging.log_classes.CoreLogFormatter.format_datetime"><code class="xref py py-obj docutils literal notranslate"><span class="pre">format_datetime</span></code></a>(t[, date_format])</p></td>
+<td><p>Formates a datetime object to a string using the specified format.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#core_logging.log_classes.CoreLogFormatter.usesTime" title="core_logging.log_classes.CoreLogFormatter.usesTime"><code class="xref py py-obj docutils literal notranslate"><span class="pre">usesTime</span></code></a>()</p></td>
+<td><p>Check if the format uses the creation time of the record.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="core_logging.log_classes.CoreLogFormatter.converter">
+<span class="sig-name descname"><span class="pre">converter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#core_logging.log_classes.CoreLogFormatter.converter" title="Link to this definition"></a></dt>
+<dd><dl class="simple">
+<dt>localtime([seconds]) -&gt; (tm_year,tm_mon,tm_mday,tm_hour,tm_min,</dt><dd><p>tm_sec,tm_wday,tm_yday,tm_isdst)</p>
+</dd>
+</dl>
+<p>Convert seconds since the Epoch to a time tuple expressing local time.
+When ‘seconds’ is not passed in, convert the current time instead.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_logging.log_classes.CoreLogFormatter.format">
+<span class="sig-name descname"><span class="pre">format</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#core_logging.log_classes.CoreLogFormatter.format" title="Link to this definition"></a></dt>
+<dd><p>Format the specified record as text.</p>
+<p>The record’s attribute dictionary is used as the operand to a
+string formatting operation which yields the returned string.
+Before formatting the dictionary, a couple of preparatory steps
+are carried out. The message attribute of the record is computed
+using LogRecord.getMessage(). If the formatting string uses the
+time (as determined by a call to usesTime(), formatTime() is
+called to format the event time. If there is exception information,
+it is formatted using formatException() and appended to the message.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_logging.log_classes.CoreLogFormatter.formatException">
+<span class="sig-name descname"><span class="pre">formatException</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ei</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#core_logging.log_classes.CoreLogFormatter.formatException" title="Link to this definition"></a></dt>
+<dd><p>Format and return the specified exception information as a string.</p>
+<p>This default implementation just uses
+traceback.print_exception()</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_logging.log_classes.CoreLogFormatter.formatStack">
+<span class="sig-name descname"><span class="pre">formatStack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stack_info</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#core_logging.log_classes.CoreLogFormatter.formatStack" title="Link to this definition"></a></dt>
+<dd><p>This method is provided as an extension point for specialized
+formatting of stack information.</p>
+<p>The input data is a string as returned from a call to
+<code class="xref py py-func docutils literal notranslate"><span class="pre">traceback.print_stack()</span></code>, but with the last trailing newline
+removed.</p>
+<p>The base implementation just returns the value passed in.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_logging.log_classes.CoreLogFormatter.formatTime">
+<span class="sig-name descname"><span class="pre">formatTime</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LogRecord</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date_format</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../../_modules/core_logging/log_classes.html#CoreLogFormatter.formatTime"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core_logging.log_classes.CoreLogFormatter.formatTime" title="Link to this definition"></a></dt>
+<dd><p>Exracts the “created” field from the logging.LogRecord object and converts it to a datetime object.
+to be used as the timestamp of the log message.</p>
+<p>If date_format is not specified, the default format is used.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>record</strong> (<em>logging.LogRecord</em>) – The log record object.</p></li>
+<li><p><strong>date_format</strong> (<em>str</em><em> | </em><em>None</em><em>, </em><em>optional</em>) – The format to use for the datetime. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The formatted datatime string.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_logging.log_classes.CoreLogFormatter.format_datetime">
+<span class="sig-name descname"><span class="pre">format_datetime</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">datetime</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date_format</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../../_modules/core_logging/log_classes.html#CoreLogFormatter.format_datetime"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core_logging.log_classes.CoreLogFormatter.format_datetime" title="Link to this definition"></a></dt>
+<dd><p>Formates a datetime object to a string using the specified format.  If no format is specified, the default format is used.</p>
+<p>The default format is “%Y-%m-%d %H:%M:%S” if date_format is None.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t</strong> (<em>datetime</em>) – The datetime object to format.</p></li>
+<li><p><strong>date_format</strong> (<em>str</em><em> | </em><em>None</em><em>, </em><em>optional</em>) – The date format to use. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The formatted date string.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_logging.log_classes.CoreLogFormatter.usesTime">
+<span class="sig-name descname"><span class="pre">usesTime</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#core_logging.log_classes.CoreLogFormatter.usesTime" title="Link to this definition"></a></dt>
+<dd><p>Check if the format uses the creation time of the record.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="core_logging.log_classes.L_PRN.html" class="btn btn-neutral float-left" title="core_logging.log_classes.L_PRN" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="core_logging.log_classes.CoreLogJsonFormatter.html" class="btn btn-neutral float-right" title="core_logging.log_classes.CoreLogJsonFormatter" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

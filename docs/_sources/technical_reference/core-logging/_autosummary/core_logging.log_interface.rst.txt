@@ -1,0 +1,56 @@
+﻿core_logging.log_interface
+==========================
+
+.. automodule:: core_logging.log_interface
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+      clear_identity
+      critical
+      debug
+      error
+      fatal
+      getLevel
+      getLevelFromName
+      getLevelName
+      getLogger
+      getRootLevel
+      get_caller_info
+      get_default_identity
+      get_identity
+      get_logger_identity
+      info
+      log
+      msg
+      reset_identity
+      setLevel
+      setLevelForLogger
+      setRootLevel
+      set_identity
+      setup
+      status
+      trace
+      warn
+      warning
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

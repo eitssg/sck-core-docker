@@ -1,0 +1,6 @@
+core\_helper.aws.get\_resource
+==============================
+
+.. currentmodule:: core_helper.aws
+
+.. autofunction:: get_resource

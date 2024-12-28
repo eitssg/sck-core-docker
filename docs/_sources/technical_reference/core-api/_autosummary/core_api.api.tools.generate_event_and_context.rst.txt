@@ -1,0 +1,6 @@
+core\_api.api.tools.generate\_event\_and\_context
+=================================================
+
+.. currentmodule:: core_api.api.tools
+
+.. autofunction:: generate_event_and_context

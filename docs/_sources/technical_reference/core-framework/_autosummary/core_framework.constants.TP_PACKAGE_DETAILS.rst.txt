@@ -1,0 +1,6 @@
+core\_framework.constants.TP\_PACKAGE\_DETAILS
+==============================================
+
+.. currentmodule:: core_framework.constants
+
+.. autodata:: TP_PACKAGE_DETAILS

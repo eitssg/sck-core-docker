@@ -1,0 +1,6 @@
+core\_logging.log\_interface.getLevelFromName
+=============================================
+
+.. currentmodule:: core_logging.log_interface
+
+.. autofunction:: getLevelFromName

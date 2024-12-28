@@ -1,0 +1,6 @@
+core\_execute.actionlib.actions.aws.delete\_user.generate\_template
+===================================================================
+
+.. currentmodule:: core_execute.actionlib.actions.aws.delete_user
+
+.. autofunction:: generate_template

@@ -1,0 +1,6 @@
+core\_framework.models.models.get\_packages\_path
+=================================================
+
+.. currentmodule:: core_framework.models.models
+
+.. autofunction:: get_packages_path

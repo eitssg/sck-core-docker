@@ -1,0 +1,40 @@
+﻿core_db.dbhelper
+================
+
+.. automodule:: core_db.dbhelper
+
+   
+   
+   .. rubric:: Module Attributes
+
+   .. autosummary::
+      :toctree:
+   
+      actions_routes
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+      get_facts_by_prn
+      register_item
+      update_item
+      update_status
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

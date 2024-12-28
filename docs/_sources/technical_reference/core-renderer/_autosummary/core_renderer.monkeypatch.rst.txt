@@ -1,0 +1,42 @@
+﻿core_renderer.monkeypatch
+=========================
+
+.. automodule:: core_renderer.monkeypatch
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+      construct_aws_fn
+      construct_mapping
+      patch_the_monkeys
+      process_yaml_include
+      represent_ordereddict
+      represent_string
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Exceptions
+
+   .. autosummary::
+      :toctree:
+   
+      MappingConstructorError
+   
+   
+
+
+

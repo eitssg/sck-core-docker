@@ -1,0 +1,34 @@
+core_framework.models.actions
+=============================
+
+.. automodule:: core_framework.models.actions
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :template: custom-module-template.rst
+   :recursive:
+   
+      action
+      action_params
+
+

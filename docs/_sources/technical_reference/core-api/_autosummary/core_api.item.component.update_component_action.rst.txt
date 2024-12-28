@@ -1,0 +1,6 @@
+core\_api.item.component.update\_component\_action
+==================================================
+
+.. currentmodule:: core_api.item.component
+
+.. autofunction:: update_component_action

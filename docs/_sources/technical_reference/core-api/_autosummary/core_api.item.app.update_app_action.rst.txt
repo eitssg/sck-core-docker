@@ -1,0 +1,6 @@
+core\_api.item.app.update\_app\_action
+======================================
+
+.. currentmodule:: core_api.item.app
+
+.. autofunction:: update_app_action

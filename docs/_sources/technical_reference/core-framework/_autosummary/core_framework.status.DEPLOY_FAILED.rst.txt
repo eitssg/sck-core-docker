@@ -1,0 +1,6 @@
+core\_framework.status.DEPLOY\_FAILED
+=====================================
+
+.. currentmodule:: core_framework.status
+
+.. autodata:: DEPLOY_FAILED

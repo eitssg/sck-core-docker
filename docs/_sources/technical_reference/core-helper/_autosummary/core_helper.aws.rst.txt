@@ -1,0 +1,61 @@
+﻿core_helper.aws
+===============
+
+.. automodule:: core_helper.aws
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+      assume_role
+      cfn_client
+      check_if_user_authorised
+      cloudfront_client
+      cloudwatch_client
+      dynamodb_resource
+      ec2_client
+      ecr_client
+      elb_client
+      elbv2_client
+      generate_context
+      get_client
+      get_identity
+      get_resource
+      get_session
+      get_session_credentials
+      grant_assume_role_permission
+      iam_client
+      invoke_lambda
+      kms_client
+      lambda_client
+      login_to_aws
+      org_client
+      rds_client
+      revoke_assume_role_permission
+      s3_client
+      s3_resource
+      step_functions_client
+      sts_client
+      transform_stack_parameter_dict
+      transform_stack_parameter_hash
+      transform_tag_hash
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

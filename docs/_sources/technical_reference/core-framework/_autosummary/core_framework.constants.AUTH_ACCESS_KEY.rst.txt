@@ -1,0 +1,6 @@
+core\_framework.constants.AUTH\_ACCESS\_KEY
+===========================================
+
+.. currentmodule:: core_framework.constants
+
+.. autodata:: AUTH_ACCESS_KEY

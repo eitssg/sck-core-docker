@@ -1,0 +1,6 @@
+core\_api.item.portfolio.get\_portfolio\_list\_action
+=====================================================
+
+.. currentmodule:: core_api.item.portfolio
+
+.. autofunction:: get_portfolio_list_action

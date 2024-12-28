@@ -1,0 +1,310 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>core_db.event.actions.EventActions &mdash; SCK Core Automation 1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a3c9731c" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=45d66dd6" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=29a6c3e3"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="core_db.event.models" href="core_db.event.models.html" />
+    <link rel="prev" title="core_db.event.actions" href="core_db.event.actions.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            SCK Core Automation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../user_guide/index.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developer_guide/index.html">Developer Guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Technical Reference Guide</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../modules.html">Modules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../core-logging/core-logging.html">core-logging</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-framework/core-framework.html">core-framework</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../core-db.html">core-db</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../core-db.html#base-models">Base Models</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../core-db.html#facts-database">FACTS Database</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../core-db.html#deployments-database">Deployments Database</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="../core-db.html#event-log-database">Event Log Database</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-helper/core-helper.html">core-helper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-renderer/core-renderer.html">core-renderer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-component-compiler/core-component-compiler.html">core-component-compiler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-deployspec-compiler/core-deployspec-compiler.html">core-deployspec-compiler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-execute/core-execute.html">core-execute</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-organization/core-organization.html">core-organization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-runner/core-runner.html">core-runner</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-invoker/core-invoker.html">core-invoker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-report/core-report.html">core-report</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-api-auth/core-api-auth.html">core-api-auth</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-api/core-api.html">core-api</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-codecommit-listener/core-codecommit-listener.html">core-codecommit-listener</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-automation/core-automation.html">core-automation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../db_schema.html">Database Schema</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SCK Core Automation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Technical Reference Guide</a></li>
+          <li class="breadcrumb-item"><a href="../../modules.html">Modules</a></li>
+          <li class="breadcrumb-item"><a href="../core-db.html">core-db</a></li>
+          <li class="breadcrumb-item"><a href="core_db.event.html">core_db.event</a></li>
+          <li class="breadcrumb-item"><a href="core_db.event.actions.html">core_db.event.actions</a></li>
+      <li class="breadcrumb-item active">core_db.event.actions.EventActions</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/technical_reference/core-db/_autosummary/core_db.event.actions.EventActions.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="core-db-event-actions-eventactions">
+<h1>core_db.event.actions.EventActions<a class="headerlink" href="#core-db-event-actions-eventactions" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="core_db.event.actions.EventActions">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">core_db.event.actions.</span></span><span class="sig-name descname"><span class="pre">EventActions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/core_db/event/actions.html#EventActions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core_db.event.actions.EventActions" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="core_db.actions.TableActions.html#core_db.actions.TableActions" title="core_db.actions.TableActions"><code class="xref py py-class docutils literal notranslate"><span class="pre">TableActions</span></code></a></p>
+<p class="rubric">Attributes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">item_types</span></code></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#core_db.event.actions.EventActions.NoneIfEmpty" title="core_db.event.actions.EventActions.NoneIfEmpty"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NoneIfEmpty</span></code></a>(value)</p></td>
+<td><p>If the value is an empty string, return None, otherwise return the value but, first check to see if it isa valid iso8601 timestamp, if not, then return None</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code>(*args, **kwargs)</p></td>
+<td><p>Base API for all table actions</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#core_db.event.actions.EventActions.create" title="core_db.event.actions.EventActions.create"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create</span></code></a>(**kwargs)</p></td>
+<td><p>Creates a new record in the table.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#core_db.event.actions.EventActions.delete" title="core_db.event.actions.EventActions.delete"><code class="xref py py-obj docutils literal notranslate"><span class="pre">delete</span></code></a>(**kwargs)</p></td>
+<td><p>Deletes a record from the table.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#core_db.event.actions.EventActions.get" title="core_db.event.actions.EventActions.get"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get</span></code></a>(**kwargs)</p></td>
+<td><p>Returns a record from the table by primary hash_key and range_key.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_item_type</span></code>(**kwargs)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#core_db.event.actions.EventActions.list" title="core_db.event.actions.EventActions.list"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code></a>(**kwargs)</p></td>
+<td><p>List all items in the table.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#core_db.event.actions.EventActions.patch" title="core_db.event.actions.EventActions.patch"><code class="xref py py-obj docutils literal notranslate"><span class="pre">patch</span></code></a>(**kwargs)</p></td>
+<td><p>Allows you to specify only a partial set of fields to update in a record.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#core_db.event.actions.EventActions.update" title="core_db.event.actions.EventActions.update"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update</span></code></a>(**kwargs)</p></td>
+<td><p>Updates a record in the table.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="core_db.event.actions.EventActions.NoneIfEmpty">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">NoneIfEmpty</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="reference internal" href="../../../_modules/core_db/event/actions.html#EventActions.NoneIfEmpty"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core_db.event.actions.EventActions.NoneIfEmpty" title="Link to this definition"></a></dt>
+<dd><p>If the value is an empty string, return None, otherwise return the value
+but, first check to see if it isa valid iso8601 timestamp, if not, then return None</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_db.event.actions.EventActions.create">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="core_db.response.Response.html#core_db.response.Response" title="core_db.response.Response"><span class="pre">Response</span></a></span></span><a class="reference internal" href="../../../_modules/core_db/event/actions.html#EventActions.create"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core_db.event.actions.EventActions.create" title="Link to this definition"></a></dt>
+<dd><p>Creates a new record in the table.  The primary hash_key and range_key must be provided.</p>
+<p>Other fields may be provided as requred by the table model schema.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="core_db.exceptions.NotFoundException.html#core_db.exceptions.NotFoundException" title="core_db.exceptions.NotFoundException"><strong>NotFoundException</strong></a> – if your subclass has not implemented the create method</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Response</span></code> object</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="core_db.response.Response.html#core_db.response.Response" title="core_db.response.Response">Response</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_db.event.actions.EventActions.delete">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="core_db.response.Response.html#core_db.response.Response" title="core_db.response.Response"><span class="pre">Response</span></a></span></span><a class="reference internal" href="../../../_modules/core_db/event/actions.html#EventActions.delete"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core_db.event.actions.EventActions.delete" title="Link to this definition"></a></dt>
+<dd><p>Deletes a record from the table.  The primary hash_key and range_key must be provided.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="core_db.exceptions.NotFoundException.html#core_db.exceptions.NotFoundException" title="core_db.exceptions.NotFoundException"><strong>NotFoundException</strong></a> – If your subclass has not implemented the delete method</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Response</span></code> object</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="core_db.response.Response.html#core_db.response.Response" title="core_db.response.Response">Response</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_db.event.actions.EventActions.get">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="core_db.response.Response.html#core_db.response.Response" title="core_db.response.Response"><span class="pre">Response</span></a></span></span><a class="headerlink" href="#core_db.event.actions.EventActions.get" title="Link to this definition"></a></dt>
+<dd><p>Returns a record from the table by primary hash_key and range_key. The intent
+is to return one and only one unique record.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="core_db.exceptions.NotFoundException.html#core_db.exceptions.NotFoundException" title="core_db.exceptions.NotFoundException"><strong>NotFoundException</strong></a> – If your subclass has not implmeneted the get method</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Response</span></code> object</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="core_db.response.Response.html#core_db.response.Response" title="core_db.response.Response">Response</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="core_db.event.actions.EventActions.item_model">
+<span class="sig-name descname"><span class="pre">item_model</span></span><a class="headerlink" href="#core_db.event.actions.EventActions.item_model" title="Link to this definition"></a></dt>
+<dd><p>alias of <a class="reference internal" href="core_db.event.models.EventModel.html#core_db.event.models.EventModel" title="core_db.event.models.EventModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">EventModel</span></code></a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_db.event.actions.EventActions.list">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="core_db.response.Response.html#core_db.response.Response" title="core_db.response.Response"><span class="pre">Response</span></a></span></span><a class="reference internal" href="../../../_modules/core_db/event/actions.html#EventActions.list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core_db.event.actions.EventActions.list" title="Link to this definition"></a></dt>
+<dd><p>List all items in the table.  Various implmenentations in subclasses
+may behave differently.  Some pay return a list of objects, some may return
+a list of keys.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="core_db.exceptions.NotFoundException.html#core_db.exceptions.NotFoundException" title="core_db.exceptions.NotFoundException"><strong>NotFoundException</strong></a> – If your subclass has not implmeneted the list method</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Response</span></code> object</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="core_db.response.Response.html#core_db.response.Response" title="core_db.response.Response">Response</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_db.event.actions.EventActions.patch">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">patch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="core_db.response.Response.html#core_db.response.Response" title="core_db.response.Response"><span class="pre">Response</span></a></span></span><a class="headerlink" href="#core_db.event.actions.EventActions.patch" title="Link to this definition"></a></dt>
+<dd><p>Allows you to specify only a partial set of fields to update in a record.</p>
+<p>The effect will be that the full record will be fetched, the fields specified
+will be updated, and the full record will be saved back to the table.</p>
+<p>Some implementations may use the dynamodb PATCH operation to update a field.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="core_db.exceptions.NotFoundException.html#core_db.exceptions.NotFoundException" title="core_db.exceptions.NotFoundException"><strong>NotFoundException</strong></a> – If your subclass has not implemented the patch method</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Response</span></code> object</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="core_db.response.Response.html#core_db.response.Response" title="core_db.response.Response">Response</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_db.event.actions.EventActions.update">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="core_db.response.Response.html#core_db.response.Response" title="core_db.response.Response"><span class="pre">Response</span></a></span></span><a class="headerlink" href="#core_db.event.actions.EventActions.update" title="Link to this definition"></a></dt>
+<dd><p>Updates a record in the table.  The primary hash_key and range_key must be provided.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="core_db.exceptions.NotFoundException.html#core_db.exceptions.NotFoundException" title="core_db.exceptions.NotFoundException"><strong>NotFoundException</strong></a> – If your subclass has not implemented the update method</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Response</span></code> object</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="core_db.response.Response.html#core_db.response.Response" title="core_db.response.Response">Response</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="core_db.event.actions.html" class="btn btn-neutral float-left" title="core_db.event.actions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="core_db.event.models.html" class="btn btn-neutral float-right" title="core_db.event.models" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,43 @@
+core_api.registry.portfolio
+===========================
+
+.. automodule:: core_api.registry.portfolio
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+      create_portfolio_action
+      delete_portfolio_action
+      get_portfolio_action
+      list_portfolios_action
+      patch_portfolio_action
+      update_portfolio_action
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      ApiRegPortfolioActions
+   
+   
+
+   
+   
+   
+
+
+

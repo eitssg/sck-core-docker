@@ -1,0 +1,68 @@
+core\_db.registry.zone.models.AccountFacts
+==========================================
+
+.. currentmodule:: core_db.registry.zone.models
+
+.. autoclass:: AccountFacts
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~AccountFacts.AccountName
+      ~AccountFacts.AwsAccountId
+      ~AccountFacts.Client
+      ~AccountFacts.Environment
+      ~AccountFacts.Kms
+      ~AccountFacts.OrganizationalUnit
+      ~AccountFacts.ResourceNamespace
+      ~AccountFacts.SubnetAliases
+      ~AccountFacts.Tags
+      ~AccountFacts.UserInstantiated
+      ~AccountFacts.VpcAliases
+      ~AccountFacts.attr_name
+      ~AccountFacts.attr_type
+      ~AccountFacts.attribute_args
+      ~AccountFacts.null
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~AccountFacts.__init__
+      ~AccountFacts.add
+      ~AccountFacts.append
+      ~AccountFacts.as_dict
+      ~AccountFacts.between
+      ~AccountFacts.contains
+      ~AccountFacts.delete
+      ~AccountFacts.deserialize
+      ~AccountFacts.does_not_exist
+      ~AccountFacts.exists
+      ~AccountFacts.from_dynamodb_dict
+      ~AccountFacts.from_simple_dict
+      ~AccountFacts.get_attributes
+      ~AccountFacts.get_value
+      ~AccountFacts.is_correctly_typed
+      ~AccountFacts.is_in
+      ~AccountFacts.is_raw
+      ~AccountFacts.is_type
+      ~AccountFacts.prepend
+      ~AccountFacts.remove
+      ~AccountFacts.serialize
+      ~AccountFacts.set
+      ~AccountFacts.startswith
+      ~AccountFacts.to_dynamodb_dict
+      ~AccountFacts.to_simple_dict
+      ~AccountFacts.validate
+   
+   

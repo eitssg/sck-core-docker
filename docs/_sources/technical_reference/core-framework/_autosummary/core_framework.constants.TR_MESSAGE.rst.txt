@@ -1,0 +1,6 @@
+core\_framework.constants.TR\_MESSAGE
+=====================================
+
+.. currentmodule:: core_framework.constants
+
+.. autodata:: TR_MESSAGE

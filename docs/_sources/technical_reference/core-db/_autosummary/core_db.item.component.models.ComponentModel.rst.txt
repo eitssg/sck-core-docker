@@ -1,0 +1,72 @@
+core\_db.item.component.models.ComponentModel
+=============================================
+
+.. currentmodule:: core_db.item.component.models
+
+.. autoclass:: ComponentModel
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ComponentModel.app_prn
+      ~ComponentModel.branch_prn
+      ~ComponentModel.build_prn
+      ~ComponentModel.component_type
+      ~ComponentModel.created_at
+      ~ComponentModel.image_alias
+      ~ComponentModel.image_id
+      ~ComponentModel.item_type
+      ~ComponentModel.message
+      ~ComponentModel.name
+      ~ComponentModel.parent_created_at_index
+      ~ComponentModel.parent_prn
+      ~ComponentModel.portfolio_prn
+      ~ComponentModel.prn
+      ~ComponentModel.status
+      ~ComponentModel.updated_at
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ComponentModel.__init__
+      ~ComponentModel.batch_get
+      ~ComponentModel.batch_write
+      ~ComponentModel.count
+      ~ComponentModel.create_table
+      ~ComponentModel.delete
+      ~ComponentModel.delete_table
+      ~ComponentModel.describe_table
+      ~ComponentModel.deserialize
+      ~ComponentModel.exists
+      ~ComponentModel.from_dynamodb_dict
+      ~ComponentModel.from_raw_data
+      ~ComponentModel.from_simple_dict
+      ~ComponentModel.get
+      ~ComponentModel.get_attributes
+      ~ComponentModel.get_delete_kwargs_from_instance
+      ~ComponentModel.get_operation_kwargs_from_class
+      ~ComponentModel.get_save_kwargs_from_instance
+      ~ComponentModel.get_update_kwargs_from_instance
+      ~ComponentModel.query
+      ~ComponentModel.refresh
+      ~ComponentModel.save
+      ~ComponentModel.scan
+      ~ComponentModel.serialize
+      ~ComponentModel.to_dynamodb_dict
+      ~ComponentModel.to_simple_dict
+      ~ComponentModel.update
+      ~ComponentModel.update_local_version_attribute
+      ~ComponentModel.update_ttl
+   
+   

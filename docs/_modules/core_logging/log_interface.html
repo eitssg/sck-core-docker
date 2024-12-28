@@ -1,0 +1,682 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>core_logging.log_interface &mdash; SCK Core Automation 1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a3c9731c" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=45d66dd6" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=29a6c3e3"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            SCK Core Automation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/index.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/index.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../technical_reference/index.html">Technical Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">SCK Core Automation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">core_logging.log_interface</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for core_logging.log_interface</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; This module provides the log helper functions for the core_logging library. Such as log.debug, log.error, log.warning, log.warn, log.fatal, log.critical, log.info, log.trace, log.message, etc.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">inspect</span>
+<span class="kn">from</span> <span class="nn">threading</span> <span class="kn">import</span> <span class="n">local</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="kn">from</span> <span class="nn">.log_classes</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">CoreLogger</span><span class="p">,</span>
+    <span class="n">CoreLoggerHandler</span><span class="p">,</span>
+    <span class="n">CoreLogTextFormatter</span><span class="p">,</span>
+    <span class="n">CoreLogJsonFormatter</span><span class="p">,</span>
+    <span class="n">L_IDENTITY</span><span class="p">,</span>
+    <span class="n">DEFAULT_DATE_FORMAT</span><span class="p">,</span>
+    <span class="n">DEFAULT_LOG_FORMAT</span><span class="p">,</span>
+    <span class="n">ENV_LOG_JSON</span><span class="p">,</span>
+    <span class="n">ENV_LOG_LEVEL</span><span class="p">,</span>
+    <span class="n">ENV_LOG_DIR</span><span class="p">,</span>
+    <span class="n">INFO</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Our custom levels were added when the &quot;core_logging.log_classes&quot; module was loaded in the imports above</span>
+<span class="n">_log_level</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">_nameToLevel</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="n">ENV_LOG_LEVEL</span><span class="p">,</span> <span class="s2">&quot;INFO&quot;</span><span class="p">),</span> <span class="n">INFO</span><span class="p">)</span>
+
+<span class="c1"># Override the default logger class to use our custom logger class as methods were added (e.g. trace() and msg() functions).</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">CoreLogger</span><span class="p">(</span><span class="s2">&quot;root&quot;</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="n">_log_level</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="o">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">root</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">setLoggerClass</span><span class="p">(</span><span class="n">CoreLogger</span><span class="p">)</span>
+
+<span class="c1"># Please note that Lambda has a time imit nd when it restarts, thread local variables are reset.</span>
+<span class="n">_thread_local</span> <span class="o">=</span> <span class="n">local</span><span class="p">()</span>
+<span class="n">_thread_local</span><span class="o">.</span><span class="n">default_identity</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">_thread_local</span><span class="o">.</span><span class="n">identity</span> <span class="o">=</span> <span class="kc">None</span>
+
+
+<div class="viewcode-block" id="getLevelName">
+<a class="viewcode-back" href="../../technical_reference/core-logging/_autosummary/core_logging.log_interface.getLevelName.html#core_logging.log_interface.getLevelName">[docs]</a>
+<span class="k">def</span> <span class="nf">getLevelName</span><span class="p">(</span><span class="n">level</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return the name of the logging level for the specified level.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        level (int): The log level integer value</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The string represetation of the logging level</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLevelName</span><span class="p">(</span><span class="n">level</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="getLevelFromName">
+<a class="viewcode-back" href="../../technical_reference/core-logging/_autosummary/core_logging.log_interface.getLevelFromName.html#core_logging.log_interface.getLevelFromName">[docs]</a>
+<span class="k">def</span> <span class="nf">getLevelFromName</span><span class="p">(</span><span class="n">level</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return the logging level for the name provided.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        level (str): The name of the logging level</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        int: The logging level integer value</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">logging</span><span class="o">.</span><span class="n">_nameToLevel</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="setRootLevel">
+<a class="viewcode-back" href="../../technical_reference/core-logging/_autosummary/core_logging.log_interface.setRootLevel.html#core_logging.log_interface.setRootLevel">[docs]</a>
+<span class="k">def</span> <span class="nf">setRootLevel</span><span class="p">(</span><span class="n">level</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Set the logging level for the logger.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        level (int): The logging level integer value</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">level</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="getRootLevel">
+<a class="viewcode-back" href="../../technical_reference/core-logging/_autosummary/core_logging.log_interface.getRootLevel.html#core_logging.log_interface.getRootLevel">[docs]</a>
+<span class="k">def</span> <span class="nf">getRootLevel</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return the current logging level for the logger.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        int: The logging level integer value</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">logging</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">level</span></div>
+
+
+
+<div class="viewcode-block" id="getLevel">
+<a class="viewcode-back" href="../../technical_reference/core-logging/_autosummary/core_logging.log_interface.getLevel.html#core_logging.log_interface.getLevel">[docs]</a>
+<span class="k">def</span> <span class="nf">getLevel</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return the current logging level for the log module.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        int: The logging level integer value</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">_log_level</span></div>
+
+
+
+<div class="viewcode-block" id="setLevel">
+<a class="viewcode-back" href="../../technical_reference/core-logging/_autosummary/core_logging.log_interface.setLevel.html#core_logging.log_interface.setLevel">[docs]</a>
+<span class="k">def</span> <span class="nf">setLevel</span><span class="p">(</span><span class="n">level</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Set the logging level for the log module.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        level (int): The logging level integer value</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">_log_level</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">level</span> <span class="o">=</span> <span class="n">getLevelFromName</span><span class="p">(</span><span class="n">level</span><span class="o">.</span><span class="n">upper</span><span class="p">())</span>
+
+    <span class="n">_log_level</span> <span class="o">=</span> <span class="n">level</span></div>
+
+
+
+<div class="viewcode-block" id="setLevelForLogger">
+<a class="viewcode-back" href="../../technical_reference/core-logging/_autosummary/core_logging.log_interface.setLevelForLogger.html#core_logging.log_interface.setLevelForLogger">[docs]</a>
+<span class="k">def</span> <span class="nf">setLevelForLogger</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Sets the log level for the specified logger.</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        import core_logging as log</span>
+
+<span class="sd">        log.setLevel(&quot;WARN&quot;)  # Set the default log level to WARN</span>
+
+<span class="sd">        # Set the log level for the specified identity to DEBUG</span>
+<span class="sd">        identity = &quot;prn:portfolio:app:branch:build&quot;</span>
+<span class="sd">        log.setLevelForLogger(identity, &quot;DEBUG&quot;)</span>
+
+<span class="sd">        # Log a message for the identity</span>
+<span class="sd">        log.debug(&quot;This is a debug message&quot;, identity=identity)</span>
+
+<span class="sd">    Outputs the following:</span>
+
+<span class="sd">    .. code-block:: console</span>
+
+<span class="sd">        2024-12-19 10:21:55 [prn:portfolio:app:branch:build] [DEBUG] This is a debug message</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name (str): The logger&#39;s name</span>
+<span class="sd">        level (int): The level that you wish to set</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">level</span> <span class="o">=</span> <span class="n">getLevelFromName</span><span class="p">(</span><span class="n">level</span><span class="o">.</span><span class="n">upper</span><span class="p">())</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">level</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="setup">
+<a class="viewcode-back" href="../../technical_reference/core-logging/_autosummary/core_logging.log_interface.setup.html#core_logging.log_interface.setup">[docs]</a>
+<span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="n">identity</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Initialize the logger with the specified identity.  The identity is a PRN (Pipeline Resource Name) or (Pipeline Reference Name/Number)</span>
+<span class="sd">    and is in the format of &quot;prn:portfolio:app:branch:build&quot;.  The identity is used to identify the source of the log message.</span>
+
+<span class="sd">    The identity can actually be any string.  It is not validated.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        identity (str): The PRN or identity of the logger.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_thread_local</span><span class="o">.</span><span class="n">default_identity</span> <span class="o">=</span> <span class="n">_thread_local</span><span class="o">.</span><span class="n">identity</span> <span class="o">=</span> <span class="n">identity</span></div>
+
+
+
+<div class="viewcode-block" id="set_identity">
+<a class="viewcode-back" href="../../technical_reference/core-logging/_autosummary/core_logging.log_interface.set_identity.html#core_logging.log_interface.set_identity">[docs]</a>
+<span class="k">def</span> <span class="nf">set_identity</span><span class="p">(</span><span class="n">identity</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Hold an identity for the logger.  This is used to identify the source of the log message.  This value will be used if not specified in the log call</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        identity (str): The PRN or identity of the logger.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">_thread_local</span><span class="o">.</span><span class="n">identity</span> <span class="o">=</span> <span class="n">identity</span></div>
+
+
+
+<div class="viewcode-block" id="get_default_identity">
+<a class="viewcode-back" href="../../technical_reference/core-logging/_autosummary/core_logging.log_interface.get_default_identity.html#core_logging.log_interface.get_default_identity">[docs]</a>
+<span class="k">def</span> <span class="nf">get_default_identity</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return the threadlocal default identity for the logger.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The thread_local identity or empty string</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">_thread_local</span><span class="p">,</span> <span class="s2">&quot;default_identity&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="get_identity">
+<a class="viewcode-back" href="../../technical_reference/core-logging/_autosummary/core_logging.log_interface.get_identity.html#core_logging.log_interface.get_identity">[docs]</a>
+<span class="k">def</span> <span class="nf">get_identity</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return the default identity for the logger.  This default identity is used to identify the source of the log message and will be used if not specified in the log call</span>
+
+<span class="sd">    :return identity(str):  The default identity for the logger.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">_thread_local</span><span class="p">,</span> <span class="s2">&quot;identity&quot;</span><span class="p">,</span> <span class="n">get_default_identity</span><span class="p">())</span></div>
+
+
+
+<div class="viewcode-block" id="clear_identity">
+<a class="viewcode-back" href="../../technical_reference/core-logging/_autosummary/core_logging.log_interface.clear_identity.html#core_logging.log_interface.clear_identity">[docs]</a>
+<span class="k">def</span> <span class="nf">clear_identity</span><span class="p">():</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">_thread_local</span><span class="p">,</span> <span class="s2">&quot;identity&quot;</span><span class="p">):</span>
+        <span class="k">del</span> <span class="n">_thread_local</span><span class="o">.</span><span class="n">identity</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">_thread_local</span><span class="p">,</span> <span class="s2">&quot;default_identity&quot;</span><span class="p">):</span>
+        <span class="k">del</span> <span class="n">_thread_local</span><span class="o">.</span><span class="n">default_identity</span></div>
+
+
+
+<div class="viewcode-block" id="reset_identity">
+<a class="viewcode-back" href="../../technical_reference/core-logging/_autosummary/core_logging.log_interface.reset_identity.html#core_logging.log_interface.reset_identity">[docs]</a>
+<span class="k">def</span> <span class="nf">reset_identity</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Deprecated: use the &quot;getLogger()&quot; method to get a logger with the specified identity..  This method is NOT thread safe.</span>
+
+<span class="sd">    Resets the identity to the default identity that was established when the logger was setup with the setup() method.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_thread_local</span><span class="o">.</span><span class="n">identity</span> <span class="o">=</span> <span class="n">get_default_identity</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="get_logger_identity">
+<a class="viewcode-back" href="../../technical_reference/core-logging/_autosummary/core_logging.log_interface.get_logger_identity.html#core_logging.log_interface.get_logger_identity">[docs]</a>
+<span class="k">def</span> <span class="nf">get_logger_identity</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Attempts to retrieve the identity from the kwargs parameter.  If it&#39;s not found, it will return the default identity.</span>
+
+<span class="sd">    The kwargs is NOT expended.  No \\*\\* on the kwargs  We are mutating kwargs and popping off the Identity.</span>
+
+<span class="sd">    We may change this behaviour in the future.</span>
+
+<span class="sd">    Looking for &quot;identity&quot; or &quot;prn&quot; in kwargs. (&quot;prn&quot; is not popped off)</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        kwargs (dict): A dictionary of name/value pairs that should have the identity in it.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str | None: The identity if found, else None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">module</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;module&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">function</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;function&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">identity</span> <span class="o">=</span> <span class="n">get_identity</span><span class="p">()</span> <span class="ow">or</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">module</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">function</span><span class="si">}</span><span class="s2">&quot;</span> <span class="ow">or</span> <span class="s2">&quot;unknown&quot;</span>
+    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">L_IDENTITY</span><span class="p">,</span> <span class="n">identity</span><span class="p">))</span></div>
+
+
+
+<span class="k">def</span> <span class="nf">__get_formatter</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">:</span>
+
+    <span class="c1"># Get the Core Automatin Formatters</span>
+    <span class="n">date_fmt</span> <span class="o">=</span> <span class="n">DEFAULT_DATE_FORMAT</span>
+    <span class="n">msg_fmt</span> <span class="o">=</span> <span class="n">DEFAULT_LOG_FORMAT</span>
+
+    <span class="c1"># default logging to text formatter unless LOG_AS_JSON is set to true</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">ENV_LOG_JSON</span><span class="p">,</span> <span class="s2">&quot;false&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;true&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">CoreLogJsonFormatter</span><span class="p">(</span><span class="n">msg_fmt</span><span class="p">,</span> <span class="n">date_fmt</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">CoreLogTextFormatter</span><span class="p">(</span><span class="n">msg_fmt</span><span class="p">,</span> <span class="n">date_fmt</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">__get_handlers</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">logging</span><span class="o">.</span><span class="n">Handler</span><span class="p">]:</span>
+
+    <span class="n">handlers</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">logging</span><span class="o">.</span><span class="n">Handler</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">formatter</span> <span class="o">=</span> <span class="n">__get_formatter</span><span class="p">()</span>
+
+    <span class="c1"># Add a console handler</span>
+    <span class="n">console_hdlr</span> <span class="o">=</span> <span class="n">CoreLoggerHandler</span><span class="p">(</span><span class="n">name</span> <span class="ow">or</span> <span class="s2">&quot;core&quot;</span><span class="p">)</span>
+    <span class="n">console_hdlr</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">)</span>
+    <span class="n">handlers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">console_hdlr</span><span class="p">)</span>
+
+    <span class="c1"># Add a file handler</span>
+    <span class="n">log_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="n">ENV_LOG_DIR</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">log_dir</span><span class="p">:</span>
+
+        <span class="c1"># TODO - If a LOG GROUP is defined, add it to the folder diretory path</span>
+        <span class="n">log_group</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;log_group&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+        <span class="c1"># TODO - If a LOG STREAM is defined, set it as the filename</span>
+        <span class="n">log_stream</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;log_stream&quot;</span><span class="p">,</span> <span class="s2">&quot;core&quot;</span><span class="p">)</span>
+
+        <span class="n">log_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">log_dir</span><span class="p">,</span> <span class="n">log_group</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">log_stream</span><span class="si">}</span><span class="s2">.log&quot;</span><span class="p">)</span>
+
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">log_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">hdlr</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">FileHandler</span><span class="p">(</span><span class="n">log_file</span><span class="p">)</span>
+        <span class="n">hdlr</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">)</span>
+        <span class="n">handlers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">hdlr</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">handlers</span>
+
+
+<div class="viewcode-block" id="getLogger">
+<a class="viewcode-back" href="../../technical_reference/core-logging/_autosummary/core_logging.log_interface.getLogger.html#core_logging.log_interface.getLogger">[docs]</a>
+<span class="k">def</span> <span class="nf">getLogger</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CoreLogger</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return a logging object with the specified name.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name (str | None): The name/identity of the logger</span>
+<span class="sd">        kwargs (dict): experimental parameters &quot;log_stream&quot; and &quot;log_group&quot;.</span>
+<span class="sd">            * log_stream: The name of the log stream filename.</span>
+<span class="sd">            * log_group: The name of the log group folder.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        CoreLogger: The logger object</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span><span class="p">:</span> <span class="n">CoreLogger</span>
+    <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span>  <span class="c1"># type: ignore</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">logger</span><span class="o">.</span><span class="n">handlers</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">handler</span> <span class="ow">in</span> <span class="n">__get_handlers</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">handler</span><span class="p">)</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">getLevel</span><span class="p">())</span>
+
+    <span class="k">return</span> <span class="n">logger</span></div>
+
+
+
+<div class="viewcode-block" id="get_caller_info">
+<a class="viewcode-back" href="../../technical_reference/core-logging/_autosummary/core_logging.log_interface.get_caller_info.html#core_logging.log_interface.get_caller_info">[docs]</a>
+<span class="k">def</span> <span class="nf">get_caller_info</span><span class="p">():</span>
+    <span class="n">frame</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">currentframe</span><span class="p">()</span>
+    <span class="n">caller_frame</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">f_back</span><span class="o">.</span><span class="n">f_back</span>  <span class="c1"># Go back two frames to get the caller</span>
+    <span class="n">module</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getmodule</span><span class="p">(</span><span class="n">caller_frame</span><span class="p">)</span>
+    <span class="n">module_name</span> <span class="o">=</span> <span class="n">module</span><span class="o">.</span><span class="vm">__name__</span> <span class="k">if</span> <span class="n">module</span> <span class="k">else</span> <span class="s2">&quot;Unknown&quot;</span>
+    <span class="n">function_name</span> <span class="o">=</span> <span class="n">caller_frame</span><span class="o">.</span><span class="n">f_code</span><span class="o">.</span><span class="n">co_name</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="n">caller_frame</span><span class="o">.</span><span class="n">f_code</span><span class="o">.</span><span class="n">co_filename</span>
+    <span class="n">lineno</span> <span class="o">=</span> <span class="n">caller_frame</span><span class="o">.</span><span class="n">f_lineno</span>
+    <span class="k">return</span> <span class="n">module_name</span><span class="p">,</span> <span class="n">function_name</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">lineno</span></div>
+
+
+
+<div class="viewcode-block" id="log">
+<a class="viewcode-back" href="../../technical_reference/core-logging/_autosummary/core_logging.log_interface.log.html#core_logging.log_interface.log">[docs]</a>
+<span class="k">def</span> <span class="nf">log</span><span class="p">(</span><span class="n">level</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Log a message at the specified level.</span>
+<span class="sd">    The log identity is taken from the kwargs parameter if it exists, else it&#39;s taken from the _identity variable.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        level (int): The logging level (MSG, STATUS, TRACE, etc.)</span>
+<span class="sd">        message (Union[str, dict], optional): The message to output. Defaults to None.</span>
+<span class="sd">        args (tuple): values used to replace the %s place holders in the message.</span>
+<span class="sd">        kwargs: Name/Value pairs that will be added to the output. Defaults to None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">module_name</span><span class="p">,</span> <span class="n">function_name</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">get_caller_info</span><span class="p">()</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger</span><span class="p">(</span>
+        <span class="n">get_logger_identity</span><span class="p">(</span><span class="n">module</span><span class="o">=</span><span class="n">module_name</span><span class="p">,</span> <span class="n">function</span><span class="o">=</span><span class="n">function_name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="msg">
+<a class="viewcode-back" href="../../technical_reference/core-logging/_autosummary/core_logging.log_interface.msg.html#core_logging.log_interface.msg">[docs]</a>
+<span class="k">def</span> <span class="nf">msg</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Log a message at the MSG level</span>
+<span class="sd">    The log identity is taken from the kwargs parameter if it exists, else it&#39;s taken from the _identity variable.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        message (Union[str, dict], optional): The message to output. Defaults to None.</span>
+<span class="sd">        args (tuple): values used to replace the %s place holders in the message.</span>
+<span class="sd">        kwargs: Name/Value pairs that will be added to the output. Defaults to None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">module_name</span><span class="p">,</span> <span class="n">function_name</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">get_caller_info</span><span class="p">()</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger</span><span class="p">(</span>
+        <span class="n">get_logger_identity</span><span class="p">(</span><span class="n">module</span><span class="o">=</span><span class="n">module_name</span><span class="p">,</span> <span class="n">function</span><span class="o">=</span><span class="n">function_name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">msg</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="trace">
+<a class="viewcode-back" href="../../technical_reference/core-logging/_autosummary/core_logging.log_interface.trace.html#core_logging.log_interface.trace">[docs]</a>
+<span class="k">def</span> <span class="nf">trace</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Log a message at the TRACE level</span>
+<span class="sd">    The log identity is taken from the kwargs parameter if it exists, else it&#39;s taken from the _identity variable.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        message (Union[str, dict], optional): The message to output. Defaults to None.</span>
+<span class="sd">        args (tuple): values used to replace the %s place holders in the message.</span>
+<span class="sd">        kwargs: Name/Value pairs that will be added to the output. Defaults to None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">module_name</span><span class="p">,</span> <span class="n">function_name</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">get_caller_info</span><span class="p">()</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger</span><span class="p">(</span>
+        <span class="n">get_logger_identity</span><span class="p">(</span><span class="n">module</span><span class="o">=</span><span class="n">module_name</span><span class="p">,</span> <span class="n">function</span><span class="o">=</span><span class="n">function_name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="debug">
+<a class="viewcode-back" href="../../technical_reference/core-logging/_autosummary/core_logging.log_interface.debug.html#core_logging.log_interface.debug">[docs]</a>
+<span class="k">def</span> <span class="nf">debug</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Log a message at the DEBUG level</span>
+<span class="sd">    The log identity is taken from the kwargs parameter if it exists, else it&#39;s taken from the _identity variable.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        message (Union[str, dict], optional): The message to output. Defaults to None.</span>
+<span class="sd">        args (tuple): values used to replace the %s place holders in the message.</span>
+<span class="sd">        kwargs: Name/Value pairs that will be added to the output. Defaults to None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">module_name</span><span class="p">,</span> <span class="n">function_name</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">get_caller_info</span><span class="p">()</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger</span><span class="p">(</span>
+        <span class="n">get_logger_identity</span><span class="p">(</span><span class="n">module</span><span class="o">=</span><span class="n">module_name</span><span class="p">,</span> <span class="n">function</span><span class="o">=</span><span class="n">function_name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="critical">
+<a class="viewcode-back" href="../../technical_reference/core-logging/_autosummary/core_logging.log_interface.critical.html#core_logging.log_interface.critical">[docs]</a>
+<span class="k">def</span> <span class="nf">critical</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Log a message at the CRITICAL level</span>
+<span class="sd">    The log identity is taken from the kwargs parameter if it exists, else it&#39;s taken from the _identity variable.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        message (Union[str, dict], optional): The message to output. Defaults to None.</span>
+<span class="sd">        args (tuple): values used to replace the %s place holders in the message.</span>
+<span class="sd">        kwargs: Name/Value pairs that will be added to the output. Defaults to None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">module_name</span><span class="p">,</span> <span class="n">function_name</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">get_caller_info</span><span class="p">()</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger</span><span class="p">(</span>
+        <span class="n">get_logger_identity</span><span class="p">(</span><span class="n">module</span><span class="o">=</span><span class="n">module_name</span><span class="p">,</span> <span class="n">function</span><span class="o">=</span><span class="n">function_name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="fatal">
+<a class="viewcode-back" href="../../technical_reference/core-logging/_autosummary/core_logging.log_interface.fatal.html#core_logging.log_interface.fatal">[docs]</a>
+<span class="k">def</span> <span class="nf">fatal</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Log a message at the FATAL level</span>
+<span class="sd">    The log identity is taken from the kwargs parameter if it exists, else it&#39;s taken from the _identity variable.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        message (Union[str, dict], optional): The message to output. Defaults to None.</span>
+<span class="sd">        args (tuple): values used to replace the %s place holders in the message.</span>
+<span class="sd">        kwargs: Name/Value pairs that will be added to the output. Defaults to None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">module_name</span><span class="p">,</span> <span class="n">function_name</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">get_caller_info</span><span class="p">()</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger</span><span class="p">(</span>
+        <span class="n">get_logger_identity</span><span class="p">(</span><span class="n">module</span><span class="o">=</span><span class="n">module_name</span><span class="p">,</span> <span class="n">function</span><span class="o">=</span><span class="n">function_name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">fatal</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="error">
+<a class="viewcode-back" href="../../technical_reference/core-logging/_autosummary/core_logging.log_interface.error.html#core_logging.log_interface.error">[docs]</a>
+<span class="k">def</span> <span class="nf">error</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Log a message at the ERROR level</span>
+<span class="sd">    The log identity is taken from the kwargs parameter if it exists, else it&#39;s taken from the _identity variable.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        message (Union[str, dict], optional): The message to output. Defaults to None.</span>
+<span class="sd">        args (tuple): values used to replace the %s place holders in the message.</span>
+<span class="sd">        kwargs: Name/Value pairs that will be added to the output. Defaults to None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">module_name</span><span class="p">,</span> <span class="n">function_name</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">get_caller_info</span><span class="p">()</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger</span><span class="p">(</span>
+        <span class="n">get_logger_identity</span><span class="p">(</span><span class="n">module</span><span class="o">=</span><span class="n">module_name</span><span class="p">,</span> <span class="n">function</span><span class="o">=</span><span class="n">function_name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="info">
+<a class="viewcode-back" href="../../technical_reference/core-logging/_autosummary/core_logging.log_interface.info.html#core_logging.log_interface.info">[docs]</a>
+<span class="k">def</span> <span class="nf">info</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Log a message at the INFO level</span>
+<span class="sd">    The log identity is taken from the kwargs parameter if it exists, else it&#39;s taken from the _identity variable.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        message (Union[str, dict], optional): The message to output. Defaults to None.</span>
+<span class="sd">        args (tuple): values used to replace the %s place holders in the message.</span>
+<span class="sd">        kwargs: Name/Value pairs that will be added to the output. Defaults to None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">module_name</span><span class="p">,</span> <span class="n">function_name</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">get_caller_info</span><span class="p">()</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger</span><span class="p">(</span>
+        <span class="n">get_logger_identity</span><span class="p">(</span><span class="n">module</span><span class="o">=</span><span class="n">module_name</span><span class="p">,</span> <span class="n">function</span><span class="o">=</span><span class="n">function_name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="warn">
+<a class="viewcode-back" href="../../technical_reference/core-logging/_autosummary/core_logging.log_interface.warn.html#core_logging.log_interface.warn">[docs]</a>
+<span class="k">def</span> <span class="nf">warn</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Log a message at the WARNING level</span>
+<span class="sd">    The log identity is taken from the kwargs parameter if it exists, else it&#39;s taken from the _identity variable.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        message (Union[str, dict], optional): The message to output. Defaults to None.</span>
+<span class="sd">        args (tuple): values used to replace the %s place holders in the message.</span>
+<span class="sd">        kwargs: Name/Value pairs that will be added to the output. Defaults to None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">module_name</span><span class="p">,</span> <span class="n">function_name</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">get_caller_info</span><span class="p">()</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger</span><span class="p">(</span>
+        <span class="n">get_logger_identity</span><span class="p">(</span><span class="n">module</span><span class="o">=</span><span class="n">module_name</span><span class="p">,</span> <span class="n">function</span><span class="o">=</span><span class="n">function_name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="warning">
+<a class="viewcode-back" href="../../technical_reference/core-logging/_autosummary/core_logging.log_interface.warning.html#core_logging.log_interface.warning">[docs]</a>
+<span class="k">def</span> <span class="nf">warning</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Log a message at the WARNING level</span>
+<span class="sd">    The log identity is taken from the kwargs parameter if it exists, else it&#39;s taken from the _identity variable.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        message (Union[str, dict], optional): The message to output. Defaults to None.</span>
+<span class="sd">        args (tuple): values used to replace the %s place holders in the message.</span>
+<span class="sd">        kwargs: Name/Value pairs that will be added to the output. Defaults to None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">module_name</span><span class="p">,</span> <span class="n">function_name</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">get_caller_info</span><span class="p">()</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger</span><span class="p">(</span>
+        <span class="n">get_logger_identity</span><span class="p">(</span><span class="n">module</span><span class="o">=</span><span class="n">module_name</span><span class="p">,</span> <span class="n">function</span><span class="o">=</span><span class="n">function_name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="status">
+<a class="viewcode-back" href="../../technical_reference/core-logging/_autosummary/core_logging.log_interface.status.html#core_logging.log_interface.status">[docs]</a>
+<span class="k">def</span> <span class="nf">status</span><span class="p">(</span><span class="n">code</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">reason</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Log a message at the STATUS level</span>
+<span class="sd">    The log identity is taken from the kwargs parameter if it exists, else it&#39;s taken from the _identity variable.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        code (str): _description_</span>
+<span class="sd">        reason (str): The status message</span>
+<span class="sd">        args (tuple): values used to replace the %s place holders in the message.</span>
+<span class="sd">        kwargs: Name/Value pairs that will be added to the output. Defaults to None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">module_name</span><span class="p">,</span> <span class="n">function_name</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">get_caller_info</span><span class="p">()</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">getLogger</span><span class="p">(</span>
+        <span class="n">get_logger_identity</span><span class="p">(</span><span class="n">module</span><span class="o">=</span><span class="n">module_name</span><span class="p">,</span> <span class="n">function</span><span class="o">=</span><span class="n">function_name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="p">)</span>
+
+    <span class="n">reason</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span> <span class="k">if</span> <span class="n">reason</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">reason</span>
+
+    <span class="k">if</span> <span class="n">code</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">code</span> <span class="o">=</span> <span class="mi">200</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">status</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="n">reason</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

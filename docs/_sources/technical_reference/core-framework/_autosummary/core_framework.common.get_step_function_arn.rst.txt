@@ -1,0 +1,6 @@
+core\_framework.common.get\_step\_function\_arn
+===============================================
+
+.. currentmodule:: core_framework.common
+
+.. autofunction:: get_step_function_arn

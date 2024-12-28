@@ -1,0 +1,6 @@
+core\_framework.common.get\_delivered\_by
+=========================================
+
+.. currentmodule:: core_framework.common
+
+.. autofunction:: get_delivered_by

@@ -1,0 +1,6 @@
+core\_execute.actionlib.actions.aws.empty\_bucket.generate\_template
+====================================================================
+
+.. currentmodule:: core_execute.actionlib.actions.aws.empty_bucket
+
+.. autofunction:: generate_template

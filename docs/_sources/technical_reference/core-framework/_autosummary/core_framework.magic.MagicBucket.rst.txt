@@ -1,0 +1,25 @@
+core\_framework.magic.MagicBucket
+=================================
+
+.. currentmodule:: core_framework.magic
+
+.. autoclass:: MagicBucket
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~MagicBucket.Object
+      ~MagicBucket.__init__
+      ~MagicBucket.download_fileobj
+   
+   

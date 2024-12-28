@@ -1,0 +1,6 @@
+core\_db.exceptions.TableException
+==================================
+
+.. currentmodule:: core_db.exceptions
+
+.. autoexception:: TableException

@@ -1,0 +1,62 @@
+core\_db.registry.zone.models.ProxyFacts
+========================================
+
+.. currentmodule:: core_db.registry.zone.models
+
+.. autoclass:: ProxyFacts
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ProxyFacts.Host
+      ~ProxyFacts.NoProxy
+      ~ProxyFacts.Port
+      ~ProxyFacts.Url
+      ~ProxyFacts.UserInstantiated
+      ~ProxyFacts.attr_name
+      ~ProxyFacts.attr_type
+      ~ProxyFacts.attribute_args
+      ~ProxyFacts.null
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ProxyFacts.__init__
+      ~ProxyFacts.add
+      ~ProxyFacts.append
+      ~ProxyFacts.as_dict
+      ~ProxyFacts.between
+      ~ProxyFacts.contains
+      ~ProxyFacts.delete
+      ~ProxyFacts.deserialize
+      ~ProxyFacts.does_not_exist
+      ~ProxyFacts.exists
+      ~ProxyFacts.from_dynamodb_dict
+      ~ProxyFacts.from_simple_dict
+      ~ProxyFacts.get_attributes
+      ~ProxyFacts.get_value
+      ~ProxyFacts.is_correctly_typed
+      ~ProxyFacts.is_in
+      ~ProxyFacts.is_raw
+      ~ProxyFacts.is_type
+      ~ProxyFacts.prepend
+      ~ProxyFacts.remove
+      ~ProxyFacts.serialize
+      ~ProxyFacts.set
+      ~ProxyFacts.startswith
+      ~ProxyFacts.to_dynamodb_dict
+      ~ProxyFacts.to_simple_dict
+      ~ProxyFacts.validate
+   
+   

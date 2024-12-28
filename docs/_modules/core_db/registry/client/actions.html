@@ -1,0 +1,383 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>core_db.registry.client.actions &mdash; SCK Core Automation 1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=a3c9731c" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/custom.css?v=45d66dd6" />
+
+  
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=29a6c3e3"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            SCK Core Automation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../user_guide/index.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../developer_guide/index.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../technical_reference/index.html">Technical Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">SCK Core Automation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">core_db.registry.client.actions</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for core_db.registry.client.actions</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; Actions for the Registry.Clients database: list, get, create, update, delete &quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">pynamodb.exceptions</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">DoesNotExist</span><span class="p">,</span>
+    <span class="n">PutError</span><span class="p">,</span>
+    <span class="n">TableError</span><span class="p">,</span>
+    <span class="n">ScanError</span><span class="p">,</span>
+    <span class="n">GetError</span><span class="p">,</span>
+    <span class="n">DeleteError</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">pynamodb.expressions.update</span> <span class="kn">import</span> <span class="n">Action</span>
+
+<span class="kn">from</span> <span class="nn">...constants</span> <span class="kn">import</span> <span class="n">CLIENT_KEY</span>
+
+<span class="kn">from</span> <span class="nn">...exceptions</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ConflictException</span><span class="p">,</span>
+    <span class="n">BadRequestException</span><span class="p">,</span>
+    <span class="n">UnknownException</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">...response</span> <span class="kn">import</span> <span class="n">Response</span><span class="p">,</span> <span class="n">SuccessResponse</span><span class="p">,</span> <span class="n">NoContentResponse</span>
+
+<span class="kn">from</span> <span class="nn">..actions</span> <span class="kn">import</span> <span class="n">RegistryAction</span>
+
+<span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">ClientFacts</span>
+
+
+<span class="k">def</span> <span class="nf">_get_client_name</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the client name from the input arguments.dict</span>
+
+<span class="sd">    Mutates **kwargs by removing the client name and returning the client name.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        **kwargs (dict): Dictionary containing:</span>
+<span class="sd">            client (str): The client name (required)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The client name</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        BadRequestException: If client name is missing from **kwargs</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;client&quot;</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;Client&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">client</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">BadRequestException</span><span class="p">(</span>
+            <span class="s1">&#39;Client name is required in content: { &quot;client&quot;: &quot;&lt;name&gt;&quot;, ...}&#39;</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">client</span>
+
+
+<div class="viewcode-block" id="ClientActions">
+<a class="viewcode-back" href="../../../../technical_reference/core-db/_autosummary/core_db.registry.client.actions.ClientActions.html#core_db.registry.client.actions.ClientActions">[docs]</a>
+<span class="k">class</span> <span class="nc">ClientActions</span><span class="p">(</span><span class="n">RegistryAction</span><span class="p">):</span>
+
+<div class="viewcode-block" id="ClientActions.list">
+<a class="viewcode-back" href="../../../../technical_reference/core-db/_autosummary/core_db.registry.client.actions.ClientActions.html#core_db.registry.client.actions.ClientActions.list">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">list</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        list all client FACTS records in a list of client names</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            **kwargs (dict): Dictionary containing:</span>
+<span class="sd">                Nothing</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Response:</span>
+<span class="sd">                SuccessResponse: containing the updated client details</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            UnknownException: If database operations fail</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">items</span> <span class="o">=</span> <span class="n">ClientFacts</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="n">attributes_to_get</span><span class="o">=</span><span class="p">[</span><span class="n">CLIENT_KEY</span><span class="p">])</span>
+        <span class="k">except</span> <span class="n">TableError</span><span class="p">:</span>
+            <span class="c1"># Table doesn&#39;t exist or is in a different state</span>
+            <span class="k">raise</span> <span class="n">UnknownException</span><span class="p">(</span><span class="s2">&quot;Failed to scan clients: Database table error&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">ScanError</span><span class="p">:</span>
+            <span class="c1"># Permissions or other AWS-specific scan operation failures</span>
+            <span class="k">raise</span> <span class="n">UnknownException</span><span class="p">(</span>
+                <span class="s2">&quot;Failed to scan clients: Permission denied or AWS error&quot;</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="c1"># Catch-all for unexpected errors</span>
+            <span class="k">raise</span> <span class="n">UnknownException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to scan clients: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">client</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">items</span><span class="p">]</span>  <span class="c1"># return a simple list of client names</span>
+
+        <span class="k">return</span> <span class="n">SuccessResponse</span><span class="p">(</span><span class="n">result</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ClientActions.get">
+<a class="viewcode-back" href="../../../../technical_reference/core-db/_autosummary/core_db.registry.client.actions.ClientActions.html#core_db.registry.client.actions.ClientActions.get">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get a client FACTS record</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            **kwargs (dict): Dictionary containing:</span>
+<span class="sd">                client (str): The client name (required)</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Response:</span>
+<span class="sd">                SuccessResponse: containing the updated client details</span>
+<span class="sd">                NoContentResponse: if the client does not exist</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            UnknownException: If database operations fail</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">client</span> <span class="o">=</span> <span class="n">_get_client_name</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">fact</span> <span class="o">=</span> <span class="n">ClientFacts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">client</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">DoesNotExist</span><span class="p">:</span>
+            <span class="c1"># Item doesn&#39;t exist in the database</span>
+            <span class="k">return</span> <span class="n">NoContentResponse</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Client </span><span class="si">{</span><span class="n">client</span><span class="si">}</span><span class="s2"> does not exist&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">TableError</span><span class="p">:</span>
+            <span class="c1"># Table doesn&#39;t exist or is in a different state</span>
+            <span class="k">raise</span> <span class="n">UnknownException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Database table error for client </span><span class="si">{</span><span class="n">client</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">GetError</span><span class="p">:</span>
+            <span class="c1"># Permissions or other AWS-specific get operation failures</span>
+            <span class="k">raise</span> <span class="n">UnknownException</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Failed to access client </span><span class="si">{</span><span class="n">client</span><span class="si">}</span><span class="s2">: Permission denied or AWS error&quot;</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="c1"># Catch-all for unexpected errors</span>
+            <span class="k">raise</span> <span class="n">UnknownException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to get client </span><span class="si">{</span><span class="n">client</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">SuccessResponse</span><span class="p">(</span><span class="n">fact</span><span class="o">.</span><span class="n">to_simple_dict</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="ClientActions.delete">
+<a class="viewcode-back" href="../../../../technical_reference/core-db/_autosummary/core_db.registry.client.actions.ClientActions.html#core_db.registry.client.actions.ClientActions.delete">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Delete a client FACTS record</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            **kwargs (dict): Dictionary containing:</span>
+<span class="sd">                client (str): The client name (required)</span>
+<span class="sd">                [attribute_name] (Any): Any additional attributes to update for the client</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Response:</span>
+<span class="sd">                SuccessResponse: containing the updated client details</span>
+<span class="sd">                NoContentResponse: if the client does not exist</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            UnknownException: If database operations fails</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">client</span> <span class="o">=</span> <span class="n">_get_client_name</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">fact</span> <span class="o">=</span> <span class="n">ClientFacts</span><span class="p">(</span><span class="n">client</span><span class="p">)</span>
+            <span class="n">fact</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+        <span class="k">except</span> <span class="n">DoesNotExist</span><span class="p">:</span>
+            <span class="c1"># Item was deleted between get and delete (race condition)</span>
+            <span class="k">return</span> <span class="n">NoContentResponse</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Client </span><span class="si">{</span><span class="n">client</span><span class="si">}</span><span class="s2"> does not exist&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">DeleteError</span><span class="p">:</span>
+            <span class="c1"># Specific delete operation failure (permissions, conditions, etc.)</span>
+            <span class="k">raise</span> <span class="n">UnknownException</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Failed to delete client </span><span class="si">{</span><span class="n">client</span><span class="si">}</span><span class="s2">: Permission denied or condition check failed&quot;</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="c1"># Catch-all for unexpected errors</span>
+            <span class="k">raise</span> <span class="n">UnknownException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to delete client </span><span class="si">{</span><span class="n">client</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">SuccessResponse</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Client </span><span class="si">{</span><span class="n">client</span><span class="si">}</span><span class="s2"> deleted&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ClientActions.create">
+<a class="viewcode-back" href="../../../../technical_reference/core-db/_autosummary/core_db.registry.client.actions.ClientActions.html#core_db.registry.client.actions.ClientActions.create">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a client FACTS record</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            **kwargs (dict): Dictionary containing:</span>
+<span class="sd">                client (str): The client name (required)</span>
+<span class="sd">                [attribute_name] (Any): Any additional attributes to update for the client</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Response: SuccessResponse containing the updated client details</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ConflictException: If client name already exists</span>
+<span class="sd">            BadRequestException: If client name is missing or data format is invalid</span>
+<span class="sd">            UnknownException: If database operations fails</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">client</span> <span class="o">=</span> <span class="n">_get_client_name</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">fact</span> <span class="o">=</span> <span class="n">ClientFacts</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="n">fact</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">ClientFacts</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">does_not_exist</span><span class="p">())</span>
+        <span class="k">except</span> <span class="n">PutError</span><span class="p">:</span>
+            <span class="c1"># Condition check failed (item already exists)</span>
+            <span class="k">raise</span> <span class="n">ConflictException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Client </span><span class="si">{</span><span class="n">client</span><span class="si">}</span><span class="s2"> already exists&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">TableError</span><span class="p">:</span>
+            <span class="c1"># Table doesn&#39;t exist or is in a different state</span>
+            <span class="k">raise</span> <span class="n">UnknownException</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Failed to save client </span><span class="si">{</span><span class="n">client</span><span class="si">}</span><span class="s2">: Database table error&quot;</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="c1"># Catch-all for unexpected errors</span>
+            <span class="k">raise</span> <span class="n">UnknownException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to save client </span><span class="si">{</span><span class="n">client</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">SuccessResponse</span><span class="p">(</span><span class="n">fact</span><span class="o">.</span><span class="n">to_simple_dict</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="ClientActions.update">
+<a class="viewcode-back" href="../../../../technical_reference/core-db/_autosummary/core_db.registry.client.actions.ClientActions.html#core_db.registry.client.actions.ClientActions.update">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Handles the PUT method.  If the item does not exist, it will be created.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            kwargs (dict): The client name</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">client</span> <span class="o">=</span> <span class="n">_get_client_name</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Get the existing client record or create a new one if it doesn&#39;t exist</span>
+            <span class="n">fact</span> <span class="o">=</span> <span class="n">ClientFacts</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="n">fact</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+        <span class="k">except</span> <span class="p">(</span><span class="n">TableError</span><span class="p">,</span> <span class="n">PutError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">UnknownException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to update client </span><span class="si">{</span><span class="n">client</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">UnknownException</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Unexpected error updating client </span><span class="si">{</span><span class="n">client</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">SuccessResponse</span><span class="p">(</span><span class="n">fact</span><span class="o">.</span><span class="n">to_simple_dict</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="ClientActions.patch">
+<a class="viewcode-back" href="../../../../technical_reference/core-db/_autosummary/core_db.registry.client.actions.ClientActions.html#core_db.registry.client.actions.ClientActions.patch">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">patch</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Handles the PATCH method.  If the item does not exist, it will be created or updated.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            kwargs (dict): Input arguments</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">client</span> <span class="o">=</span> <span class="n">_get_client_name</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Create actions to remove attributes not in new kwargs</span>
+            <span class="n">fact</span> <span class="o">=</span> <span class="n">ClientFacts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">client</span><span class="p">)</span>
+            <span class="n">attributes</span> <span class="o">=</span> <span class="n">fact</span><span class="o">.</span><span class="n">get_attributes</span><span class="p">()</span>
+
+            <span class="n">actions</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Action</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">fact</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+                    <span class="n">attr</span> <span class="o">=</span> <span class="n">attributes</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">attr</span><span class="o">.</span><span class="n">remove</span><span class="p">())</span>
+                        <span class="n">attr</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="n">value</span> <span class="o">!=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">fact</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+                        <span class="n">actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">attr</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">actions</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="c1"># Perform the update with all actions</span>
+                <span class="n">fact</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">actions</span><span class="o">=</span><span class="n">actions</span><span class="p">)</span>
+                <span class="n">fact</span><span class="o">.</span><span class="n">refresh</span><span class="p">()</span>
+
+            <span class="k">return</span> <span class="n">SuccessResponse</span><span class="p">(</span><span class="n">fact</span><span class="o">.</span><span class="n">to_simple_dict</span><span class="p">())</span>
+
+        <span class="k">except</span> <span class="n">TableError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">UnknownException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Database table error while saving client </span><span class="si">{</span><span class="n">client</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">PutError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">UnknownException</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Failed to save client </span><span class="si">{</span><span class="n">client</span><span class="si">}</span><span class="s2">: Permission denied or condition check failed&quot;</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">UnknownException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unexpected error saving client </span><span class="si">{</span><span class="n">client</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

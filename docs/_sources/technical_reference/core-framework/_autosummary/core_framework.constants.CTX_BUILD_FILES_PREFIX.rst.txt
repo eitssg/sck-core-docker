@@ -1,0 +1,6 @@
+core\_framework.constants.CTX\_BUILD\_FILES\_PREFIX
+===================================================
+
+.. currentmodule:: core_framework.constants
+
+.. autodata:: CTX_BUILD_FILES_PREFIX

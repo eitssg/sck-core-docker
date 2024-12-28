@@ -1,0 +1,31 @@
+core_db.registry.client.models
+==============================
+
+.. automodule:: core_db.registry.client.models
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      ClientFacts
+   
+   
+
+   
+   
+   
+
+
+

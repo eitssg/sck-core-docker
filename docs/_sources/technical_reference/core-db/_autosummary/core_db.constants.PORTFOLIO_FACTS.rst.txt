@@ -1,0 +1,6 @@
+core\_db.constants.PORTFOLIO\_FACTS
+===================================
+
+.. currentmodule:: core_db.constants
+
+.. autodata:: PORTFOLIO_FACTS

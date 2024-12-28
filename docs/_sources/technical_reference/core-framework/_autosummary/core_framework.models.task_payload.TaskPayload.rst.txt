@@ -1,0 +1,70 @@
+core\_framework.models.task\_payload.TaskPayload
+================================================
+
+.. currentmodule:: core_framework.models.task_payload
+
+.. autoclass:: TaskPayload
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~TaskPayload.Type
+      ~TaskPayload.model_computed_fields
+      ~TaskPayload.model_config
+      ~TaskPayload.model_extra
+      ~TaskPayload.model_fields
+      ~TaskPayload.model_fields_set
+      ~TaskPayload.Client
+      ~TaskPayload.Task
+      ~TaskPayload.Force
+      ~TaskPayload.DryRun
+      ~TaskPayload.Identity
+      ~TaskPayload.DeploymentDetails
+      ~TaskPayload.Package
+      ~TaskPayload.Actions
+      ~TaskPayload.State
+      ~TaskPayload.FlowControl
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~TaskPayload.__init__
+      ~TaskPayload.construct
+      ~TaskPayload.copy
+      ~TaskPayload.dict
+      ~TaskPayload.from_arguments
+      ~TaskPayload.from_orm
+      ~TaskPayload.json
+      ~TaskPayload.model_construct
+      ~TaskPayload.model_copy
+      ~TaskPayload.model_dump
+      ~TaskPayload.model_dump_json
+      ~TaskPayload.model_json_schema
+      ~TaskPayload.model_parametrized_name
+      ~TaskPayload.model_post_init
+      ~TaskPayload.model_rebuild
+      ~TaskPayload.model_validate
+      ~TaskPayload.model_validate_json
+      ~TaskPayload.model_validate_strings
+      ~TaskPayload.parse_file
+      ~TaskPayload.parse_obj
+      ~TaskPayload.parse_raw
+      ~TaskPayload.schema
+      ~TaskPayload.schema_json
+      ~TaskPayload.update_forward_refs
+      ~TaskPayload.validate
+      ~TaskPayload.validate_model_before
+      ~TaskPayload.validate_task
+   
+   

@@ -1,0 +1,37 @@
+core\_api.event.event.ApiEventActions
+=====================================
+
+.. currentmodule:: core_api.event.event
+
+.. autoclass:: ApiEventActions
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ApiEventActions.item_types
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ApiEventActions.NoneIfEmpty
+      ~ApiEventActions.__init__
+      ~ApiEventActions.create
+      ~ApiEventActions.delete
+      ~ApiEventActions.get
+      ~ApiEventActions.get_item_type
+      ~ApiEventActions.list
+      ~ApiEventActions.patch
+      ~ApiEventActions.update
+   
+   

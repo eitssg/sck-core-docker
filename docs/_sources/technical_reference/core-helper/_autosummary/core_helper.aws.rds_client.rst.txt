@@ -1,0 +1,6 @@
+core\_helper.aws.rds\_client
+============================
+
+.. currentmodule:: core_helper.aws
+
+.. autofunction:: rds_client

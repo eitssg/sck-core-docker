@@ -1,0 +1,6 @@
+core\_db.constants.CREATED\_AT
+==============================
+
+.. currentmodule:: core_db.constants
+
+.. autodata:: CREATED_AT

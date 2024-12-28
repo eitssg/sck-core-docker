@@ -1,0 +1,6 @@
+core\_framework.constants.HTTP\_PAYMENT\_REQUIRED
+=================================================
+
+.. currentmodule:: core_framework.constants
+
+.. autodata:: HTTP_PAYMENT_REQUIRED

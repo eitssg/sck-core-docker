@@ -1,0 +1,63 @@
+core\_db.registry.portfolio.models.ProjectFacts
+===============================================
+
+.. currentmodule:: core_db.registry.portfolio.models
+
+.. autoclass:: ProjectFacts
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ProjectFacts.UserInstantiated
+      ~ProjectFacts.attr_name
+      ~ProjectFacts.attr_type
+      ~ProjectFacts.attribute_args
+      ~ProjectFacts.attributes
+      ~ProjectFacts.code
+      ~ProjectFacts.description
+      ~ProjectFacts.name
+      ~ProjectFacts.null
+      ~ProjectFacts.repository
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ProjectFacts.__init__
+      ~ProjectFacts.add
+      ~ProjectFacts.append
+      ~ProjectFacts.as_dict
+      ~ProjectFacts.between
+      ~ProjectFacts.contains
+      ~ProjectFacts.delete
+      ~ProjectFacts.deserialize
+      ~ProjectFacts.does_not_exist
+      ~ProjectFacts.exists
+      ~ProjectFacts.from_dynamodb_dict
+      ~ProjectFacts.from_simple_dict
+      ~ProjectFacts.get_attributes
+      ~ProjectFacts.get_value
+      ~ProjectFacts.is_correctly_typed
+      ~ProjectFacts.is_in
+      ~ProjectFacts.is_raw
+      ~ProjectFacts.is_type
+      ~ProjectFacts.prepend
+      ~ProjectFacts.remove
+      ~ProjectFacts.serialize
+      ~ProjectFacts.set
+      ~ProjectFacts.startswith
+      ~ProjectFacts.to_dynamodb_dict
+      ~ProjectFacts.to_simple_dict
+      ~ProjectFacts.validate
+   
+   

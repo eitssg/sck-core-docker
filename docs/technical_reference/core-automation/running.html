@@ -1,0 +1,203 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Running &mdash; SCK Core Automation 1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a3c9731c" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=45d66dd6" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=29a6c3e3"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Database Schema" href="../core-db/db_schema.html" />
+    <link rel="prev" title="Dynamic Security Rules" href="security_rules.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            SCK Core Automation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/index.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/index.html">Developer Guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Technical Reference Guide</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../modules.html">Modules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../core-logging/core-logging.html">core-logging</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../core-framework/core-framework.html">core-framework</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../core-db/core-db.html">core-db</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../core-helper/core-helper.html">core-helper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../core-renderer/core-renderer.html">core-renderer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../core-component-compiler/core-component-compiler.html">core-component-compiler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../core-deployspec-compiler/core-deployspec-compiler.html">core-deployspec-compiler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../core-execute/core-execute.html">core-execute</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../core-organization/core-organization.html">core-organization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../core-runner/core-runner.html">core-runner</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../core-invoker/core-invoker.html">core-invoker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../core-report/core-report.html">core-report</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../core-api-auth/core-api-auth.html">core-api-auth</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../core-api/core-api.html">core-api</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../core-codecommit-listener/core-codecommit-listener.html">core-codecommit-listener</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="core-automation.html">core-automation</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="security_rules.html">Dynamic Security Rules</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Running</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../core-db/db_schema.html">Database Schema</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">SCK Core Automation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Technical Reference Guide</a></li>
+          <li class="breadcrumb-item"><a href="../modules.html">Modules</a></li>
+          <li class="breadcrumb-item"><a href="core-automation.html">core-automation</a></li>
+      <li class="breadcrumb-item active">Running</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/technical_reference/core-automation/running.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="running">
+<h1>Running<a class="headerlink" href="#running" title="Link to this heading"></a></h1>
+<p>Core automation commandline interface (CLI) is a wrapper around the <code class="docutils literal notranslate"><span class="pre">invoke</span></code> library, which provides a way to run tasks
+in a container (lambda or docker).  When you add a new task or make modifications, you can test the module you’ve modified
+by using pytest</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># need to install the requirements</span>
+poetry<span class="w"> </span>install
+
+pytest<span class="w"> </span>./tests
+</pre></div>
+</div>
+<p>All configurations are in the file pytest.ini which are provided in each repository submodule.  Fore core-db, the ini
+file looks like this:</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[pytest]</span>
+<span class="na">addopts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">--maxfail=1 --disable-warnings --cov=core_db --cov-report=term-missing --cov-report=html</span>
+<span class="na">testpaths</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">tests</span>
+<span class="na">python_files</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">test_*.py</span>
+<span class="na">asyncio_default_fixture_loop_scope</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">session</span>
+<span class="na">env_override_existing_values</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">true</span>
+<span class="na">env_files</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="na">.env</span>
+</pre></div>
+</div>
+<p>You sould create the .env file so you can add your Environment Varaiables to your project</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="na">LOCAL_MODE</span><span class="o">=</span><span class="s">true</span>
+</pre></div>
+</div>
+<p>Setting LOCAL_MODE to true will run the all code in a “container” mode (e.g. your laptop or docker container)</p>
+<p><strong>Running Code</strong></p>
+<p>To run a pipeline:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>core<span class="w"> </span>run<span class="w"> </span>compile<span class="w"> </span>-h
+usage:<span class="w"> </span>core<span class="w"> </span>run<span class="w"> </span>compile<span class="w"> </span><span class="o">[</span>-h<span class="o">]</span><span class="w"> </span><span class="o">[</span>--mode<span class="w"> </span>MODE<span class="o">]</span><span class="w"> </span><span class="o">[</span>--aws-profile<span class="w"> </span>AWS_PROFILE<span class="o">]</span>
+<span class="w">                        </span><span class="o">[</span>--app-path<span class="w"> </span>APP_PATH<span class="o">]</span><span class="w"> </span><span class="o">[</span>--bucket-region<span class="w"> </span>BUCKET_REGION<span class="o">]</span>
+<span class="w">                        </span><span class="o">[</span>--bucket-name<span class="w"> </span>BUCKET_NAME<span class="o">]</span>
+<span class="w">                        </span>portfolio<span class="w"> </span>app<span class="w"> </span>branch<span class="w"> </span>build
+
+Component<span class="w"> </span>Compiler<span class="w"> </span><span class="k">for</span><span class="w"> </span>the<span class="w"> </span>Action<span class="w"> </span>Runner
+
+Arguments:
+<span class="w">  </span>-c,<span class="w"> </span>--client<span class="w">          </span>Client<span class="w"> </span>name<span class="w"> </span><span class="o">(</span>default:<span class="w"> </span>configuration<span class="w"> </span>value<span class="o">)</span>
+<span class="w">  </span>-p,<span class="w"> </span>--portfolio<span class="w">       </span>Portfolio<span class="w"> </span>name<span class="w"> </span><span class="o">(</span>default:<span class="w"> </span>environment<span class="w"> </span>variable<span class="o">)</span>
+<span class="w">  </span>-a,<span class="w"> </span>--app<span class="w">             </span>Application/Deployment<span class="w"> </span>name
+<span class="w">  </span>-b,<span class="w"> </span>--branch<span class="w">          </span>Branch<span class="w"> </span>name<span class="w"> </span><span class="o">(</span>with<span class="w"> </span>dashes<span class="w"> </span>instead<span class="w"> </span>of<span class="w"> </span>underscores<span class="o">)</span>
+<span class="w">  </span>-n,<span class="w"> </span>--build<span class="w">           </span>Build<span class="w"> </span>number<span class="w"> </span><span class="o">(</span>git<span class="w"> </span>tag<span class="w"> </span>such<span class="w"> </span>as<span class="w"> </span><span class="s2">&quot;v1.0.0+commitHash&quot;</span><span class="o">)</span>
+<span class="w">  </span>-h,<span class="w"> </span>--help<span class="w">            </span>show<span class="w"> </span>this<span class="w"> </span><span class="nb">help</span><span class="w"> </span>message<span class="w"> </span>and<span class="w"> </span><span class="nb">exit</span>
+<span class="w">  </span>--mode<span class="w"> </span>MODE<span class="w">           </span>Mode<span class="w"> </span>of<span class="w"> </span>operation<span class="w"> </span><span class="o">(</span>None<span class="p">|</span><span class="nb">local</span><span class="o">)</span><span class="w"> </span><span class="o">(</span>default:<span class="w"> </span>None<span class="o">)</span>
+<span class="w">                        </span><span class="k">if</span><span class="w"> </span>Local,<span class="w"> </span><span class="k">then</span><span class="w"> </span>app-path<span class="w"> </span>is<span class="w"> </span>required<span class="w"> </span>and<span class="w"> </span>the<span class="w"> </span>compiled
+<span class="w">                        </span>content<span class="w"> </span>is<span class="w"> </span>deposited<span class="w"> </span><span class="k">in</span><span class="w"> </span>app-path/_compiled
+<span class="w">  </span>--dry-run<span class="w">             </span>Dry<span class="w"> </span>run<span class="w"> </span><span class="o">(</span>default:<span class="w"> </span>False<span class="o">)</span>
+<span class="w">  </span>--app-path<span class="w"> </span>APP_PATH<span class="w">   </span>Local<span class="w"> </span>app<span class="w"> </span>path<span class="w"> </span><span class="o">(</span><span class="nb">local</span><span class="w"> </span>mode<span class="w"> </span>only<span class="o">)</span><span class="w"> </span><span class="o">(</span>default:<span class="w"> </span>None<span class="o">)</span>
+</pre></div>
+</div>
+<p>An example command would look like this:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Local mode</span>
+core<span class="w"> </span>--client<span class="w"> </span>sample<span class="w"> </span>run<span class="w"> </span>compile<span class="w"> </span>-p<span class="w"> </span>demo<span class="w"> </span>-a<span class="w"> </span>simpleapp<span class="w"> </span>-b<span class="w"> </span>staging<span class="w"> </span>-n<span class="w"> </span><span class="m">1</span><span class="w"> </span>--mode<span class="o">=</span><span class="nb">local</span><span class="w"> </span>--app-path<span class="w"> </span>/tmp
+
+<span class="c1"># Test mode</span>
+core<span class="w"> </span>--client<span class="w"> </span>sample<span class="w"> </span>run<span class="w"> </span>compile<span class="w"> </span>-p<span class="w"> </span>demo<span class="w"> </span>-a<span class="w"> </span>simpleapp<span class="w"> </span>-b<span class="w"> </span>staging<span class="w"> </span>-n<span class="w"> </span><span class="m">1</span><span class="w"> </span>--mode<span class="o">=</span><span class="nb">local</span><span class="w"> </span>--dry-run
+</pre></div>
+</div>
+<p>If you wish to output all file content to a container mounted volume, you can set the environment variables:</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="na">CLIENT</span><span class="o">=</span><span class="s">sample</span>
+<span class="na">LOCAL_MODE</span><span class="o">=</span><span class="s">true</span>
+<span class="na">VOLUME</span><span class="o">=</span><span class="s">/opt/data/core</span>
+</pre></div>
+</div>
+<p>And by adding the CLIENT and LOCAL_MODE in the .env file, you can run the command without the –client and –mode flags:</p>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="security_rules.html" class="btn btn-neutral float-left" title="Dynamic Security Rules" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../core-db/db_schema.html" class="btn btn-neutral float-right" title="Database Schema" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

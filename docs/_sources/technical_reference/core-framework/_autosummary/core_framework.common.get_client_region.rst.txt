@@ -1,0 +1,6 @@
+core\_framework.common.get\_client\_region
+==========================================
+
+.. currentmodule:: core_framework.common
+
+.. autofunction:: get_client_region

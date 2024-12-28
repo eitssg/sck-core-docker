@@ -1,0 +1,6 @@
+core\_api.event.event.action\_create\_event
+===========================================
+
+.. currentmodule:: core_api.event.event
+
+.. autofunction:: action_create_event

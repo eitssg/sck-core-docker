@@ -1,0 +1,6 @@
+core\_helper.aws.get\_session
+=============================
+
+.. currentmodule:: core_helper.aws
+
+.. autofunction:: get_session

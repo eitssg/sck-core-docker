@@ -1,0 +1,310 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>core_execute.actionlib.actions.aws.copy_image &mdash; SCK Core Automation 1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=a3c9731c" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/custom.css?v=45d66dd6" />
+
+  
+      <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../_static/documentation_options.js?v=29a6c3e3"></script>
+      <script src="../../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../index.html" class="icon icon-home">
+            SCK Core Automation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../user_guide/index.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developer_guide/index.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../technical_reference/index.html">Technical Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">SCK Core Automation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">core_execute.actionlib.actions.aws.copy_image</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for core_execute.actionlib.actions.aws.copy_image</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Copy an AMI from one region to another with encryption&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
+<span class="kn">import</span> <span class="nn">core_logging</span> <span class="k">as</span> <span class="nn">log</span>
+
+<span class="kn">import</span> <span class="nn">core_framework</span> <span class="k">as</span> <span class="nn">util</span>
+
+<span class="kn">from</span> <span class="nn">core_framework.models</span> <span class="kn">import</span> <span class="n">ActionDefinition</span><span class="p">,</span> <span class="n">DeploymentDetails</span><span class="p">,</span> <span class="n">ActionParams</span>
+
+<span class="kn">import</span> <span class="nn">core_helper.aws</span> <span class="k">as</span> <span class="nn">aws</span>
+
+<span class="kn">from</span> <span class="nn">core_execute.actionlib.action</span> <span class="kn">import</span> <span class="n">BaseAction</span>
+
+
+<div class="viewcode-block" id="generate_template">
+<a class="viewcode-back" href="../../../../../technical_reference/core-execute/_autosummary/core_execute.actionlib.actions.aws.copy_image.generate_template.html#core_execute.actionlib.actions.aws.copy_image.generate_template">[docs]</a>
+<span class="k">def</span> <span class="nf">generate_template</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">ActionDefinition</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate the action definition&quot;&quot;&quot;</span>
+
+    <span class="n">definition</span> <span class="o">=</span> <span class="n">ActionDefinition</span><span class="p">(</span>
+        <span class="n">Label</span><span class="o">=</span><span class="s2">&quot;action-definition-label&quot;</span><span class="p">,</span>
+        <span class="n">Type</span><span class="o">=</span><span class="s2">&quot;AWS::CopyImage&quot;</span><span class="p">,</span>
+        <span class="n">DependsOn</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;put-a-label-here&quot;</span><span class="p">],</span>
+        <span class="n">Params</span><span class="o">=</span><span class="n">ActionParams</span><span class="p">(</span>
+            <span class="n">Account</span><span class="o">=</span><span class="s2">&quot;The account to use for the action (required)&quot;</span><span class="p">,</span>
+            <span class="n">DestinationImageName</span><span class="o">=</span><span class="s2">&quot;The name of the destination image (required)&quot;</span><span class="p">,</span>
+            <span class="n">ImageName</span><span class="o">=</span><span class="s2">&quot;The name of the source image (required)&quot;</span><span class="p">,</span>
+            <span class="n">KmsKeyArn</span><span class="o">=</span><span class="s2">&quot;The KMS key ARN to use for encryption (required)&quot;</span><span class="p">,</span>
+            <span class="n">Region</span><span class="o">=</span><span class="s2">&quot;The region to copy the image to (required)&quot;</span><span class="p">,</span>
+            <span class="n">Tags</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;any&quot;</span><span class="p">:</span> <span class="s2">&quot;The tags to apply to the image (optional)&quot;</span><span class="p">},</span>
+        <span class="p">),</span>
+        <span class="n">Scope</span><span class="o">=</span><span class="s2">&quot;Based on your deployment details, it one of &#39;portfolio&#39;, &#39;app&#39;, &#39;branch&#39;, or &#39;build&#39;&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">definition</span></div>
+
+
+
+<div class="viewcode-block" id="CopyImageAction">
+<a class="viewcode-back" href="../../../../../technical_reference/core-execute/_autosummary/core_execute.actionlib.actions.aws.copy_image.CopyImageAction.html#core_execute.actionlib.actions.aws.copy_image.CopyImageAction">[docs]</a>
+<span class="k">class</span> <span class="nc">CopyImageAction</span><span class="p">(</span><span class="n">BaseAction</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Copy AMI from one region to another with encryption</span>
+
+<span class="sd">    This action will copy an AMI.  The action will wait for the copy to complete before returning.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        Label: Enter a label to define this action instance</span>
+<span class="sd">        Type: Use the value: ``AWS::KMS::CopyImage``</span>
+<span class="sd">        Params.Account: The accoutn where KMS keys are centraly stored</span>
+<span class="sd">        Params.Region: The region where KMS keys are located</span>
+<span class="sd">        Params.ImageName: The name of the source image (required)</span>
+<span class="sd">        Params.KmsKeyArn: The KMS Key ARN to use for encryption (required)</span>
+
+<span class="sd">    .. rubric: ActionDefinition:</span>
+
+<span class="sd">    .. tip:: s3:/&lt;bucket&gt;/artfacts/&lt;deployment_details&gt;/{task}.actions:</span>
+
+<span class="sd">        .. code-block:: yaml</span>
+
+<span class="sd">            - Label: action-aws-copyimage-label</span>
+<span class="sd">              Type: &quot;AWS::KMS::CopyImage&quot;</span>
+<span class="sd">              Params:</span>
+<span class="sd">                Account: &quot;123456789012&quot;</span>
+<span class="sd">                Region: &quot;ap-southeast-1&quot;</span>
+<span class="sd">                ImageName: &quot;My-Image-Name&quot;</span>
+<span class="sd">                KmsKeyArn: &quot;arn:aws:kms:ap-southeast-1:123456789012:key/your-kms-key-id&quot;</span>
+<span class="sd">              Scope: &quot;build&quot;</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">definition</span><span class="p">:</span> <span class="n">ActionDefinition</span><span class="p">,</span>
+        <span class="n">context</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+        <span class="n">deployment_details</span><span class="p">:</span> <span class="n">DeploymentDetails</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">definition</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">deployment_details</span><span class="p">)</span>
+
+        <span class="n">tags</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">Tags</span> <span class="ow">or</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="n">deployment_details</span><span class="o">.</span><span class="n">DeliveredBy</span><span class="p">:</span>
+            <span class="n">tags</span><span class="p">[</span><span class="s2">&quot;DeliveredBy&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">deployment_details</span><span class="o">.</span><span class="n">DeliveredBy</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">tags</span> <span class="o">=</span> <span class="n">aws</span><span class="o">.</span><span class="n">transform_tag_hash</span><span class="p">(</span><span class="n">tags</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_execute</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="s2">&quot;Executing CopyImageAction&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Obtain an EC2 client</span>
+        <span class="n">ec2_client</span> <span class="o">=</span> <span class="n">aws</span><span class="o">.</span><span class="n">ec2_client</span><span class="p">(</span>
+            <span class="n">region</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">Region</span><span class="p">,</span>
+            <span class="n">role</span><span class="o">=</span><span class="n">util</span><span class="o">.</span><span class="n">get_provisioning_role_arn</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">Account</span><span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Find image (provides image id and snapshot ids)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Finding image with name &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">ImageName</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">ec2_client</span><span class="o">.</span><span class="n">describe_images</span><span class="p">(</span>
+            <span class="n">Filters</span><span class="o">=</span><span class="p">[{</span><span class="s2">&quot;Name&quot;</span><span class="p">:</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;Values&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">ImageName</span><span class="p">]}]</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s2">&quot;Images&quot;</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_complete</span><span class="p">(</span>
+                <span class="s2">&quot;Could not find image with name &#39;</span><span class="si">{}</span><span class="s2">&#39;. It may have been previously deleted.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">ImageName</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s2">&quot;Could not find image with name &#39;</span><span class="si">{}</span><span class="s2">&#39;. It may have been previously deleted.&quot;</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">ImageName</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="n">image_id</span> <span class="o">=</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;Images&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;ImageId&quot;</span><span class="p">]</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Found image &#39;</span><span class="si">{}</span><span class="s2">&#39; with name &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="p">,</span> <span class="n">image_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">ImageName</span><span class="p">)</span>
+
+        <span class="c1"># Encrypt AMI by copying source AMI with encryption option</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_running</span><span class="p">(</span><span class="s2">&quot;Encrypting new image&quot;</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">ec2_client</span><span class="o">.</span><span class="n">copy_image</span><span class="p">(</span>
+            <span class="n">Encrypted</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">KmsKeyId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">KmsKeyArn</span><span class="p">,</span>
+            <span class="n">Name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">DestinationImageName</span><span class="p">,</span>
+            <span class="n">SourceImageId</span><span class="o">=</span><span class="n">image_id</span><span class="p">,</span>
+            <span class="n">SourceRegion</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">Region</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">image_id</span> <span class="o">=</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;ImageId&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_output</span><span class="p">(</span><span class="s2">&quot;ImageId&quot;</span><span class="p">,</span> <span class="n">image_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="s2">&quot;ImageId&quot;</span><span class="p">,</span> <span class="n">image_id</span><span class="p">)</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="s2">&quot;CopyImageAction completed&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="s2">&quot;Checking CopyImageAction&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Obtain an EC2 client</span>
+        <span class="n">ec2_client</span> <span class="o">=</span> <span class="n">aws</span><span class="o">.</span><span class="n">ec2_client</span><span class="p">(</span>
+            <span class="n">region</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">Region</span><span class="p">,</span>
+            <span class="n">role</span><span class="o">=</span><span class="n">util</span><span class="o">.</span><span class="n">provisioning_role_arn</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">Account</span><span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Wait for image creation to complete / fail</span>
+        <span class="n">image_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_state</span><span class="p">(</span><span class="s2">&quot;ImageId&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">image_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="s2">&quot;Internal error - state variable ImageId should have been set during action execution&quot;</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_failed</span><span class="p">(</span><span class="s2">&quot;No image previously created - cannot continue&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Checking availability of copied image &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="p">,</span> <span class="n">image_id</span><span class="p">)</span>
+        <span class="n">describe_images_response</span> <span class="o">=</span> <span class="n">ec2_client</span><span class="o">.</span><span class="n">describe_images</span><span class="p">(</span><span class="n">ImageIds</span><span class="o">=</span><span class="p">[</span><span class="n">image_id</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">describe_images_response</span><span class="p">[</span><span class="s2">&quot;Images&quot;</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_failed</span><span class="p">(</span><span class="s2">&quot;No images found with id &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="p">,</span> <span class="n">image_id</span><span class="p">)</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;No images found with id &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="p">,</span> <span class="n">image_id</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="n">state</span> <span class="o">=</span> <span class="n">describe_images_response</span><span class="p">[</span><span class="s2">&quot;Images&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;State&quot;</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">state</span> <span class="o">==</span> <span class="s2">&quot;available&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_running</span><span class="p">(</span><span class="s2">&quot;Tagging image &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">image_id</span><span class="p">))</span>
+            <span class="n">ec2_client</span><span class="o">.</span><span class="n">create_tags</span><span class="p">(</span><span class="n">Resources</span><span class="o">=</span><span class="p">[</span><span class="n">image_id</span><span class="p">],</span> <span class="n">Tags</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tags</span><span class="p">)</span>
+
+            <span class="n">image_snapshots</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_image_snapshots</span><span class="p">(</span><span class="n">describe_images_response</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_running</span><span class="p">(</span>
+                <span class="s2">&quot;Tagging image snapshots: &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">image_snapshots</span><span class="p">))</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">image_snapshots</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">ec2_client</span><span class="o">.</span><span class="n">create_tags</span><span class="p">(</span><span class="n">Resources</span><span class="o">=</span><span class="n">image_snapshots</span><span class="p">,</span> <span class="n">Tags</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tags</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_complete</span><span class="p">(</span><span class="s2">&quot;Image is in state &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">state</span><span class="p">))</span>
+
+        <span class="k">elif</span> <span class="n">state</span> <span class="o">==</span> <span class="s2">&quot;pending&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_running</span><span class="p">(</span><span class="s2">&quot;Image is in state &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">state</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_failed</span><span class="p">(</span><span class="s2">&quot;Image is in state &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">state</span><span class="p">))</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="s2">&quot;CopyImageAction check completed&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_unexecute</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">_cancel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">_resolve</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="s2">&quot;Resolving CopyImageAction&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">Account</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">render_string</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">Account</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">ImageName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">render_string</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">ImageName</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">Region</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">render_string</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">Region</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span>
+        <span class="p">)</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="s2">&quot;CopyImageAction resolved&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__get_image_snapshots</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">describe_images_response</span><span class="p">):</span>
+        <span class="n">snapshots</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">mapping</span> <span class="ow">in</span> <span class="n">describe_images_response</span><span class="p">[</span><span class="s2">&quot;Images&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;BlockDeviceMappings&quot;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;Ebs&quot;</span> <span class="ow">in</span> <span class="n">mapping</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="s2">&quot;SnapshotId&quot;</span> <span class="ow">in</span> <span class="n">mapping</span><span class="p">[</span><span class="s2">&quot;Ebs&quot;</span><span class="p">]):</span>
+                <span class="n">snapshots</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mapping</span><span class="p">[</span><span class="s2">&quot;Ebs&quot;</span><span class="p">][</span><span class="s2">&quot;SnapshotId&quot;</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">snapshots</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

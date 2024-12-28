@@ -1,0 +1,6 @@
+core\_db.exceptions.UnknownException
+====================================
+
+.. currentmodule:: core_db.exceptions
+
+.. autoexception:: UnknownException

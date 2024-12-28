@@ -1,0 +1,71 @@
+core\_db.registry.zone.models.RegionFacts
+=========================================
+
+.. currentmodule:: core_db.registry.zone.models
+
+.. autoclass:: RegionFacts
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~RegionFacts.AwsRegion
+      ~RegionFacts.AzCount
+      ~RegionFacts.ImageAliases
+      ~RegionFacts.MinSuccessfulInstancesPercent
+      ~RegionFacts.NameServers
+      ~RegionFacts.NoProxy
+      ~RegionFacts.Proxy
+      ~RegionFacts.ProxyHost
+      ~RegionFacts.ProxyPort
+      ~RegionFacts.ProxyUrl
+      ~RegionFacts.SecurityAliases
+      ~RegionFacts.SecurityGroupAliases
+      ~RegionFacts.Tags
+      ~RegionFacts.UserInstantiated
+      ~RegionFacts.attr_name
+      ~RegionFacts.attr_type
+      ~RegionFacts.attribute_args
+      ~RegionFacts.null
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~RegionFacts.__init__
+      ~RegionFacts.add
+      ~RegionFacts.append
+      ~RegionFacts.as_dict
+      ~RegionFacts.between
+      ~RegionFacts.contains
+      ~RegionFacts.delete
+      ~RegionFacts.deserialize
+      ~RegionFacts.does_not_exist
+      ~RegionFacts.exists
+      ~RegionFacts.from_dynamodb_dict
+      ~RegionFacts.from_simple_dict
+      ~RegionFacts.get_attributes
+      ~RegionFacts.get_value
+      ~RegionFacts.is_correctly_typed
+      ~RegionFacts.is_in
+      ~RegionFacts.is_raw
+      ~RegionFacts.is_type
+      ~RegionFacts.prepend
+      ~RegionFacts.remove
+      ~RegionFacts.serialize
+      ~RegionFacts.set
+      ~RegionFacts.startswith
+      ~RegionFacts.to_dynamodb_dict
+      ~RegionFacts.to_simple_dict
+      ~RegionFacts.validate
+   
+   

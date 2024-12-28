@@ -1,0 +1,31 @@
+core_db.item.build.models
+=========================
+
+.. automodule:: core_db.item.build.models
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      BuildModel
+   
+   
+
+   
+   
+   
+
+
+

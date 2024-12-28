@@ -1,0 +1,69 @@
+core\_db.item.build.models.BuildModel
+=====================================
+
+.. currentmodule:: core_db.item.build.models
+
+.. autoclass:: BuildModel
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~BuildModel.app_prn
+      ~BuildModel.branch_prn
+      ~BuildModel.context
+      ~BuildModel.created_at
+      ~BuildModel.item_type
+      ~BuildModel.message
+      ~BuildModel.name
+      ~BuildModel.parent_created_at_index
+      ~BuildModel.parent_prn
+      ~BuildModel.portfolio_prn
+      ~BuildModel.prn
+      ~BuildModel.status
+      ~BuildModel.updated_at
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~BuildModel.__init__
+      ~BuildModel.batch_get
+      ~BuildModel.batch_write
+      ~BuildModel.count
+      ~BuildModel.create_table
+      ~BuildModel.delete
+      ~BuildModel.delete_table
+      ~BuildModel.describe_table
+      ~BuildModel.deserialize
+      ~BuildModel.exists
+      ~BuildModel.from_dynamodb_dict
+      ~BuildModel.from_raw_data
+      ~BuildModel.from_simple_dict
+      ~BuildModel.get
+      ~BuildModel.get_attributes
+      ~BuildModel.get_delete_kwargs_from_instance
+      ~BuildModel.get_operation_kwargs_from_class
+      ~BuildModel.get_save_kwargs_from_instance
+      ~BuildModel.get_update_kwargs_from_instance
+      ~BuildModel.query
+      ~BuildModel.refresh
+      ~BuildModel.save
+      ~BuildModel.scan
+      ~BuildModel.serialize
+      ~BuildModel.to_dynamodb_dict
+      ~BuildModel.to_simple_dict
+      ~BuildModel.update
+      ~BuildModel.update_local_version_attribute
+      ~BuildModel.update_ttl
+   
+   

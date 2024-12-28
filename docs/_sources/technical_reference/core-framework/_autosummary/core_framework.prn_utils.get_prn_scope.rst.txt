@@ -1,0 +1,6 @@
+core\_framework.prn\_utils.get\_prn\_scope
+==========================================
+
+.. currentmodule:: core_framework.prn_utils
+
+.. autofunction:: get_prn_scope

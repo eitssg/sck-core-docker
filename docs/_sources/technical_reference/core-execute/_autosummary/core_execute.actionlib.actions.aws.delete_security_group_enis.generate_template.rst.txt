@@ -1,0 +1,6 @@
+core\_execute.actionlib.actions.aws.delete\_security\_group\_enis.generate\_template
+====================================================================================
+
+.. currentmodule:: core_execute.actionlib.actions.aws.delete_security_group_enis
+
+.. autofunction:: generate_template

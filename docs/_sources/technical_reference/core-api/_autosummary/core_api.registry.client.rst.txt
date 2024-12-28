@@ -1,0 +1,43 @@
+core_api.registry.client
+========================
+
+.. automodule:: core_api.registry.client
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+      create_client_action
+      delete_client_action
+      get_client_action
+      get_client_list_action
+      patch_client_action
+      update_client_action
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      ApiRegClientActions
+   
+   
+
+   
+   
+   
+
+
+

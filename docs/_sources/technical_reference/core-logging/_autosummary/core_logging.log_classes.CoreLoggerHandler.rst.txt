@@ -1,0 +1,48 @@
+core\_logging.log\_classes.CoreLoggerHandler
+============================================
+
+.. currentmodule:: core_logging.log_classes
+
+.. autoclass:: CoreLoggerHandler
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~CoreLoggerHandler.name
+      ~CoreLoggerHandler.formatter
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~CoreLoggerHandler.__init__
+      ~CoreLoggerHandler.acquire
+      ~CoreLoggerHandler.addFilter
+      ~CoreLoggerHandler.add_details
+      ~CoreLoggerHandler.close
+      ~CoreLoggerHandler.createLock
+      ~CoreLoggerHandler.emit
+      ~CoreLoggerHandler.filter
+      ~CoreLoggerHandler.flush
+      ~CoreLoggerHandler.format
+      ~CoreLoggerHandler.get_name
+      ~CoreLoggerHandler.handle
+      ~CoreLoggerHandler.handleError
+      ~CoreLoggerHandler.release
+      ~CoreLoggerHandler.removeFilter
+      ~CoreLoggerHandler.replace_holders
+      ~CoreLoggerHandler.setFormatter
+      ~CoreLoggerHandler.setLevel
+      ~CoreLoggerHandler.set_name
+   
+   

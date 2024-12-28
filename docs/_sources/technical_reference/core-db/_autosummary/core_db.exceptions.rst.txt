@@ -1,0 +1,36 @@
+﻿core_db.exceptions
+==================
+
+.. automodule:: core_db.exceptions
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Exceptions
+
+   .. autosummary::
+      :toctree:
+   
+      BadRequestException
+      ConflictException
+      ForbiddenException
+      NotFoundException
+      TableException
+      UnauthorizedException
+      UnknownException
+   
+   
+
+
+

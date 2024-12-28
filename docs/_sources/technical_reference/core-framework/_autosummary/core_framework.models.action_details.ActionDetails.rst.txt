@@ -1,0 +1,68 @@
+core\_framework.models.action\_details.ActionDetails
+====================================================
+
+.. currentmodule:: core_framework.models.action_details
+
+.. autoclass:: ActionDetails
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ActionDetails.AppPath
+      ~ActionDetails.Mode
+      ~ActionDetails.TempDir
+      ~ActionDetails.model_computed_fields
+      ~ActionDetails.model_config
+      ~ActionDetails.model_extra
+      ~ActionDetails.model_fields
+      ~ActionDetails.model_fields_set
+      ~ActionDetails.Client
+      ~ActionDetails.BucketName
+      ~ActionDetails.BucketRegion
+      ~ActionDetails.Key
+      ~ActionDetails.VersionId
+      ~ActionDetails.ContentType
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ActionDetails.__init__
+      ~ActionDetails.construct
+      ~ActionDetails.copy
+      ~ActionDetails.dict
+      ~ActionDetails.from_arguments
+      ~ActionDetails.from_orm
+      ~ActionDetails.json
+      ~ActionDetails.model_construct
+      ~ActionDetails.model_copy
+      ~ActionDetails.model_dump
+      ~ActionDetails.model_dump_json
+      ~ActionDetails.model_json_schema
+      ~ActionDetails.model_parametrized_name
+      ~ActionDetails.model_post_init
+      ~ActionDetails.model_rebuild
+      ~ActionDetails.model_validate
+      ~ActionDetails.model_validate_json
+      ~ActionDetails.model_validate_strings
+      ~ActionDetails.parse_file
+      ~ActionDetails.parse_obj
+      ~ActionDetails.parse_raw
+      ~ActionDetails.schema
+      ~ActionDetails.schema_json
+      ~ActionDetails.set_key
+      ~ActionDetails.update_forward_refs
+      ~ActionDetails.validate
+      ~ActionDetails.validate_artefacts_before
+   
+   

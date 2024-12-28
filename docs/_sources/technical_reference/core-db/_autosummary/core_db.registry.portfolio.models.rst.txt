@@ -1,0 +1,35 @@
+core_db.registry.portfolio.models
+=================================
+
+.. automodule:: core_db.registry.portfolio.models
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      ApproverFacts
+      ContactFacts
+      OwnerFacts
+      PortfolioFacts
+      ProjectFacts
+   
+   
+
+   
+   
+   
+
+
+

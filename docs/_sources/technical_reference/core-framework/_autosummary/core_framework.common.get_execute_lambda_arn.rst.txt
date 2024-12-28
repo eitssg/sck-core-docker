@@ -1,0 +1,6 @@
+core\_framework.common.get\_execute\_lambda\_arn
+================================================
+
+.. currentmodule:: core_framework.common
+
+.. autofunction:: get_execute_lambda_arn

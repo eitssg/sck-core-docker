@@ -1,0 +1,6 @@
+core\_helper.aws.transform\_stack\_parameter\_dict
+==================================================
+
+.. currentmodule:: core_helper.aws
+
+.. autofunction:: transform_stack_parameter_dict

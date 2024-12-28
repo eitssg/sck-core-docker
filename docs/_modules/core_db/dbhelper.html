@@ -1,0 +1,451 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>core_db.dbhelper &mdash; SCK Core Automation 1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a3c9731c" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=45d66dd6" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=29a6c3e3"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            SCK Core Automation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/index.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/index.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../technical_reference/index.html">Technical Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">SCK Core Automation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">core_db.dbhelper</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for core_db.dbhelper</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; A set of helper functions that write and update item records status values in the DB</span>
+
+<span class="sd">THe class also provides a mapping of names to classes to allow for the development of</span>
+<span class="sd">a single interface to the DB for all the different types of items that can be stored in the DB.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">core_logging</span> <span class="k">as</span> <span class="nn">log</span>
+
+<span class="kn">import</span> <span class="nn">core_framework</span> <span class="k">as</span> <span class="nn">util</span>
+
+<span class="kn">from</span> <span class="nn">core_framework.constants</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">DD_ENVIRONMENT</span><span class="p">,</span>
+    <span class="n">DD_SCOPE</span><span class="p">,</span>
+    <span class="n">ENV_ENVIRONMENT</span><span class="p">,</span>
+    <span class="n">SCOPE_BRANCH</span><span class="p">,</span>
+    <span class="n">SCOPE_BUILD</span><span class="p">,</span>
+    <span class="n">SCOPE_COMPONENT</span><span class="p">,</span>
+    <span class="n">TR_STATUS</span><span class="p">,</span>
+    <span class="n">TR_RESPONSE</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">.actions</span> <span class="kn">import</span> <span class="n">TableActions</span>
+
+<span class="kn">from</span> <span class="nn">.item.portfolio.actions</span> <span class="kn">import</span> <span class="n">PortfolioActions</span>
+<span class="kn">from</span> <span class="nn">.item.app.actions</span> <span class="kn">import</span> <span class="n">AppActions</span>
+<span class="kn">from</span> <span class="nn">.item.branch.actions</span> <span class="kn">import</span> <span class="n">BranchActions</span>
+<span class="kn">from</span> <span class="nn">.item.build.actions</span> <span class="kn">import</span> <span class="n">BuildActions</span>
+<span class="kn">from</span> <span class="nn">.item.component.actions</span> <span class="kn">import</span> <span class="n">ComponentActions</span>
+
+<span class="kn">from</span> <span class="nn">.event.actions</span> <span class="kn">import</span> <span class="n">EventActions</span>
+
+<span class="kn">from</span> <span class="nn">.registry.client.actions</span> <span class="kn">import</span> <span class="n">ClientActions</span> <span class="k">as</span> <span class="n">RegClientActions</span>
+<span class="kn">from</span> <span class="nn">.registry.portfolio.actions</span> <span class="kn">import</span> <span class="n">PortfolioActions</span> <span class="k">as</span> <span class="n">RegPortfolioActions</span>
+<span class="kn">from</span> <span class="nn">.registry.app.actions</span> <span class="kn">import</span> <span class="n">AppActions</span> <span class="k">as</span> <span class="n">RegAppActions</span>
+<span class="kn">from</span> <span class="nn">.registry.zone.actions</span> <span class="kn">import</span> <span class="n">ZoneActions</span> <span class="k">as</span> <span class="n">RegZoneActions</span>
+
+<span class="kn">from</span> <span class="nn">.facter.actions</span> <span class="kn">import</span> <span class="n">FactsActions</span>
+<span class="kn">from</span> <span class="nn">.facter.facter</span> <span class="kn">import</span> <span class="n">get_facts_by_identity</span>
+
+<span class="n">PRN</span> <span class="o">=</span> <span class="s2">&quot;prn&quot;</span>
+<span class="n">STATUS</span> <span class="o">=</span> <span class="s2">&quot;status&quot;</span>
+<span class="n">ERROR</span> <span class="o">=</span> <span class="s2">&quot;error&quot;</span>
+<span class="n">OK</span> <span class="o">=</span> <span class="s2">&quot;ok&quot;</span>
+<span class="n">MESSAGE</span> <span class="o">=</span> <span class="s2">&quot;message&quot;</span>
+
+<span class="c1"># the key to this dictionary is an &quot;action prefix name&quot;</span>
+<span class="c1"># Actions will come n as &quot;prefix:action&quot; and the prefix will be used to route the action</span>
+<span class="c1"># to the correct class</span>
+<span class="n">TableActionType</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">TableActions</span> <span class="o">|</span> <span class="n">Any</span><span class="p">]</span>
+
+<span class="n">actions_routes</span><span class="p">:</span> <span class="n">TableActionType</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="c1"># Old Names</span>
+    <span class="s2">&quot;portfolio&quot;</span><span class="p">:</span> <span class="n">PortfolioActions</span><span class="p">,</span>
+    <span class="s2">&quot;app&quot;</span><span class="p">:</span> <span class="n">AppActions</span><span class="p">,</span>
+    <span class="s2">&quot;branch&quot;</span><span class="p">:</span> <span class="n">BranchActions</span><span class="p">,</span>
+    <span class="s2">&quot;build&quot;</span><span class="p">:</span> <span class="n">BuildActions</span><span class="p">,</span>
+    <span class="s2">&quot;component&quot;</span><span class="p">:</span> <span class="n">ComponentActions</span><span class="p">,</span>
+    <span class="c1"># New Names</span>
+    <span class="s2">&quot;item:portfolio&quot;</span><span class="p">:</span> <span class="n">PortfolioActions</span><span class="p">,</span>
+    <span class="s2">&quot;item:app&quot;</span><span class="p">:</span> <span class="n">AppActions</span><span class="p">,</span>
+    <span class="s2">&quot;item:branch&quot;</span><span class="p">:</span> <span class="n">BranchActions</span><span class="p">,</span>
+    <span class="s2">&quot;item:build&quot;</span><span class="p">:</span> <span class="n">BuildActions</span><span class="p">,</span>
+    <span class="s2">&quot;item:component&quot;</span><span class="p">:</span> <span class="n">ComponentActions</span><span class="p">,</span>
+    <span class="c1"># Evants and Status</span>
+    <span class="s2">&quot;event&quot;</span><span class="p">:</span> <span class="n">EventActions</span><span class="p">,</span>
+    <span class="c1"># Facts.  Think of Facts as a DB &quot;View&quot; on the registry</span>
+    <span class="s2">&quot;facts&quot;</span><span class="p">:</span> <span class="n">FactsActions</span><span class="p">,</span>
+    <span class="c1"># Registry</span>
+    <span class="s2">&quot;registry:client&quot;</span><span class="p">:</span> <span class="n">RegClientActions</span><span class="p">,</span>
+    <span class="s2">&quot;registry:portfolio&quot;</span><span class="p">:</span> <span class="n">RegPortfolioActions</span><span class="p">,</span>
+    <span class="s2">&quot;registry:app&quot;</span><span class="p">:</span> <span class="n">RegAppActions</span><span class="p">,</span>
+    <span class="s2">&quot;registry:zone&quot;</span><span class="p">:</span> <span class="n">RegZoneActions</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="sd">&quot;&quot;&quot; TabelActionType: A dictionary that maps the action prefix to the class that will handle the action</span>
+
+<span class="sd">Values are classes that implement the TableActions interface:</span>
+
+<span class="sd">    Items Table or Schema Names:</span>
+
+<span class="sd">        * portfolio</span>
+<span class="sd">        * app</span>
+<span class="sd">        * branch</span>
+<span class="sd">        * build</span>
+<span class="sd">        * component</span>
+
+<span class="sd">    Event Table or Schema Names:</span>
+<span class="sd">        * event</span>
+
+<span class="sd">    Registry Table or Schema Names:</span>
+
+<span class="sd">        * registry:client</span>
+<span class="sd">        * registry:portfolio</span>
+<span class="sd">        * registry:app</span>
+<span class="sd">        * registry:zone</span>
+
+<span class="sd">    Facts View Name:</span>
+
+<span class="sd">        * facts</span>
+
+<span class="sd">    This name, concatenated with list, get, create, update, delete, will be used to route the action to the correct class.</span>
+
+<span class="sd">    For example, to get a list of items from the portfolio table, the action would be:</span>
+
+<span class="sd">        * &quot;portfolio:list&quot;  -&gt; PortfolioActions.list()</span>
+<span class="sd">        * &quot;portfolio:get&quot;   -&gt; PortfolioActions.get()</span>
+
+<span class="sd">    The class must implement the TableActions interface.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="update_status">
+<a class="viewcode-back" href="../../technical_reference/core-db/_autosummary/core_db.dbhelper.update_status.html#core_db.dbhelper.update_status">[docs]</a>
+<span class="k">def</span> <span class="nf">update_status</span><span class="p">(</span>
+    <span class="n">prn</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">status</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">details</span><span class="o">=</span><span class="p">{}</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Updates the status of a PRN in the DB</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        prn (str): Pipeline Reference Number</span>
+<span class="sd">        status (str): Status Code from :class:`BuildStatus`</span>
+<span class="sd">        message (str | None, optional): Text Message. Defaults to None.</span>
+<span class="sd">        details (dict, optional): Item Details. Defaults to {}.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: The items details after the update</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">environment</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="n">ENV_ENVIRONMENT</span><span class="p">)</span>
+
+    <span class="c1"># Try and set environment from config if not already set</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">DD_ENVIRONMENT</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">details</span> <span class="ow">and</span> <span class="n">environment</span><span class="p">:</span>
+            <span class="n">details</span><span class="p">[</span><span class="n">DD_ENVIRONMENT</span><span class="p">]</span> <span class="o">=</span> <span class="n">environment</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="n">log</span><span class="o">.</span><span class="n">status</span><span class="p">(</span>
+        <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="p">,</span>
+        <span class="n">reason</span><span class="o">=</span><span class="n">message</span><span class="p">,</span>
+        <span class="n">details</span><span class="o">=</span><span class="p">{</span><span class="n">DD_SCOPE</span><span class="p">:</span> <span class="n">util</span><span class="o">.</span><span class="n">get_prn_scope</span><span class="p">(</span><span class="n">prn</span><span class="p">),</span> <span class="o">**</span><span class="n">details</span><span class="p">},</span>
+        <span class="n">identity</span><span class="o">=</span><span class="n">prn</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">__api_put_event</span><span class="p">(</span><span class="n">prn</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>
+    <span class="n">__api_update_status</span><span class="p">(</span><span class="n">prn</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="n">TR_STATUS</span><span class="p">:</span> <span class="n">OK</span><span class="p">,</span> <span class="n">TR_RESPONSE</span><span class="p">:</span> <span class="s2">&quot;Status updated&quot;</span><span class="p">}</span></div>
+
+
+
+<div class="viewcode-block" id="get_facts_by_prn">
+<a class="viewcode-back" href="../../technical_reference/core-db/_autosummary/core_db.dbhelper.get_facts_by_prn.html#core_db.dbhelper.get_facts_by_prn">[docs]</a>
+<span class="k">def</span> <span class="nf">get_facts_by_prn</span><span class="p">(</span><span class="n">client</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">prn</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns the facts for a given PRN for the client specified</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        client (str): The client name</span>
+<span class="sd">        prn (str): the PRN within the client</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: The Jinja2 context (a.k.a. facts) for the deployment Pipeline Reference Number</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="n">get_facts_by_identity</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">prn</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">result</span></div>
+
+
+
+<div class="viewcode-block" id="update_item">
+<a class="viewcode-back" href="../../technical_reference/core-db/_autosummary/core_db.dbhelper.update_item.html#core_db.dbhelper.update_item">[docs]</a>
+<span class="k">def</span> <span class="nf">update_item</span><span class="p">(</span><span class="n">prn</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Add or update an item in the DB</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        prn (str): The Pipeline Reference Number</span>
+<span class="sd">        **kwargs: The item details</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: If the data is invalid</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: The item after it ahs been updated/saved.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">scope</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">get_prn_scope</span><span class="p">(</span><span class="n">prn</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">scope</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cannot determine scope from PRN: &#39;</span><span class="si">{</span><span class="n">prn</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;(API) Updating item &#39;</span><span class="si">{</span><span class="n">prn</span><span class="si">}</span><span class="s2">&#39; - </span><span class="si">{</span><span class="n">kwargs</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">klazz</span> <span class="o">=</span> <span class="n">actions_routes</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">scope</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">klazz</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported PRN &#39;</span><span class="si">{</span><span class="n">prn</span><span class="si">}</span><span class="s2">&#39;, cannot determine DB class&quot;</span><span class="p">)</span>
+
+        <span class="n">kwargs</span><span class="p">[</span><span class="n">PRN</span><span class="p">]</span> <span class="o">=</span> <span class="n">prn</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">klazz</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">status</span> <span class="o">!=</span> <span class="n">OK</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to update item &#39;</span><span class="si">{</span><span class="n">prn</span><span class="si">}</span><span class="s2">&#39;: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">data</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">identity</span><span class="o">=</span><span class="n">prn</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">model_dump</span><span class="p">()</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to update item &#39;</span><span class="si">{</span><span class="n">prn</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">,</span> <span class="n">identity</span><span class="o">=</span><span class="n">prn</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">TR_STATUS</span><span class="p">:</span> <span class="n">ERROR</span><span class="p">,</span> <span class="n">TR_RESPONSE</span><span class="p">:</span> <span class="s2">&quot;Failed to update item&quot;</span><span class="p">,</span> <span class="n">MESSAGE</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)}</span></div>
+
+
+
+<div class="viewcode-block" id="register_item">
+<a class="viewcode-back" href="../../technical_reference/core-db/_autosummary/core_db.dbhelper.register_item.html#core_db.dbhelper.register_item">[docs]</a>
+<span class="k">def</span> <span class="nf">register_item</span><span class="p">(</span><span class="n">prn</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates a new item in the DB</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        prn (str): The Pipeline Reference Number</span>
+<span class="sd">        name (str): The Name of the item</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: If the item data is invalid</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: The item after it has been created.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">scope</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">get_prn_scope</span><span class="p">(</span><span class="n">prn</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">scope</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cannot determine scope from PRN: &#39;</span><span class="si">{</span><span class="n">prn</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">scope</span> <span class="o">==</span> <span class="n">SCOPE_BRANCH</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;app_prn&quot;</span><span class="p">:</span> <span class="s2">&quot;:&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">prn</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]),</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">}</span>
+        <span class="k">elif</span> <span class="n">scope</span> <span class="o">==</span> <span class="n">SCOPE_BUILD</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;branch_prn&quot;</span><span class="p">:</span> <span class="s2">&quot;:&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">prn</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="p">]),</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">}</span>
+        <span class="k">elif</span> <span class="n">scope</span> <span class="o">==</span> <span class="n">SCOPE_COMPONENT</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;build_prn&quot;</span><span class="p">:</span> <span class="s2">&quot;:&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">prn</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">]),</span>
+                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
+                <span class="s2">&quot;component_type&quot;</span><span class="p">:</span> <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;component_type&quot;</span><span class="p">],</span>
+            <span class="p">}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Unsupported SCOPE &#39;</span><span class="si">{</span><span class="n">scope</span><span class="si">}</span><span class="s2">&#39;. Must be branch, build or component&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">}</span>
+
+        <span class="c1"># Register the branch (may not be required)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;(API) registering </span><span class="si">{</span><span class="n">scope</span><span class="si">}</span><span class="s2"> &#39;</span><span class="si">{</span><span class="n">prn</span><span class="si">}</span><span class="s2">&#39; </span><span class="si">{</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">STATUS</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">identity</span><span class="o">=</span><span class="n">prn</span>
+        <span class="p">)</span>
+
+        <span class="n">klazz</span> <span class="o">=</span> <span class="n">actions_routes</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">scope</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">klazz</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported PRN &#39;</span><span class="si">{</span><span class="n">prn</span><span class="si">}</span><span class="s2">&#39;, cannot determine DB class&quot;</span><span class="p">)</span>
+
+        <span class="n">data</span><span class="p">[</span><span class="n">PRN</span><span class="p">]</span> <span class="o">=</span> <span class="n">prn</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">klazz</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="o">**</span><span class="n">data</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">status</span> <span class="o">!=</span> <span class="n">OK</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Failed to register item &#39;</span><span class="si">{</span><span class="n">prn</span><span class="si">}</span><span class="s2">&#39;:&quot;</span><span class="p">,</span> <span class="n">details</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">identity</span><span class="o">=</span><span class="n">prn</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">model_dump</span><span class="p">()</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to register item &#39;</span><span class="si">{</span><span class="n">prn</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">,</span> <span class="n">identity</span><span class="o">=</span><span class="n">prn</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="n">TR_STATUS</span><span class="p">:</span> <span class="n">ERROR</span><span class="p">,</span>
+            <span class="n">TR_RESPONSE</span><span class="p">:</span> <span class="s2">&quot;Failed to register item&quot;</span><span class="p">,</span>
+            <span class="n">MESSAGE</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span>
+        <span class="p">}</span></div>
+
+
+
+<span class="k">def</span> <span class="nf">__api_update_status</span><span class="p">(</span><span class="n">prn</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">status</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">scope</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">get_prn_scope</span><span class="p">(</span><span class="n">prn</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">scope</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cannot determine scope from PRN &#39;</span><span class="si">{</span><span class="n">prn</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">scope</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported PRN &#39;</span><span class="si">{</span><span class="n">prn</span><span class="si">}</span><span class="s2">&#39;, cannot update API&quot;</span><span class="p">)</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;(API) Setting status of </span><span class="si">{</span><span class="n">scope</span><span class="si">}</span><span class="s2"> &#39;</span><span class="si">{</span><span class="n">prn</span><span class="si">}</span><span class="s2">&#39; to </span><span class="si">{</span><span class="n">status</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span>
+            <span class="n">identity</span><span class="o">=</span><span class="n">prn</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="n">PRN</span><span class="p">:</span> <span class="n">prn</span><span class="p">,</span> <span class="n">STATUS</span><span class="p">:</span> <span class="n">status</span><span class="p">,</span> <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="n">message</span><span class="p">}</span>
+
+        <span class="n">klazz</span> <span class="o">=</span> <span class="n">actions_routes</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">scope</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">klazz</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported PRN &#39;</span><span class="si">{</span><span class="n">prn</span><span class="si">}</span><span class="s2">&#39;, cannot update API&quot;</span><span class="p">,</span> <span class="n">identity</span><span class="o">=</span><span class="n">prn</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">{</span><span class="n">TR_STATUS</span><span class="p">:</span> <span class="n">ERROR</span><span class="p">,</span> <span class="n">TR_RESPONSE</span><span class="p">:</span> <span class="s2">&quot;Unsupported PRN&quot;</span><span class="p">}</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="n">klazz</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">**</span><span class="n">data</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">status</span> <span class="o">!=</span> <span class="n">OK</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Failed to update status of &#39;</span><span class="si">{</span><span class="n">prn</span><span class="si">}</span><span class="s2">&#39;: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">data</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">identity</span><span class="o">=</span><span class="n">prn</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">model_dump</span><span class="p">()</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to create event &#39;</span><span class="si">{</span><span class="n">prn</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">,</span> <span class="n">identity</span><span class="o">=</span><span class="n">prn</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="n">TR_STATUS</span><span class="p">:</span> <span class="n">ERROR</span><span class="p">,</span>
+            <span class="n">TR_RESPONSE</span><span class="p">:</span> <span class="s2">&quot;Failed to create event&quot;</span><span class="p">,</span>
+            <span class="n">MESSAGE</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span>
+        <span class="p">}</span>
+
+
+<span class="k">def</span> <span class="nf">__api_put_event</span><span class="p">(</span><span class="n">prn</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">status</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;(API) New event: </span><span class="si">{</span><span class="n">prn</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">status</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">identity</span><span class="o">=</span><span class="n">prn</span><span class="p">)</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="n">PRN</span><span class="p">:</span> <span class="n">prn</span><span class="p">,</span> <span class="n">STATUS</span><span class="p">:</span> <span class="n">status</span><span class="p">,</span> <span class="n">MESSAGE</span><span class="p">:</span> <span class="n">message</span><span class="p">}</span>
+
+        <span class="n">klazz</span> <span class="o">=</span> <span class="n">actions_routes</span><span class="p">[</span><span class="s2">&quot;event&quot;</span><span class="p">]</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="n">klazz</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="o">**</span><span class="n">data</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">status</span> <span class="o">!=</span> <span class="n">OK</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Failed to create event &#39;</span><span class="si">{</span><span class="n">prn</span><span class="si">}</span><span class="s2">&#39;:&quot;</span><span class="p">,</span> <span class="n">details</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">identity</span><span class="o">=</span><span class="n">prn</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">model_dump</span><span class="p">()</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to create event &#39;</span><span class="si">{</span><span class="n">prn</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">,</span> <span class="n">identity</span><span class="o">=</span><span class="n">prn</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="n">TR_STATUS</span><span class="p">:</span> <span class="n">ERROR</span><span class="p">,</span>
+            <span class="n">TR_RESPONSE</span><span class="p">:</span> <span class="s2">&quot;Failed to create event&quot;</span><span class="p">,</span>
+            <span class="n">MESSAGE</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span>
+        <span class="p">}</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

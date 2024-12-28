@@ -1,0 +1,6 @@
+core\_helper.aws.s3\_client
+===========================
+
+.. currentmodule:: core_helper.aws
+
+.. autofunction:: s3_client

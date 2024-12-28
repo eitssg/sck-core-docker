@@ -1,0 +1,64 @@
+core\_db.response.ErrorResponse
+===============================
+
+.. currentmodule:: core_db.response
+
+.. autoclass:: ErrorResponse
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ErrorResponse.model_computed_fields
+      ~ErrorResponse.model_config
+      ~ErrorResponse.model_extra
+      ~ErrorResponse.model_fields
+      ~ErrorResponse.model_fields_set
+      ~ErrorResponse.timestamp
+      ~ErrorResponse.status
+      ~ErrorResponse.code
+      ~ErrorResponse.data
+      ~ErrorResponse.links
+      ~ErrorResponse.metadata
+      ~ErrorResponse.errors
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ErrorResponse.__init__
+      ~ErrorResponse.construct
+      ~ErrorResponse.copy
+      ~ErrorResponse.dict
+      ~ErrorResponse.from_orm
+      ~ErrorResponse.json
+      ~ErrorResponse.model_construct
+      ~ErrorResponse.model_copy
+      ~ErrorResponse.model_dump
+      ~ErrorResponse.model_dump_json
+      ~ErrorResponse.model_json_schema
+      ~ErrorResponse.model_parametrized_name
+      ~ErrorResponse.model_post_init
+      ~ErrorResponse.model_rebuild
+      ~ErrorResponse.model_validate
+      ~ErrorResponse.model_validate_json
+      ~ErrorResponse.model_validate_strings
+      ~ErrorResponse.parse_file
+      ~ErrorResponse.parse_obj
+      ~ErrorResponse.parse_raw
+      ~ErrorResponse.schema
+      ~ErrorResponse.schema_json
+      ~ErrorResponse.update_forward_refs
+      ~ErrorResponse.validate
+      ~ErrorResponse.validate_model
+   
+   

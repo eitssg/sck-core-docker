@@ -1,0 +1,6 @@
+core\_framework.common.from\_json
+=================================
+
+.. currentmodule:: core_framework.common
+
+.. autofunction:: from_json

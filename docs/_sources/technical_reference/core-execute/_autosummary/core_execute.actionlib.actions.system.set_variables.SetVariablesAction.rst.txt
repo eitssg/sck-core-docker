@@ -1,0 +1,55 @@
+core\_execute.actionlib.actions.system.set\_variables.SetVariablesAction
+========================================================================
+
+.. currentmodule:: core_execute.actionlib.actions.system.set_variables
+
+.. autoclass:: SetVariablesAction
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~SetVariablesAction.variables
+      ~SetVariablesAction.label
+      ~SetVariablesAction.context
+      ~SetVariablesAction.action_name
+      ~SetVariablesAction.output_namespace
+      ~SetVariablesAction.state_namespace
+      ~SetVariablesAction.type
+      ~SetVariablesAction.condition
+      ~SetVariablesAction.after
+      ~SetVariablesAction.params
+      ~SetVariablesAction.lifecycle_hooks
+      ~SetVariablesAction.deployment_details
+      ~SetVariablesAction.renderer
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~SetVariablesAction.__init__
+      ~SetVariablesAction.check
+      ~SetVariablesAction.execute
+      ~SetVariablesAction.get_output
+      ~SetVariablesAction.get_state
+      ~SetVariablesAction.is_complete
+      ~SetVariablesAction.is_failed
+      ~SetVariablesAction.is_init
+      ~SetVariablesAction.is_running
+      ~SetVariablesAction.set_complete
+      ~SetVariablesAction.set_failed
+      ~SetVariablesAction.set_output
+      ~SetVariablesAction.set_running
+      ~SetVariablesAction.set_skipped
+      ~SetVariablesAction.set_state
+   
+   

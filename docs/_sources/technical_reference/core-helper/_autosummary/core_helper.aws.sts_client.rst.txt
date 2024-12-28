@@ -1,0 +1,6 @@
+core\_helper.aws.sts\_client
+============================
+
+.. currentmodule:: core_helper.aws
+
+.. autofunction:: sts_client

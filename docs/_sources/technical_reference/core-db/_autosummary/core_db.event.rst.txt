@@ -1,0 +1,34 @@
+﻿core_db.event
+=============
+
+.. automodule:: core_db.event
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :template: custom-module-template.rst
+   :recursive:
+   
+      actions
+      models
+
+

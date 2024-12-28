@@ -1,0 +1,54 @@
+core\_execute.actionlib.action.BaseAction
+=========================================
+
+.. currentmodule:: core_execute.actionlib.action
+
+.. autoclass:: BaseAction
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~BaseAction.label
+      ~BaseAction.context
+      ~BaseAction.action_name
+      ~BaseAction.output_namespace
+      ~BaseAction.state_namespace
+      ~BaseAction.type
+      ~BaseAction.condition
+      ~BaseAction.after
+      ~BaseAction.params
+      ~BaseAction.lifecycle_hooks
+      ~BaseAction.deployment_details
+      ~BaseAction.renderer
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~BaseAction.__init__
+      ~BaseAction.check
+      ~BaseAction.execute
+      ~BaseAction.get_output
+      ~BaseAction.get_state
+      ~BaseAction.is_complete
+      ~BaseAction.is_failed
+      ~BaseAction.is_init
+      ~BaseAction.is_running
+      ~BaseAction.set_complete
+      ~BaseAction.set_failed
+      ~BaseAction.set_output
+      ~BaseAction.set_running
+      ~BaseAction.set_skipped
+      ~BaseAction.set_state
+   
+   

@@ -1,0 +1,59 @@
+core\_api.request.Request
+=========================
+
+.. currentmodule:: core_api.request
+
+.. autoclass:: Request
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Request.model_computed_fields
+      ~Request.model_config
+      ~Request.model_extra
+      ~Request.model_fields
+      ~Request.model_fields_set
+      ~Request.action
+      ~Request.data
+      ~Request.auth
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Request.__init__
+      ~Request.construct
+      ~Request.copy
+      ~Request.dict
+      ~Request.from_orm
+      ~Request.json
+      ~Request.model_construct
+      ~Request.model_copy
+      ~Request.model_dump
+      ~Request.model_dump_json
+      ~Request.model_json_schema
+      ~Request.model_parametrized_name
+      ~Request.model_post_init
+      ~Request.model_rebuild
+      ~Request.model_validate
+      ~Request.model_validate_json
+      ~Request.model_validate_strings
+      ~Request.parse_file
+      ~Request.parse_obj
+      ~Request.parse_raw
+      ~Request.schema
+      ~Request.schema_json
+      ~Request.update_forward_refs
+      ~Request.validate
+   
+   

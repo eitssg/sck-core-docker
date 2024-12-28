@@ -1,0 +1,54 @@
+core\_execute.actionlib.actions.aws.create\_image.CreateImageAction
+===================================================================
+
+.. currentmodule:: core_execute.actionlib.actions.aws.create_image
+
+.. autoclass:: CreateImageAction
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~CreateImageAction.label
+      ~CreateImageAction.context
+      ~CreateImageAction.action_name
+      ~CreateImageAction.output_namespace
+      ~CreateImageAction.state_namespace
+      ~CreateImageAction.type
+      ~CreateImageAction.condition
+      ~CreateImageAction.after
+      ~CreateImageAction.params
+      ~CreateImageAction.lifecycle_hooks
+      ~CreateImageAction.deployment_details
+      ~CreateImageAction.renderer
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~CreateImageAction.__init__
+      ~CreateImageAction.check
+      ~CreateImageAction.execute
+      ~CreateImageAction.get_output
+      ~CreateImageAction.get_state
+      ~CreateImageAction.is_complete
+      ~CreateImageAction.is_failed
+      ~CreateImageAction.is_init
+      ~CreateImageAction.is_running
+      ~CreateImageAction.set_complete
+      ~CreateImageAction.set_failed
+      ~CreateImageAction.set_output
+      ~CreateImageAction.set_running
+      ~CreateImageAction.set_skipped
+      ~CreateImageAction.set_state
+   
+   

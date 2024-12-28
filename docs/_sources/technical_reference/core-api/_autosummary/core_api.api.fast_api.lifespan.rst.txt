@@ -1,0 +1,6 @@
+core\_api.api.fast\_api.lifespan
+================================
+
+.. currentmodule:: core_api.api.fast_api
+
+.. autofunction:: lifespan

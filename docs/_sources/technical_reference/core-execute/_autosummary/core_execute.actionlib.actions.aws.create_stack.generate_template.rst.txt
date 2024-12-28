@@ -1,0 +1,6 @@
+core\_execute.actionlib.actions.aws.create\_stack.generate\_template
+====================================================================
+
+.. currentmodule:: core_execute.actionlib.actions.aws.create_stack
+
+.. autofunction:: generate_template

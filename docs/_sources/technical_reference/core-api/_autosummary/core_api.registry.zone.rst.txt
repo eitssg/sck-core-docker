@@ -1,0 +1,43 @@
+core_api.registry.zone
+======================
+
+.. automodule:: core_api.registry.zone
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+      create_zones_action
+      delete_zones_action
+      get_zone_action
+      list_zones_action
+      patch_zones_action
+      update_zones_action
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      ApiRegZoneActions
+   
+   
+
+   
+   
+   
+
+
+

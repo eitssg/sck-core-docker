@@ -1,0 +1,6 @@
+core\_execute.actionlib.actions.aws.delete\_ecr\_repository.generate\_template
+==============================================================================
+
+.. currentmodule:: core_execute.actionlib.actions.aws.delete_ecr_repository
+
+.. autofunction:: generate_template

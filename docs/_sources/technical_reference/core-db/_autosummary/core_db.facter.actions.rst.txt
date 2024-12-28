@@ -1,0 +1,31 @@
+core_db.facter.actions
+======================
+
+.. automodule:: core_db.facter.actions
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      FactsActions
+   
+   
+
+   
+   
+   
+
+
+

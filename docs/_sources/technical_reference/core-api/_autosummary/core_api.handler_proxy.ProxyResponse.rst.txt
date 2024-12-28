@@ -1,0 +1,34 @@
+core\_api.handler\_proxy.ProxyResponse
+======================================
+
+.. currentmodule:: core_api.handler_proxy
+
+.. autoclass:: ProxyResponse
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ProxyResponse.__init__
+      ~ProxyResponse.clear
+      ~ProxyResponse.copy
+      ~ProxyResponse.fromkeys
+      ~ProxyResponse.get
+      ~ProxyResponse.items
+      ~ProxyResponse.keys
+      ~ProxyResponse.pop
+      ~ProxyResponse.popitem
+      ~ProxyResponse.setdefault
+      ~ProxyResponse.update
+      ~ProxyResponse.values
+   
+   

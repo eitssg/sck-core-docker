@@ -1,0 +1,6 @@
+core\_api.item.branch.get\_branch\_action
+=========================================
+
+.. currentmodule:: core_api.item.branch
+
+.. autofunction:: get_branch_action

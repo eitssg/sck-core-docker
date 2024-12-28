@@ -1,0 +1,6 @@
+core\_framework.status.COMPILE\_FAILED
+======================================
+
+.. currentmodule:: core_framework.status
+
+.. autodata:: COMPILE_FAILED

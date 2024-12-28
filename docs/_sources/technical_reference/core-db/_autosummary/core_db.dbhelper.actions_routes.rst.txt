@@ -1,0 +1,6 @@
+core\_db.dbhelper.actions\_routes
+=================================
+
+.. currentmodule:: core_db.dbhelper
+
+.. autodata:: actions_routes

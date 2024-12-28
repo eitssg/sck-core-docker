@@ -1,0 +1,31 @@
+core\_db.item.branch.actions.BranchActions
+==========================================
+
+.. currentmodule:: core_db.item.branch.actions
+
+.. autoclass:: BranchActions
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~BranchActions.__init__
+      ~BranchActions.create
+      ~BranchActions.delete
+      ~BranchActions.get
+      ~BranchActions.list
+      ~BranchActions.patch
+      ~BranchActions.update
+      ~BranchActions.validate_date
+      ~BranchActions.validate_prn
+   
+   

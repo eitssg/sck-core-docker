@@ -1,0 +1,6 @@
+core\_framework.constants.FACTS\_ENVIRONMENT
+============================================
+
+.. currentmodule:: core_framework.constants
+
+.. autodata:: FACTS_ENVIRONMENT

@@ -1,0 +1,54 @@
+core\_execute.actionlib.actions.aws.delete\_image.DeleteImageAction
+===================================================================
+
+.. currentmodule:: core_execute.actionlib.actions.aws.delete_image
+
+.. autoclass:: DeleteImageAction
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~DeleteImageAction.label
+      ~DeleteImageAction.context
+      ~DeleteImageAction.action_name
+      ~DeleteImageAction.output_namespace
+      ~DeleteImageAction.state_namespace
+      ~DeleteImageAction.type
+      ~DeleteImageAction.condition
+      ~DeleteImageAction.after
+      ~DeleteImageAction.params
+      ~DeleteImageAction.lifecycle_hooks
+      ~DeleteImageAction.deployment_details
+      ~DeleteImageAction.renderer
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~DeleteImageAction.__init__
+      ~DeleteImageAction.check
+      ~DeleteImageAction.execute
+      ~DeleteImageAction.get_output
+      ~DeleteImageAction.get_state
+      ~DeleteImageAction.is_complete
+      ~DeleteImageAction.is_failed
+      ~DeleteImageAction.is_init
+      ~DeleteImageAction.is_running
+      ~DeleteImageAction.set_complete
+      ~DeleteImageAction.set_failed
+      ~DeleteImageAction.set_output
+      ~DeleteImageAction.set_running
+      ~DeleteImageAction.set_skipped
+      ~DeleteImageAction.set_state
+   
+   

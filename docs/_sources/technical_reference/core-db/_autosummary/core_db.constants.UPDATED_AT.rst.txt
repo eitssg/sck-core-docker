@@ -1,0 +1,6 @@
+core\_db.constants.UPDATED\_AT
+==============================
+
+.. currentmodule:: core_db.constants
+
+.. autodata:: UPDATED_AT

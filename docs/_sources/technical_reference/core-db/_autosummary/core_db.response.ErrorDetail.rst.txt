@@ -1,0 +1,59 @@
+core\_db.response.ErrorDetail
+=============================
+
+.. currentmodule:: core_db.response
+
+.. autoclass:: ErrorDetail
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ErrorDetail.model_computed_fields
+      ~ErrorDetail.model_config
+      ~ErrorDetail.model_extra
+      ~ErrorDetail.model_fields
+      ~ErrorDetail.model_fields_set
+      ~ErrorDetail.type
+      ~ErrorDetail.message
+      ~ErrorDetail.track
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ErrorDetail.__init__
+      ~ErrorDetail.construct
+      ~ErrorDetail.copy
+      ~ErrorDetail.dict
+      ~ErrorDetail.from_orm
+      ~ErrorDetail.json
+      ~ErrorDetail.model_construct
+      ~ErrorDetail.model_copy
+      ~ErrorDetail.model_dump
+      ~ErrorDetail.model_dump_json
+      ~ErrorDetail.model_json_schema
+      ~ErrorDetail.model_parametrized_name
+      ~ErrorDetail.model_post_init
+      ~ErrorDetail.model_rebuild
+      ~ErrorDetail.model_validate
+      ~ErrorDetail.model_validate_json
+      ~ErrorDetail.model_validate_strings
+      ~ErrorDetail.parse_file
+      ~ErrorDetail.parse_obj
+      ~ErrorDetail.parse_raw
+      ~ErrorDetail.schema
+      ~ErrorDetail.schema_json
+      ~ErrorDetail.update_forward_refs
+      ~ErrorDetail.validate
+   
+   

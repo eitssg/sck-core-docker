@@ -1,0 +1,32 @@
+core_api.api.fast_api
+=====================
+
+.. automodule:: core_api.api.fast_api
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+      get_app
+      is_running
+      lifespan
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

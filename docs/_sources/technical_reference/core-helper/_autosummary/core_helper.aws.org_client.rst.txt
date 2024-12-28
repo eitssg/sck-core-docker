@@ -1,0 +1,6 @@
+core\_helper.aws.org\_client
+============================
+
+.. currentmodule:: core_helper.aws
+
+.. autofunction:: org_client

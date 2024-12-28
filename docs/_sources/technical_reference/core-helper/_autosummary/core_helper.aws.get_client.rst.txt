@@ -1,0 +1,6 @@
+core\_helper.aws.get\_client
+============================
+
+.. currentmodule:: core_helper.aws
+
+.. autofunction:: get_client

@@ -1,0 +1,44 @@
+﻿core_api
+========
+
+.. automodule:: core_api
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :template: custom-module-template.rst
+   :recursive:
+   
+      actions
+      api
+      constants
+      event
+      facts
+      handler
+      handler_direct
+      handler_proxy
+      item
+      registry
+      request
+      types
+
+

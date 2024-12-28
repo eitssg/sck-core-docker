@@ -1,0 +1,198 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>core_api.handler &mdash; SCK Core Automation 1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a3c9731c" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=45d66dd6" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=29a6c3e3"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            SCK Core Automation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/index.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/index.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../technical_reference/index.html">Technical Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">SCK Core Automation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">core_api.handler</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for core_api.handler</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
+
+<span class="kn">import</span> <span class="nn">json</span>
+
+<span class="kn">from</span> <span class="nn">.handler_direct</span> <span class="kn">import</span> <span class="n">handler_direct</span>
+<span class="kn">from</span> <span class="nn">.handler_proxy</span> <span class="kn">import</span> <span class="n">handler_proxy</span>
+
+
+<div class="viewcode-block" id="handler">
+<a class="viewcode-back" href="../../technical_reference/core-api/_autosummary/core_api.handler.handler.html#core_api.handler.handler">[docs]</a>
+<span class="k">def</span> <span class="nf">handler</span><span class="p">(</span><span class="n">event</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">Any</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This is the main lambda handler.  It routes the request to the appropriate handler</span>
+<span class="sd">    based on the request method.</span>
+
+<span class="sd">    **Method 1 - Lambda Invoker**</span>
+
+<span class="sd">    The invoker will call the API with a specific API.  See the request format is</span>
+
+<span class="sd">    .. clode-block:: python</span>
+
+<span class="sd">        event: dict = {</span>
+<span class="sd">            &quot;action&quot;: &quot;action_name&quot;,</span>
+<span class="sd">            &quot;data&quot;: &quot;{\&quot;key\&quot;: \&quot;value\&quot;}&quot;</span>
+<span class="sd">        }</span>
+
+<span class="sd">    When received an &quot;action&quot; in the event, we route to the legacy handler.</span>
+
+<span class="sd">    The response object is a dictionary with the following keys:</span>
+
+<span class="sd">    .. clode-block:: python</span>
+
+<span class="sd">        response: dict = {</span>
+<span class="sd">            &quot;status&quot;: &quot;ok | error&quot;,</span>
+<span class="sd">            &quot;code&quot;: 200,</span>
+<span class="sd">            &quot;data&quot;: &quot;{\&quot;key\&quot;: \&quot;value\&quot;}&quot;,</span>
+<span class="sd">            &quot;timestamp&quot;: &quot;2024-01-01T00:00:00Z&quot;</span>
+<span class="sd">        }</span>
+
+<span class="sd">    **Method 2 - API Gateway**</span>
+
+<span class="sd">    When received a &quot;resource&quot; in the event, we route to the gateway handler.  This interface is defined</span>
+<span class="sd">    by clicking the &quot;Integration Request&quot; in the API Gateway console and setting the content type to</span>
+<span class="sd">    &quot;application/json&quot;.</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        event = {</span>
+<span class="sd">            &quot;resource&quot;: &quot;/api/v1/client/{client}&quot;,</span>
+<span class="sd">            &quot;httpMethod&quot;: &quot;GET&quot;,</span>
+<span class="sd">            &quot;pathParameters&quot;: {</span>
+<span class="sd">                &quot;client&quot;: &quot;example&quot;</span>
+<span class="sd">            },</span>
+<span class="sd">            &quot;queryStringParameters&quot;: {</span>
+<span class="sd">                &quot;key&quot;: &quot;value&quot;</span>
+<span class="sd">            },</span>
+<span class="sd">            &quot;body&quot;: &quot;{\&quot;key\&quot;: \&quot;value\&quot;}&quot;</span>
+<span class="sd">        }</span>
+
+<span class="sd">    Once processed, the response is what is expected by AWS API Gateway.  This interface is defined</span>
+<span class="sd">    by clicking the &quot;Integration Request&quot; in the API Gateway console and setting the content type to</span>
+<span class="sd">    &quot;application/json&quot;.</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        response = {</span>
+<span class="sd">            &quot;isBase64Encoded&quot;: False,</span>
+<span class="sd">            &quot;statusCode&quot;: 200,</span>
+<span class="sd">            &quot;headers&quot;: {</span>
+<span class="sd">                &quot;Content-Type&quot;: &quot;application/json&quot;</span>
+<span class="sd">            },</span>
+<span class="sd">            &quot;body&quot;: &quot;{\&quot;key\&quot;: \&quot;value\&quot;}&quot;</span>
+<span class="sd">        }</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        event (dict): from AWS API Gateway or Invoker</span>
+<span class="sd">        context (dict, optional): Typically Cognito Authorization/Identificatoin Defaults to None.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: A dictionary with the response for AWS API Gateway or Invoker</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;statusCode&quot;</span><span class="p">:</span> <span class="mi">400</span><span class="p">,</span>
+            <span class="s2">&quot;body&quot;</span><span class="p">:</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span><span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Event must be a dictionary&quot;</span><span class="p">}),</span>
+        <span class="p">}</span>
+
+    <span class="k">if</span> <span class="s2">&quot;action&quot;</span> <span class="ow">in</span> <span class="n">event</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">handler_direct</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="s2">&quot;resource&quot;</span> <span class="ow">in</span> <span class="n">event</span> <span class="ow">and</span> <span class="s2">&quot;httpMethod&quot;</span> <span class="ow">in</span> <span class="n">event</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">handler_proxy</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;statusCode&quot;</span><span class="p">:</span> <span class="mi">400</span><span class="p">,</span>
+            <span class="s2">&quot;body&quot;</span><span class="p">:</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span><span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Unsupported event&quot;</span><span class="p">,</span> <span class="s2">&quot;event&quot;</span><span class="p">:</span> <span class="n">event</span><span class="p">}),</span>
+        <span class="p">}</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

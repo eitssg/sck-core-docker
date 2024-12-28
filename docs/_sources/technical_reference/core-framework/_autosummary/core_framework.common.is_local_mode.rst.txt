@@ -1,0 +1,6 @@
+core\_framework.common.is\_local\_mode
+======================================
+
+.. currentmodule:: core_framework.common
+
+.. autofunction:: is_local_mode

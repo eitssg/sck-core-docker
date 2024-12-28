@@ -1,0 +1,67 @@
+core\_framework.models.actions.action.ActionDefinition
+======================================================
+
+.. currentmodule:: core_framework.models.actions.action
+
+.. autoclass:: ActionDefinition
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ActionDefinition.model_computed_fields
+      ~ActionDefinition.model_config
+      ~ActionDefinition.model_extra
+      ~ActionDefinition.model_fields
+      ~ActionDefinition.model_fields_set
+      ~ActionDefinition.Label
+      ~ActionDefinition.Type
+      ~ActionDefinition.DependsOn
+      ~ActionDefinition.Params
+      ~ActionDefinition.Scope
+      ~ActionDefinition.Condition
+      ~ActionDefinition.Before
+      ~ActionDefinition.After
+      ~ActionDefinition.SaveOutputs
+      ~ActionDefinition.LifecycleHooks
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ActionDefinition.__init__
+      ~ActionDefinition.construct
+      ~ActionDefinition.copy
+      ~ActionDefinition.dict
+      ~ActionDefinition.from_orm
+      ~ActionDefinition.json
+      ~ActionDefinition.model_construct
+      ~ActionDefinition.model_copy
+      ~ActionDefinition.model_dump
+      ~ActionDefinition.model_dump_json
+      ~ActionDefinition.model_json_schema
+      ~ActionDefinition.model_parametrized_name
+      ~ActionDefinition.model_post_init
+      ~ActionDefinition.model_rebuild
+      ~ActionDefinition.model_validate
+      ~ActionDefinition.model_validate_json
+      ~ActionDefinition.model_validate_strings
+      ~ActionDefinition.parse_file
+      ~ActionDefinition.parse_obj
+      ~ActionDefinition.parse_raw
+      ~ActionDefinition.schema
+      ~ActionDefinition.schema_json
+      ~ActionDefinition.ser_model
+      ~ActionDefinition.update_forward_refs
+      ~ActionDefinition.validate
+   
+   

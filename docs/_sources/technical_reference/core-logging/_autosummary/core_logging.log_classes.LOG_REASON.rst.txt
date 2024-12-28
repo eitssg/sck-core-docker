@@ -1,0 +1,6 @@
+core\_logging.log\_classes.LOG\_REASON
+======================================
+
+.. currentmodule:: core_logging.log_classes
+
+.. autodata:: LOG_REASON

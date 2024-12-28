@@ -1,0 +1,40 @@
+core_api.handler_proxy
+======================
+
+.. automodule:: core_api.handler_proxy
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+      check_if_user_authorised
+      get_correlation_id
+      handler_proxy
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      ProxyResponse
+   
+   
+
+   
+   
+   
+
+
+

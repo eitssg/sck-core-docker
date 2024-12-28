@@ -1,0 +1,30 @@
+core\_db.registry.zone.actions.ZoneActions
+==========================================
+
+.. currentmodule:: core_db.registry.zone.actions
+
+.. autoclass:: ZoneActions
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ZoneActions.__init__
+      ~ZoneActions.create
+      ~ZoneActions.delete
+      ~ZoneActions.get
+      ~ZoneActions.get_clent_portfolio_zone
+      ~ZoneActions.list
+      ~ZoneActions.patch
+      ~ZoneActions.update
+   
+   

@@ -1,0 +1,181 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>core_framework.models.actions.action_params &mdash; SCK Core Automation 1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a3c9731c" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=45d66dd6" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=29a6c3e3"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="core_framework.models.actions.action_params.STACKNAME" href="core_framework.models.actions.action_params.STACKNAME.html" />
+    <link rel="prev" title="core_framework.models.actions.action.ActionDefinition" href="core_framework.models.actions.action.ActionDefinition.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            SCK Core Automation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../user_guide/index.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developer_guide/index.html">Developer Guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Technical Reference Guide</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../modules.html">Modules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../core-logging/core-logging.html">core-logging</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../core-framework.html">core-framework</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../core-framework.html#constants">Constants</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="../core-framework.html#object-models">Object Models</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../core-framework.html#common-functions">Common Functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../core-framework.html#local-execution-magic">Local Execution Magic</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-db/core-db.html">core-db</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-helper/core-helper.html">core-helper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-renderer/core-renderer.html">core-renderer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-component-compiler/core-component-compiler.html">core-component-compiler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-deployspec-compiler/core-deployspec-compiler.html">core-deployspec-compiler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-execute/core-execute.html">core-execute</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-organization/core-organization.html">core-organization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-runner/core-runner.html">core-runner</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-invoker/core-invoker.html">core-invoker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-report/core-report.html">core-report</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-api-auth/core-api-auth.html">core-api-auth</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-api/core-api.html">core-api</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-codecommit-listener/core-codecommit-listener.html">core-codecommit-listener</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-automation/core-automation.html">core-automation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../core-db/db_schema.html">Database Schema</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SCK Core Automation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Technical Reference Guide</a></li>
+          <li class="breadcrumb-item"><a href="../../modules.html">Modules</a></li>
+          <li class="breadcrumb-item"><a href="../core-framework.html">core-framework</a></li>
+          <li class="breadcrumb-item"><a href="core_framework.models.html">core_framework.models</a></li>
+          <li class="breadcrumb-item"><a href="core_framework.models.actions.html">core_framework.models.actions</a></li>
+      <li class="breadcrumb-item active">core_framework.models.actions.action_params</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/technical_reference/core-framework/_autosummary/core_framework.models.actions.action_params.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-core_framework.models.actions.action_params">
+<span id="core-framework-models-actions-action-params"></span><h1>core_framework.models.actions.action_params<a class="headerlink" href="#module-core_framework.models.actions.action_params" title="Link to this heading"></a></h1>
+<p>The params module contains the ActionParams class which provides a model for how parameters are to
+be based to actions in the ActionLib library</p>
+<p class="rubric">Module Attributes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.models.actions.action_params.STACKNAME.html#core_framework.models.actions.action_params.STACKNAME" title="core_framework.models.actions.action_params.STACKNAME"><code class="xref py py-obj docutils literal notranslate"><span class="pre">STACKNAME</span></code></a></p></td>
+<td><p>The name of the stack field in the Actions object.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.models.actions.action_params.ACCOUNT.html#core_framework.models.actions.action_params.ACCOUNT" title="core_framework.models.actions.action_params.ACCOUNT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ACCOUNT</span></code></a></p></td>
+<td><p>The name of the account field in the Actions object.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.models.actions.action_params.REGION.html#core_framework.models.actions.action_params.REGION" title="core_framework.models.actions.action_params.REGION"><code class="xref py py-obj docutils literal notranslate"><span class="pre">REGION</span></code></a></p></td>
+<td><p>The name of the region field in the Actions object.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.models.actions.action_params.TEMPLATE_URL.html#core_framework.models.actions.action_params.TEMPLATE_URL" title="core_framework.models.actions.action_params.TEMPLATE_URL"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TEMPLATE_URL</span></code></a></p></td>
+<td><p>The name of the template_url field in the Actions object.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.models.actions.action_params.STACK_PARAMETERS.html#core_framework.models.actions.action_params.STACK_PARAMETERS" title="core_framework.models.actions.action_params.STACK_PARAMETERS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">STACK_PARAMETERS</span></code></a></p></td>
+<td><p>The name of the stack_parameters field in the Actions object.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.models.actions.action_params.TAGS.html#core_framework.models.actions.action_params.TAGS" title="core_framework.models.actions.action_params.TAGS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TAGS</span></code></a></p></td>
+<td><p>Tags can be defined on the action that will be added to all resources in the deployment.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.models.actions.action_params.STACK_POLICY.html#core_framework.models.actions.action_params.STACK_POLICY" title="core_framework.models.actions.action_params.STACK_POLICY"><code class="xref py py-obj docutils literal notranslate"><span class="pre">STACK_POLICY</span></code></a></p></td>
+<td><p>Certain stack deployments may require a stack policy.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.models.actions.action_params.USER_NAME.html#core_framework.models.actions.action_params.USER_NAME" title="core_framework.models.actions.action_params.USER_NAME"><code class="xref py py-obj docutils literal notranslate"><span class="pre">USER_NAME</span></code></a></p></td>
+<td><p>The name of the user_name field in the Actions object.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Classes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.models.actions.action_params.ActionParams.html#core_framework.models.actions.action_params.ActionParams" title="core_framework.models.actions.action_params.ActionParams"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ActionParams</span></code></a>(*[, Account, StackName, ...])</p></td>
+<td><p>ActionParams is a model for the parameters that are passed to the BaseAction object in the ActionLib library.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="core_framework.models.actions.action.ActionDefinition.html" class="btn btn-neutral float-left" title="core_framework.models.actions.action.ActionDefinition" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="core_framework.models.actions.action_params.STACKNAME.html" class="btn btn-neutral float-right" title="core_framework.models.actions.action_params.STACKNAME" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

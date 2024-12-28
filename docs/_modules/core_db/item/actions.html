@@ -1,0 +1,419 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>core_db.item.actions &mdash; SCK Core Automation 1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a3c9731c" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=45d66dd6" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=29a6c3e3"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            SCK Core Automation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_guide/index.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developer_guide/index.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../technical_reference/index.html">Technical Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SCK Core Automation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">core_db.item.actions</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for core_db.item.actions</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; Defines the the generic list, get, create, update, delete methods for the Items table core-automation-items</span>
+
+<span class="sd">This will be subclassed to implement Schema specific operations for portfolio, app, branch, build, component items.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
+
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">base64</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+
+<span class="kn">from</span> <span class="nn">pynamodb.exceptions</span> <span class="kn">import</span> <span class="n">DoesNotExist</span><span class="p">,</span> <span class="n">DeleteError</span><span class="p">,</span> <span class="n">PutError</span>
+<span class="kn">from</span> <span class="nn">pynamodb.expressions.update</span> <span class="kn">import</span> <span class="n">Action</span>
+
+<span class="kn">import</span> <span class="nn">core_framework</span> <span class="k">as</span> <span class="nn">util</span>
+<span class="kn">import</span> <span class="nn">core_logging</span> <span class="k">as</span> <span class="nn">log</span>
+
+<span class="kn">from</span> <span class="nn">core_framework.time_utils</span> <span class="kn">import</span> <span class="n">make_default_time</span>
+
+<span class="kn">from</span> <span class="nn">..constants</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">EARLIEST_TIME</span><span class="p">,</span>
+    <span class="n">LATEST_TIME</span><span class="p">,</span>
+    <span class="n">DATA_PAGINATOR</span><span class="p">,</span>
+    <span class="n">SORT</span><span class="p">,</span>
+    <span class="n">ASCENDING</span><span class="p">,</span>
+    <span class="n">LIMIT</span><span class="p">,</span>
+    <span class="n">PRN</span><span class="p">,</span>
+    <span class="n">PARENT_PRN</span><span class="p">,</span>
+    <span class="n">NAME</span><span class="p">,</span>
+    <span class="n">UPDATED_AT</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">..actions</span> <span class="kn">import</span> <span class="n">TableActions</span>
+
+<span class="kn">from</span> <span class="nn">..response</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Response</span><span class="p">,</span>
+    <span class="n">SuccessResponse</span><span class="p">,</span>
+    <span class="n">NoContentResponse</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">..exceptions</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">BadRequestException</span><span class="p">,</span>
+    <span class="n">ConflictException</span><span class="p">,</span>
+    <span class="n">UnknownException</span><span class="p">,</span>
+    <span class="n">NotFoundException</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">ItemModel</span>
+
+
+<div class="viewcode-block" id="ItemTableActions">
+<a class="viewcode-back" href="../../../technical_reference/core-db/_autosummary/core_db.item.actions.ItemTableActions.html#core_db.item.actions.ItemTableActions">[docs]</a>
+<span class="k">class</span> <span class="nc">ItemTableActions</span><span class="p">(</span><span class="n">TableActions</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Provides the implmentation of :class:`TableActions` for the Items table.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">item_model</span> <span class="o">=</span> <span class="n">ItemModel</span>
+
+<div class="viewcode-block" id="ItemTableActions.validate_date">
+<a class="viewcode-back" href="../../../technical_reference/core-db/_autosummary/core_db.item.actions.ItemTableActions.html#core_db.item.actions.ItemTableActions.validate_date">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">validate_date</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">date</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Validate that the data is a string and that it is in the correct</span>
+<span class="sd">        format for the items table. (iso8601).  If the date is not a string</span>
+<span class="sd">        and is a datetime object, then it is returned as is.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            date (Any): string or datetime object representing iso8601 date</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Any: a datetime object or None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">date</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">T%H:%M:%S.</span><span class="si">%f</span><span class="s2">Z&quot;</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="n">date</span></div>
+
+
+<div class="viewcode-block" id="ItemTableActions.validate_prn">
+<a class="viewcode-back" href="../../../technical_reference/core-db/_autosummary/core_db.item.actions.ItemTableActions.html#core_db.item.actions.ItemTableActions.validate_prn">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">validate_prn</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">prn</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Validates that the prn is a valid prn for the items table.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            prn (str): The &#39;identity&#39; or Pipeline Reference Number (PRN)</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            BadRequestException: if the PRN is invalid (or None)</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: the PRN passed in.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">util</span><span class="o">.</span><span class="n">validate_item_prn</span><span class="p">(</span><span class="n">prn</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">BadRequestException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid prn: </span><span class="si">{</span><span class="n">prn</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">prn</span></div>
+
+
+<div class="viewcode-block" id="ItemTableActions.create">
+<a class="viewcode-back" href="../../../technical_reference/core-db/_autosummary/core_db.item.actions.ItemTableActions.html#core_db.item.actions.ItemTableActions.create">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a new item in the items table.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            BadRequestException: If the data is invalid such as bad PRN or bad resource Name or failed data model validations.</span>
+<span class="sd">            ConflictException: If the item already exists in the item table</span>
+<span class="sd">            UnknownException: If some uknown type of error occured when trying to save the record.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Response: :class:`Response` object containing the record created.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Load the request data</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Received create request&quot;</span><span class="p">,</span> <span class="n">details</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="n">prn</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">PRN</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">prn</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">BadRequestException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;A [prn] is required for this item: </span><span class="si">{</span><span class="n">kwargs</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">NAME</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">BadRequestException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;A [name] for this item is required: </span><span class="si">{</span><span class="n">kwargs</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">parent_prn</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">PARENT_PRN</span><span class="p">,</span> <span class="n">prn</span><span class="p">[</span><span class="mi">0</span> <span class="p">:</span> <span class="n">prn</span><span class="o">.</span><span class="n">rindex</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)])</span>
+
+        <span class="c1"># Remove any created_at or updated_at fields as these are automatic</span>
+        <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;created_at&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;updated_at&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="n">item</span><span class="p">:</span> <span class="n">ItemModel</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">item_model</span><span class="p">(</span><span class="n">prn</span><span class="o">=</span><span class="n">prn</span><span class="p">,</span> <span class="n">parent_prn</span><span class="o">=</span><span class="n">parent_prn</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="c1"># Add the new item to the database, if it doesn&#39;t already exist</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">item</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">item_model</span><span class="o">.</span><span class="n">prn</span><span class="o">.</span><span class="n">does_not_exist</span><span class="p">())</span>
+        <span class="k">except</span> <span class="n">PutError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">cause_response_code</span> <span class="o">==</span> <span class="s2">&quot;ConditionalCheckFailedException&quot;</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">ConflictException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Item [</span><span class="si">{</span><span class="n">item</span><span class="o">.</span><span class="n">prn</span><span class="si">}</span><span class="s2">] already exists&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">BadRequestException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Creation failed - </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">BadRequestException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid item data: </span><span class="si">{</span><span class="n">kwargs</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">UnknownException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Creation failed - </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Return the new item</span>
+        <span class="k">return</span> <span class="n">SuccessResponse</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">to_simple_dict</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="ItemTableActions.delete">
+<a class="viewcode-back" href="../../../technical_reference/core-db/_autosummary/core_db.item.actions.ItemTableActions.html#core_db.item.actions.ItemTableActions.delete">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Response</span><span class="p">:</span>
+        <span class="c1"># Load the request data</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Received delete request:&quot;</span><span class="p">,</span> <span class="n">details</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="n">prn</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">PRN</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">cls</span><span class="o">.</span><span class="n">validate_prn</span><span class="p">(</span><span class="n">prn</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">BadRequestException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid prn: </span><span class="si">{</span><span class="n">prn</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Load the requested item.  If not found, it&#39;s not an error, but return 204</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">item</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">item_model</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">prn</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">DoesNotExist</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">NoContentResponse</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Item not found: </span><span class="si">{</span><span class="n">prn</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">item</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+        <span class="k">except</span> <span class="n">DeleteError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">UnknownException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to delete - </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">SuccessResponse</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Item deleted: </span><span class="si">{</span><span class="n">prn</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ItemTableActions.get">
+<a class="viewcode-back" href="../../../technical_reference/core-db/_autosummary/core_db.item.actions.ItemTableActions.html#core_db.item.actions.ItemTableActions.get">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Response</span><span class="p">:</span>
+        <span class="c1"># Load the request data</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Received get request:&quot;</span><span class="p">,</span> <span class="n">details</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="n">prn</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">PRN</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">cls</span><span class="o">.</span><span class="n">validate_prn</span><span class="p">(</span><span class="n">prn</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">BadRequestException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid prn: </span><span class="si">{</span><span class="n">prn</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">item</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">item_model</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">prn</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">DoesNotExist</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NotFoundException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Item not found: </span><span class="si">{</span><span class="n">prn</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">SuccessResponse</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">to_simple_dict</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="ItemTableActions.list">
+<a class="viewcode-back" href="../../../technical_reference/core-db/_autosummary/core_db.item.actions.ItemTableActions.html#core_db.item.actions.ItemTableActions.list">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">list</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Response</span><span class="p">:</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Received list request:&quot;</span><span class="p">,</span> <span class="n">details</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="n">parent_prn</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">PARENT_PRN</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="c1"># If a parent prn has not been privded, then generated it from the prn if provided</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">parent_prn</span><span class="p">:</span>
+            <span class="n">prn</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">PRN</span><span class="p">,</span> <span class="s2">&quot;prn:missing&quot;</span><span class="p">)</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">validate_prn</span><span class="p">(</span><span class="n">prn</span><span class="p">)</span>
+            <span class="n">parent_prn</span> <span class="o">=</span> <span class="n">prn</span><span class="p">[</span><span class="mi">0</span> <span class="p">:</span> <span class="n">prn</span><span class="o">.</span><span class="n">rindex</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)]</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">util</span><span class="o">.</span><span class="n">validate_item_prn</span><span class="p">(</span><span class="n">parent_prn</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">BadRequestException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid parent_prn: </span><span class="si">{</span><span class="n">parent_prn</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Retrieving items by parent [</span><span class="si">{</span><span class="n">parent_prn</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">)</span>
+
+        <span class="n">earliest_time</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">validate_date</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">EARLIEST_TIME</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+        <span class="n">latest_time</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">validate_date</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">LATEST_TIME</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+
+        <span class="c1"># Generate our range key condition</span>
+        <span class="k">if</span> <span class="n">earliest_time</span> <span class="ow">and</span> <span class="n">latest_time</span><span class="p">:</span>
+            <span class="n">range_key_condition</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">item_model</span><span class="o">.</span><span class="n">created_at</span><span class="o">.</span><span class="n">between</span><span class="p">(</span>
+                <span class="n">earliest_time</span><span class="p">,</span> <span class="n">latest_time</span>
+            <span class="p">)</span>
+        <span class="k">elif</span> <span class="n">earliest_time</span><span class="p">:</span>
+            <span class="n">range_key_condition</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">item_model</span><span class="o">.</span><span class="n">created_at</span> <span class="o">&gt;=</span> <span class="n">earliest_time</span>
+        <span class="k">elif</span> <span class="n">latest_time</span><span class="p">:</span>
+            <span class="n">range_key_condition</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">item_model</span><span class="o">.</span><span class="n">created_at</span> <span class="o">&lt;=</span> <span class="n">latest_time</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">range_key_condition</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="n">pagenator</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">DATA_PAGINATOR</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">pagenator</span><span class="p">:</span>
+            <span class="n">last_evaluated_key</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span>
+                <span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">pagenator</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">last_evaluated_key</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="n">sort_forward</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">SORT</span><span class="p">,</span> <span class="n">ASCENDING</span><span class="p">)</span> <span class="o">==</span> <span class="n">ASCENDING</span>
+        <span class="n">request_limit</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">LIMIT</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+
+        <span class="n">results</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">item_model</span><span class="o">.</span><span class="n">parent_created_at_index</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
+            <span class="n">hash_key</span><span class="o">=</span><span class="n">parent_prn</span><span class="p">,</span>
+            <span class="n">range_key_condition</span><span class="o">=</span><span class="n">range_key_condition</span><span class="p">,</span>
+            <span class="n">scan_index_forward</span><span class="o">=</span><span class="n">sort_forward</span><span class="p">,</span>
+            <span class="n">limit</span><span class="o">=</span><span class="n">request_limit</span><span class="p">,</span>
+            <span class="n">last_evaluated_key</span><span class="o">=</span><span class="n">last_evaluated_key</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">items</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">to_simple_dict</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">results</span><span class="p">]</span>
+        <span class="n">last_evaluated_key</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">last_evaluated_key</span>
+        <span class="k">if</span> <span class="n">last_evaluated_key</span><span class="p">:</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="n">DATA_PAGINATOR</span><span class="p">]</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span>
+                <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">last_evaluated_key</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="n">DATA_PAGINATOR</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">return</span> <span class="n">SuccessResponse</span><span class="p">(</span><span class="n">items</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ItemTableActions.update">
+<a class="viewcode-back" href="../../../technical_reference/core-db/_autosummary/core_db.item.actions.ItemTableActions.html#core_db.item.actions.ItemTableActions.update">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Response</span><span class="p">:</span>  <span class="c1"># noqa: C901</span>
+        <span class="c1"># Load the request data</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Received update request&quot;</span><span class="p">,</span> <span class="n">details</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="n">prn</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">PRN</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">cls</span><span class="o">.</span><span class="n">validate_prn</span><span class="p">(</span><span class="n">prn</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">BadRequestException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid prn: </span><span class="si">{</span><span class="n">prn</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;created_at&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;updated_at&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="c1"># Load the requested item</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">item</span><span class="p">:</span> <span class="n">ItemModel</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">item_model</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">prn</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">DoesNotExist</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NotFoundException</span><span class="p">(</span><span class="s2">&quot;Item not found&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Execute the updates</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">attributes</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">get_attributes</span><span class="p">()</span>
+
+            <span class="c1"># Update individual fields in the table record</span>
+            <span class="n">actions</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Action</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+                    <span class="n">attr</span> <span class="o">=</span> <span class="n">attributes</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="c1"># Generate a remove() action and delete the attribute - pynamodb doesn&#39;t do this automatically</span>
+                        <span class="n">actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">attr</span><span class="o">.</span><span class="n">remove</span><span class="p">())</span>
+                        <span class="n">attr</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="n">value</span> <span class="o">!=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+                        <span class="n">actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">attr</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">actions</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">attributes</span><span class="p">[</span><span class="n">UPDATED_AT</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">make_default_time</span><span class="p">()))</span>
+                <span class="n">item</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">actions</span><span class="o">=</span><span class="n">actions</span><span class="p">)</span>
+
+                <span class="c1"># Load the full object to ensure the update is reflected in the response</span>
+                <span class="n">item</span><span class="o">.</span><span class="n">refresh</span><span class="p">()</span>
+
+            <span class="c1"># Return the updated item</span>
+            <span class="k">return</span> <span class="n">SuccessResponse</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">to_simple_dict</span><span class="p">())</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">UnknownException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to update - </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

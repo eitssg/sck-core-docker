@@ -1,0 +1,31 @@
+core\_db.item.app.actions.AppActions
+====================================
+
+.. currentmodule:: core_db.item.app.actions
+
+.. autoclass:: AppActions
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~AppActions.__init__
+      ~AppActions.create
+      ~AppActions.delete
+      ~AppActions.get
+      ~AppActions.list
+      ~AppActions.patch
+      ~AppActions.update
+      ~AppActions.validate_date
+      ~AppActions.validate_prn
+   
+   

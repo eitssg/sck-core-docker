@@ -1,0 +1,6 @@
+core\_db.constants.BUILD\_PRN
+=============================
+
+.. currentmodule:: core_db.constants
+
+.. autodata:: BUILD_PRN

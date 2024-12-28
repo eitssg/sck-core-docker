@@ -1,0 +1,42 @@
+core_api.item.component
+=======================
+
+.. automodule:: core_api.item.component
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+      create_component_action
+      delete_component_action
+      get_component_action
+      get_component_list_action
+      update_component_action
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      ApiComponentActions
+   
+   
+
+   
+   
+   
+
+
+

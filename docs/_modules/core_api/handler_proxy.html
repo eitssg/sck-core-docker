@@ -1,0 +1,297 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>core_api.handler_proxy &mdash; SCK Core Automation 1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a3c9731c" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=45d66dd6" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=29a6c3e3"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            SCK Core Automation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/index.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/index.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../technical_reference/index.html">Technical Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">SCK Core Automation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">core_api.handler_proxy</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for core_api.handler_proxy</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
+
+<span class="kn">import</span> <span class="nn">uuid</span>
+<span class="kn">import</span> <span class="nn">core_logging</span> <span class="k">as</span> <span class="nn">log</span>
+
+<span class="kn">from</span> <span class="nn">core_db.response</span> <span class="kn">import</span> <span class="n">ErrorResponse</span><span class="p">,</span> <span class="n">Response</span>
+<span class="kn">from</span> <span class="nn">core_db.exceptions</span> <span class="kn">import</span> <span class="n">NotFoundException</span>
+
+<span class="kn">from</span> <span class="nn">.types</span> <span class="kn">import</span> <span class="n">ActionHandlerRoutes</span>
+
+<span class="c1"># Registry actions and routes for API Gateway</span>
+<span class="kn">from</span> <span class="nn">.event.event</span> <span class="kn">import</span> <span class="n">event_actions</span>
+
+<span class="kn">from</span> <span class="nn">.item.portfolio</span> <span class="kn">import</span> <span class="n">item_portfolio_actions</span>
+<span class="kn">from</span> <span class="nn">.item.app</span> <span class="kn">import</span> <span class="n">item_app_actions</span>
+<span class="kn">from</span> <span class="nn">.item.branch</span> <span class="kn">import</span> <span class="n">item_branch_actions</span>
+<span class="kn">from</span> <span class="nn">.item.build</span> <span class="kn">import</span> <span class="n">item_build_actions</span>
+<span class="kn">from</span> <span class="nn">.item.component</span> <span class="kn">import</span> <span class="n">item_component_actions</span>
+
+<span class="kn">from</span> <span class="nn">.registry.client</span> <span class="kn">import</span> <span class="n">registry_client_actions</span>
+<span class="kn">from</span> <span class="nn">.registry.portfolio</span> <span class="kn">import</span> <span class="n">registry_portfolio_actions</span>
+<span class="kn">from</span> <span class="nn">.registry.app</span> <span class="kn">import</span> <span class="n">registry_app_actions</span>
+<span class="kn">from</span> <span class="nn">.registry.zone</span> <span class="kn">import</span> <span class="n">registry_zone_actions</span>
+
+<span class="kn">from</span> <span class="nn">.request</span> <span class="kn">import</span> <span class="n">ProxyEvent</span><span class="p">,</span> <span class="n">EventRequestContext</span>
+
+<span class="kn">from</span> <span class="nn">.facts.facter</span> <span class="kn">import</span> <span class="n">facts_actions</span>
+
+
+<span class="c1"># Build the router for the API Gateway REST interface</span>
+<span class="n">api_paths</span><span class="p">:</span> <span class="n">ActionHandlerRoutes</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="o">**</span><span class="n">event_actions</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">item_portfolio_actions</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">item_app_actions</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">item_branch_actions</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">item_build_actions</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">item_component_actions</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">registry_client_actions</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">registry_portfolio_actions</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">registry_app_actions</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">registry_zone_actions</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">facts_actions</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<div class="viewcode-block" id="ProxyResponse">
+<a class="viewcode-back" href="../../technical_reference/core-api/_autosummary/core_api.handler_proxy.ProxyResponse.html#core_api.handler_proxy.ProxyResponse">[docs]</a>
+<span class="k">class</span> <span class="nc">ProxyResponse</span><span class="p">(</span><span class="nb">dict</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;return plain dict as lambda response&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">:</span> <span class="n">Response</span><span class="p">,</span> <span class="n">correlation_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="p">[</span><span class="s2">&quot;statusCode&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">code</span>
+        <span class="bp">self</span><span class="p">[</span><span class="s2">&quot;headers&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Content-Type&quot;</span><span class="p">:</span> <span class="s2">&quot;application/json&quot;</span><span class="p">}</span>
+        <span class="k">if</span> <span class="n">correlation_id</span><span class="p">:</span>
+            <span class="bp">self</span><span class="p">[</span><span class="s2">&quot;headers&quot;</span><span class="p">][</span><span class="s2">&quot;X-Correlation-ID&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">correlation_id</span>
+        <span class="bp">self</span><span class="p">[</span><span class="s2">&quot;body&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">model_dump_json</span><span class="p">()</span>
+        <span class="bp">self</span><span class="p">[</span><span class="s2">&quot;isBase64Encoded&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+
+
+<div class="viewcode-block" id="get_correlation_id">
+<a class="viewcode-back" href="../../technical_reference/core-api/_autosummary/core_api.handler_proxy.get_correlation_id.html#core_api.handler_proxy.get_correlation_id">[docs]</a>
+<span class="k">def</span> <span class="nf">get_correlation_id</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="n">ProxyEvent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the correlation ID from the request headers</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># if there are no headers, then create a new header</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">headers</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">headers</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="c1"># If there are haeders, the correlation ID is in the headers, use it</span>
+    <span class="n">correlation_id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;X-Correlation-ID&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">correlation_id</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">requestContext</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">requestContext</span><span class="o">.</span><span class="n">requestId</span><span class="p">:</span>
+            <span class="n">correlation_id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">requestContext</span><span class="o">.</span><span class="n">requestId</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">correlation_id</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s2">&quot;X-Correlation-ID&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">correlation_id</span>
+
+    <span class="k">return</span> <span class="n">correlation_id</span></div>
+
+
+
+<div class="viewcode-block" id="check_if_user_authorised">
+<a class="viewcode-back" href="../../technical_reference/core-api/_autosummary/core_api.handler_proxy.check_if_user_authorised.html#core_api.handler_proxy.check_if_user_authorised">[docs]</a>
+<span class="k">def</span> <span class="nf">check_if_user_authorised</span><span class="p">(</span><span class="n">context</span><span class="p">:</span> <span class="n">EventRequestContext</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+
+    <span class="k">return</span> <span class="kc">True</span></div>
+
+
+    <span class="c1"># FIXME - Later, we will add the logic to check if the user is authorised</span>
+
+    <span class="c1"># if not context:</span>
+    <span class="c1">#     raise UnauthorizedException(&quot;No request context&quot;)</span>
+
+    <span class="c1"># identity = context.identity</span>
+    <span class="c1"># if not identity:</span>
+    <span class="c1">#     raise UnauthorizedException(&quot;No identity in request context&quot;)</span>
+
+    <span class="c1"># AccountId = identity.accountId</span>
+    <span class="c1"># UserId = identity.user</span>
+    <span class="c1"># AccessKey = identity.accessKey</span>
+
+    <span class="c1"># return True</span>
+
+
+<span class="c1"># The following function is the lambda handler to receive requests from AWS API Gateway</span>
+<div class="viewcode-block" id="handler_proxy">
+<a class="viewcode-back" href="../../technical_reference/core-api/_autosummary/core_api.handler_proxy.handler_proxy.html#core_api.handler_proxy.handler_proxy">[docs]</a>
+<span class="k">def</span> <span class="nf">handler_proxy</span><span class="p">(</span><span class="n">event</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">Any</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This is a router for registered API reource paths.  It examines the lambda event</span>
+<span class="sd">    data looking for &quot;resource&quot;.  This is what you would get from AWS API Gatewqy.</span>
+
+<span class="sd">    When it finds the reasource, it calles the registered function with the event as a parameter.</span>
+
+<span class="sd">    Event Example (from AWS API Gateway):</span>
+
+<span class="sd">    event = {</span>
+<span class="sd">        &quot;httpMethod&quot;: &quot;GET&quot;,</span>
+<span class="sd">        &quot;resource&quot;: &quot;/api/v1/client/{client}&quot;,</span>
+<span class="sd">        &quot;pathParameters&quot;: {</span>
+<span class="sd">            &quot;client&quot;: &quot;example&quot;</span>
+<span class="sd">        },</span>
+<span class="sd">        &quot;queryStringParameters&quot;: {</span>
+<span class="sd">            &quot;key&quot;: &quot;value&quot;</span>
+<span class="sd">        },</span>
+<span class="sd">        &quot;body&quot;: &#39;{&quot;key&quot;: &quot;value&quot;}&#39;</span>
+<span class="sd">    }</span>
+
+<span class="sd">    Example Response (back to AWS API Gateway):</span>
+<span class="sd">        dict({</span>
+<span class="sd">            &#39;statusCode&#39;: 200,</span>
+<span class="sd">            &#39;headers&#39;: {</span>
+<span class="sd">                &#39;Content-Type&#39;: &#39;application/json&#39;</span>
+<span class="sd">            },</span>
+<span class="sd">            &#39;body&#39;: &#39;{&quot;key&quot;: &quot;value&quot;}&#39;  # JSON encoded data</span>
+<span class="sd">        })</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        event (dict): The &quot;Lambda Event&quot; from AWS API Gateway.  See sck-mod-core for a sample generator</span>
+<span class="sd">        context (dict): lambda context (Ex: cognito, SQS, SNS, etc). This is where you can get, for example,</span>
+<span class="sd">                        the lambda runtime lifetime, memory, etc. so you know how long the lambda can run.</span>
+<span class="sd">                        This is helpful if you have long-running actions and the lambda function will terminate.</span>
+
+<span class="sd">                        Better use step functions when running long-running actions.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: A dictionary with the response.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Event is not a dictionary&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Validate incoming request</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">ProxyEvent</span><span class="p">(</span><span class="o">**</span><span class="n">event</span><span class="p">)</span>
+        <span class="n">route_key</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">route_key</span>
+
+        <span class="c1"># We STRONGLY recommend that you output correlation Id in</span>
+        <span class="c1"># all LOG files and messges and that you send this value</span>
+        <span class="c1"># to downstream services.  This will help you trace the request</span>
+        <span class="n">correlation_id</span> <span class="o">=</span> <span class="n">get_correlation_id</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+
+        <span class="n">check_if_user_authorised</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">requestContext</span><span class="p">)</span>
+
+        <span class="n">action_handler</span> <span class="o">=</span> <span class="n">api_paths</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">route_key</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">action_handler</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NotFoundException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported resource API: </span><span class="si">{</span><span class="n">route_key</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="s2">&quot;Executing action&quot;</span><span class="p">,</span>
+            <span class="n">details</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="n">route_key</span><span class="p">,</span> <span class="s2">&quot;correlation_id&quot;</span><span class="p">:</span> <span class="n">correlation_id</span><span class="p">},</span>
+        <span class="p">)</span>
+
+        <span class="c1"># actions handler expects **kwargs</span>
+
+        <span class="c1"># TODO: change signature of actions_handler to accept ProxyEvent</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">action_handler</span><span class="p">(</span><span class="o">**</span><span class="n">request</span><span class="o">.</span><span class="n">model_dump</span><span class="p">())</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="s2">&quot;Action complete&quot;</span><span class="p">,</span>
+            <span class="n">details</span><span class="o">=</span><span class="p">{</span>
+                <span class="s2">&quot;action&quot;</span><span class="p">:</span> <span class="n">route_key</span><span class="p">,</span>
+                <span class="s2">&quot;correlation_id&quot;</span><span class="p">:</span> <span class="n">correlation_id</span><span class="p">,</span>
+                <span class="s2">&quot;result&quot;</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(),</span>
+            <span class="p">},</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">ProxyResponse</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">correlation_id</span><span class="p">)</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">ProxyResponse</span><span class="p">(</span><span class="n">ErrorResponse</span><span class="p">(</span><span class="n">e</span><span class="p">))</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

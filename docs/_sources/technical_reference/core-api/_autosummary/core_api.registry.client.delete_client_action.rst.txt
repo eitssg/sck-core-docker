@@ -1,0 +1,6 @@
+core\_api.registry.client.delete\_client\_action
+================================================
+
+.. currentmodule:: core_api.registry.client
+
+.. autofunction:: delete_client_action

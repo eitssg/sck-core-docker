@@ -1,0 +1,6 @@
+core\_db.event.models.convert\_level\_name
+==========================================
+
+.. currentmodule:: core_db.event.models
+
+.. autofunction:: convert_level_name

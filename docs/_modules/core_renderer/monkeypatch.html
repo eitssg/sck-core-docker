@@ -1,0 +1,312 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>core_renderer.monkeypatch &mdash; SCK Core Automation 1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a3c9731c" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=45d66dd6" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=29a6c3e3"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            SCK Core Automation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/index.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/index.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../technical_reference/index.html">Technical Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">SCK Core Automation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">core_renderer.monkeypatch</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for core_renderer.monkeypatch</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This library is a few functions that manipulate CloudFormation template files.</span>
+
+<span class="sd">YAML Tags added and understood by the patch are:</span>
+
+<span class="sd">        !And</span>
+<span class="sd">        !Base64</span>
+<span class="sd">        !Cidr</span>
+<span class="sd">        !Equals</span>
+<span class="sd">        !FindInMap</span>
+<span class="sd">        !GetAtt</span>
+<span class="sd">        !GetAZs</span>
+<span class="sd">        !If</span>
+<span class="sd">        !ImportValue</span>
+<span class="sd">        !Include</span>
+<span class="sd">        !Join</span>
+<span class="sd">        !Not</span>
+<span class="sd">        !Or</span>
+<span class="sd">        !Ref</span>
+<span class="sd">        !Select</span>
+<span class="sd">        !Split</span>
+<span class="sd">        !Sub</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Any</span>
+
+<span class="c1"># currently we are doing this with PyYAML not Ruamel</span>
+<span class="kn">import</span> <span class="nn">yaml</span>
+
+<span class="kn">from</span> <span class="nn">yaml.constructor</span> <span class="kn">import</span> <span class="n">SafeConstructor</span>
+<span class="kn">from</span> <span class="nn">yaml.representer</span> <span class="kn">import</span> <span class="n">BaseRepresenter</span>
+<span class="kn">from</span> <span class="nn">yaml.nodes</span> <span class="kn">import</span> <span class="n">ScalarNode</span><span class="p">,</span> <span class="n">MappingNode</span><span class="p">,</span> <span class="n">SequenceNode</span>
+<span class="kn">from</span> <span class="nn">yaml.resolver</span> <span class="kn">import</span> <span class="n">BaseResolver</span>
+
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
+
+
+<div class="viewcode-block" id="construct_aws_fn">
+<a class="viewcode-back" href="../../technical_reference/core-renderer/_autosummary/core_renderer.monkeypatch.construct_aws_fn.html#core_renderer.monkeypatch.construct_aws_fn">[docs]</a>
+<span class="k">def</span> <span class="nf">construct_aws_fn</span><span class="p">(</span>
+    <span class="n">loader</span><span class="p">:</span> <span class="n">SafeConstructor</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">ScalarNode</span><span class="p">,</span> <span class="n">MappingNode</span><span class="p">,</span> <span class="n">SequenceNode</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert AWS tags (eg. !Ref, !GetAtt) to a map (eg. {Ref: &lt;x&gt;}, {Fn::GetAtt: &lt;x&gt;})</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        loader (SafeConstructor): The loader object</span>
+<span class="sd">        node (Union[ScalarNode, MappingNode, SequenceNode]): The node to convert</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict | None: The converted node</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">function_name</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">tag</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s2">&quot;!&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">function_name</span> <span class="o">!=</span> <span class="s2">&quot;Ref&quot;</span><span class="p">:</span>
+        <span class="n">function_name</span> <span class="o">=</span> <span class="s2">&quot;Fn::&quot;</span> <span class="o">+</span> <span class="n">function_name</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">ScalarNode</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">{</span><span class="n">function_name</span><span class="p">:</span> <span class="n">loader</span><span class="o">.</span><span class="n">construct_scalar</span><span class="p">(</span><span class="n">node</span><span class="p">)}</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">MappingNode</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">{</span><span class="n">function_name</span><span class="p">:</span> <span class="n">loader</span><span class="o">.</span><span class="n">construct_mapping</span><span class="p">(</span><span class="n">node</span><span class="p">)}</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">SequenceNode</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">{</span><span class="n">function_name</span><span class="p">:</span> <span class="n">loader</span><span class="o">.</span><span class="n">construct_sequence</span><span class="p">(</span><span class="n">node</span><span class="p">)}</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="process_yaml_include">
+<a class="viewcode-back" href="../../technical_reference/core-renderer/_autosummary/core_renderer.monkeypatch.process_yaml_include.html#core_renderer.monkeypatch.process_yaml_include">[docs]</a>
+<span class="k">def</span> <span class="nf">process_yaml_include</span><span class="p">(</span>
+    <span class="n">loader</span><span class="p">:</span> <span class="n">SafeConstructor</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">ScalarNode</span><span class="p">,</span> <span class="n">MappingNode</span><span class="p">,</span> <span class="n">SequenceNode</span><span class="p">]</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Process YAML !Include attribute</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        loader (SafeConstructor): _description_</span>
+<span class="sd">        node (Union[ScalarNode, MappingNode, SequenceNode]): _description_</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+
+
+<div class="viewcode-block" id="construct_mapping">
+<a class="viewcode-back" href="../../technical_reference/core-renderer/_autosummary/core_renderer.monkeypatch.construct_mapping.html#core_renderer.monkeypatch.construct_mapping">[docs]</a>
+<span class="k">def</span> <span class="nf">construct_mapping</span><span class="p">(</span>
+    <span class="n">loader</span><span class="p">:</span> <span class="n">SafeConstructor</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">MappingNode</span><span class="p">,</span> <span class="n">deep</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Mapping</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create a mapping object from a YAML file.  This is a convenience function for constructing a mapping object</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        loader (SafeConstructor): The loader object</span>
+<span class="sd">        node (MappingNode): The node to convert</span>
+<span class="sd">        deep (bool): _description_</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Mapping: The constructed mapping object</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Allow YAML merge operator (&lt;&lt;)</span>
+    <span class="n">loader</span><span class="o">.</span><span class="n">flatten_mapping</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+
+    <span class="c1"># Fail on duplicate keys</span>
+    <span class="n">mapping</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">key_node</span><span class="p">,</span> <span class="n">value_node</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">construct_object</span><span class="p">(</span><span class="n">key_node</span><span class="p">,</span> <span class="n">deep</span><span class="o">=</span><span class="n">deep</span><span class="p">)</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">construct_object</span><span class="p">(</span><span class="n">value_node</span><span class="p">,</span> <span class="n">deep</span><span class="o">=</span><span class="n">deep</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">mapping</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">MappingConstructorError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Duplicate key &#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">,</span> <span class="n">key_node</span><span class="o">.</span><span class="n">start_mark</span><span class="p">)</span>
+        <span class="n">mapping</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="k">return</span> <span class="n">loader</span><span class="o">.</span><span class="n">construct_mapping</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">deep</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="MappingConstructorError">
+<a class="viewcode-back" href="../../technical_reference/core-renderer/_autosummary/core_renderer.monkeypatch.MappingConstructorError.html#core_renderer.monkeypatch.MappingConstructorError">[docs]</a>
+<span class="k">class</span> <span class="nc">MappingConstructorError</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">constructor</span><span class="o">.</span><span class="n">ConstructorError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create a type mapping for the constructor error</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">pass</span></div>
+
+
+
+<div class="viewcode-block" id="represent_ordereddict">
+<a class="viewcode-back" href="../../technical_reference/core-renderer/_autosummary/core_renderer.monkeypatch.represent_ordereddict.html#core_renderer.monkeypatch.represent_ordereddict">[docs]</a>
+<span class="k">def</span> <span class="nf">represent_ordereddict</span><span class="p">(</span><span class="n">dumper</span><span class="p">:</span> <span class="n">BaseRepresenter</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">OrderedDict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MappingNode</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create a YAML representation of an OrderedDict</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dumper (BaseRepresenter): The dumper object</span>
+<span class="sd">        data (OrderedDict): The data to represent</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        MappingNode: The constructed mapping node</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="n">dumper</span><span class="o">.</span><span class="n">represent_data</span><span class="p">(</span><span class="n">item_key</span><span class="p">),</span> <span class="n">dumper</span><span class="o">.</span><span class="n">represent_data</span><span class="p">(</span><span class="n">item_value</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">item_key</span><span class="p">,</span> <span class="n">item_value</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+    <span class="p">]</span>
+    <span class="k">return</span> <span class="n">MappingNode</span><span class="p">(</span><span class="s2">&quot;tag:yaml.org,2002:map&quot;</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="represent_string">
+<a class="viewcode-back" href="../../technical_reference/core-renderer/_autosummary/core_renderer.monkeypatch.represent_string.html#core_renderer.monkeypatch.represent_string">[docs]</a>
+<span class="k">def</span> <span class="nf">represent_string</span><span class="p">(</span><span class="n">dumper</span><span class="p">:</span> <span class="n">BaseRepresenter</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ScalarNode</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Make string representations of numbers</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dumper (BaseRepresenter): The dumper object</span>
+<span class="sd">        data (Any): The data to represent</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ScalarNode: The constructed scalar node</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">dumper</span><span class="o">.</span><span class="n">represent_scalar</span><span class="p">(</span>
+        <span class="s2">&quot;tag:yaml.org,2002:str&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;&#39;&quot;</span> <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">isnumeric</span><span class="p">()</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="patch_the_monkeys">
+<a class="viewcode-back" href="../../technical_reference/core-renderer/_autosummary/core_renderer.monkeypatch.patch_the_monkeys.html#core_renderer.monkeypatch.patch_the_monkeys">[docs]</a>
+<span class="k">def</span> <span class="nf">patch_the_monkeys</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Add the Cloudformation tags to the YAML parser so we can parse them!</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">custom_tags</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;!Base64&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;!Cidr&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;!FindInMap&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;!GetAtt&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;!GetAZs&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;!ImportValue&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;!Join&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;!Select&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;!Split&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;!Sub&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;!Ref&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;!And&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;!Equals&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;!If&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;!Not&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;!Or&quot;</span><span class="p">,</span>
+    <span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">custom_tags</span><span class="p">:</span>
+        <span class="n">yaml</span><span class="o">.</span><span class="n">add_constructor</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">construct_aws_fn</span><span class="p">,</span> <span class="n">Loader</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">SafeLoader</span><span class="p">)</span>
+
+    <span class="n">yaml</span><span class="o">.</span><span class="n">add_constructor</span><span class="p">(</span><span class="s2">&quot;!Include&quot;</span><span class="p">,</span> <span class="n">process_yaml_include</span><span class="p">,</span> <span class="n">Loader</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">SafeLoader</span><span class="p">)</span>
+    <span class="n">yaml</span><span class="o">.</span><span class="n">add_constructor</span><span class="p">(</span>
+        <span class="n">BaseResolver</span><span class="o">.</span><span class="n">DEFAULT_MAPPING_TAG</span><span class="p">,</span> <span class="n">construct_mapping</span><span class="p">,</span> <span class="n">Loader</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">SafeLoader</span>
+    <span class="p">)</span>
+
+    <span class="n">yaml</span><span class="o">.</span><span class="n">add_representer</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">represent_string</span><span class="p">,</span> <span class="n">Dumper</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">SafeDumper</span><span class="p">)</span>
+    <span class="n">yaml</span><span class="o">.</span><span class="n">add_representer</span><span class="p">(</span><span class="n">OrderedDict</span><span class="p">,</span> <span class="n">represent_ordereddict</span><span class="p">,</span> <span class="n">Dumper</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">SafeDumper</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

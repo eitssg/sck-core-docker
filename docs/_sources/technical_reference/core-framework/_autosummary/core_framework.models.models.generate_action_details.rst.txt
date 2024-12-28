@@ -1,0 +1,6 @@
+core\_framework.models.models.generate\_action\_details
+=======================================================
+
+.. currentmodule:: core_framework.models.models
+
+.. autofunction:: generate_action_details

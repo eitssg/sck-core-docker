@@ -1,0 +1,6 @@
+core\_invoker.invoker.execute\_deployspec\_compiler
+===================================================
+
+.. currentmodule:: core_invoker.invoker
+
+.. autofunction:: execute_deployspec_compiler

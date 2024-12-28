@@ -1,0 +1,218 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Introduction &mdash; SCK Core Automation 1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a3c9731c" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=45d66dd6" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=29a6c3e3"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Getting Started" href="getting_started.html" />
+    <link rel="prev" title="User Guide" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            SCK Core Automation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">User Guide</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Introduction</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#what-is-core">What is CORE?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#deploy-infrastrcture">Deploy Infrastrcture</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="features.html">Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="using.html">Using Core Automation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="faq.html">FAQ</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/index.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../technical_reference/index.html">Technical Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SCK Core Automation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">User Guide</a></li>
+      <li class="breadcrumb-item active">Introduction</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/user_guide/introduction.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="introduction">
+<h1>Introduction<a class="headerlink" href="#introduction" title="Link to this heading"></a></h1>
+<p>Welcome to the EITS User Guide. This guide will help you understand how to use the application effectively.</p>
+<section id="what-is-core">
+<h2>What is CORE?<a class="headerlink" href="#what-is-core" title="Link to this heading"></a></h2>
+<p>Core is a suite of tools that provide automation and governance for deploying application infrastructure in the cloud.
+Core is designed to provide a standardised, repeatable, and secure way to deploy applications in the cloud. Core is designed
+to be used by both developers and operators to deploy applications in a secure and standardised manner.</p>
+<p><strong>What does the pipeline do for me?</strong></p>
+<p>The pipeline allows teams to <strong>package</strong>, <strong>compile</strong>, <strong>deploy</strong> (or <strong>plan</strong> and <strong>apply</strong>), <strong>release</strong>, and <strong>teardown</strong> application
+infrastructure in the cloud in a secure, standard, and repeatable manner.</p>
+<p><strong>Terms</strong></p>
+<ul>
+<li><dl>
+<dt><strong>Package</strong></dt><dd><p>The process of packaging your application code and configuration definitions into a deployable artifact.</p>
+<p>This includes all of the installation files necesary to install your application on a server.  Your package
+must include <em>install.exe</em> or <em>install.sh</em> files, configuration files, and any other files that are necessary
+to install your appication.  The package is then uploaded to the pipeline for deployment into the “packages” repository.</p>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt><strong>Compile</strong></dt><dd><p>The process of compiling your application <em>infastructre</em> code into a deployable artifact.</p>
+<p>This includes generating CloudFormation Templates or other scripts that will be used to create an AWS “Appication”
+(a.k.a CloudFormation Stack).  When compilation completes your installation files are copyied to “The compiled
+artifact is then uploaded to the pipeline for deployment.</p>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt><strong>Deploy</strong></dt><dd><p>The process of deploying your application infrastructure into the cloud.</p>
+<p>This includes creating the necessary resources in the cloud, installing your application, and configuring your
+application.  The deployment process is managed by the pipeline and is performed in a secure, standard, and repeatable
+manner.</p>
+<p><strong>plan</strong> and <strong>apply</strong> can be used to <em>stage</em> the deployment so you can see what changes will be made before
+you apply the changes.</p>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt><strong>Release</strong></dt><dd><p>The process of releasing your application to production.</p>
+<p>As Core manages all DNS services in the cloud, this process is simple:  It adjust DNS entries so that your
+new deployment becomes <em>active</em>.</p>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt><strong>Teardown</strong></dt><dd><p>The process of tearing down your application infrastructure in the cloud.</p>
+<p>This includes removing all of the resources that were created during the deployment process.</p>
+</dd>
+</dl>
+</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Core does NOT compile, test, build, or relaase your appication to production artefact repositories.
+In the SDLC, Core is used to deploy <strong>application infrastructure</strong> and will <em>install</em> your ready made
+application binaries on the destination infrastructure.</p>
+</div>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>plan -&gt; design -&gt; build -&gt; test -&gt; release -&gt; <strong>deploy</strong> -&gt; operate -&gt; monitor -&gt; analyze</p>
+</div>
+<p>In the SDLC, a <strong>release</strong> means generating an <em>install.exe</em> or installation package and uploading that package to to your
+artifact repository. Durning the Core <strong>Package</strong> phase, your artefact will be uploaded to the pipeline packages to prepar
+for insallation on the destination infrastructure.  Core can also be used to <em>package</em> your development or test artefacts.</p>
+</section>
+<section id="deploy-infrastrcture">
+<h2>Deploy Infrastrcture<a class="headerlink" href="#deploy-infrastrcture" title="Link to this heading"></a></h2>
+<p>Behind the scenes, the pipeline performs the necessary heavy lifting including:</p>
+<ul class="simple">
+<li><p><strong>Infrastrcture lifecycle</strong> - Manages package, compile, deploy, release, teardown, rollback phases of
+application infrastructure deployment lifecycle.</p></li>
+<li><p><strong>Security</strong> - deploys, manages, and enforces application security in line with best practices</p></li>
+<li><p>and company policies</p></li>
+<li><p><strong>Governance</strong> - enforces change control and governance requirements</p></li>
+<li><p><strong>Compliance</strong> - enforcing company compliance requirements</p></li>
+<li><p><strong>Data Persistence</strong> - maintains component persistence between builds, when required</p></li>
+<li><p><strong>Logging</strong> - provides logging of configuration and events</p></li>
+<li><p><strong>SOE Enforcement</strong> - manages and enforces the use of SOE images</p></li>
+</ul>
+<p>By performing this heavy lifting on behalf of application teams, using the pipeline results in:</p>
+<ul class="simple">
+<li><p><strong>Increased developer agility</strong> - developers can focus on their application rather than connecting
+and managing the underlying infrastructure.</p></li>
+<li><p><strong>Increased operator agility</strong> - operators use the pipeline to perform common tasks operations in a
+highly standardised application lifecycle.</p></li>
+<li><p><strong>Repeatability</strong> - The pipeline enforces automation of application deployment, infrastructure as
+code, and configuration as code.</p></li>
+<li><p><strong>Recoverability</strong> - By enforcing everything-as-code and enforcing best practice architecture
+patterns, application teams can be confident in their ability to restore data and systems in
+the event of a disaster.</p></li>
+<li><p><strong>Reduced risk</strong> - Through a high degree of automation, the pipeline reduces the requirement for
+human intervention and the potential for human error during application deployment.</p></li>
+<li><p><strong>Stronger governance and compliance</strong> - The pipeline transparently manages the governance and
+compliance aspects of deployment. Applications deployed through the pipeline are assured of complying
+with company requirements.</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="User Guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="getting_started.html" class="btn btn-neutral float-right" title="Getting Started" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

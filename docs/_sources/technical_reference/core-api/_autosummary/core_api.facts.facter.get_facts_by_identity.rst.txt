@@ -1,0 +1,6 @@
+core\_api.facts.facter.get\_facts\_by\_identity
+===============================================
+
+.. currentmodule:: core_api.facts.facter
+
+.. autofunction:: get_facts_by_identity

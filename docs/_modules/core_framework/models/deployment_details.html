@@ -1,0 +1,425 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>core_framework.models.deployment_details &mdash; SCK Core Automation 1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a3c9731c" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=45d66dd6" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=29a6c3e3"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            SCK Core Automation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_guide/index.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developer_guide/index.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../technical_reference/index.html">Technical Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SCK Core Automation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">core_framework.models.deployment_details</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for core_framework.models.deployment_details</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; module contains the DeploymentDetails class which provides a model for how deployment details are to be provided to the core-execute library. &quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Self</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span><span class="p">,</span> <span class="n">model_validator</span><span class="p">,</span> <span class="n">ConfigDict</span>
+
+<span class="kn">import</span> <span class="nn">core_framework</span> <span class="k">as</span> <span class="nn">util</span>
+
+<span class="kn">from</span> <span class="nn">core_framework.constants</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ENV_SCOPE</span><span class="p">,</span>
+    <span class="n">SCOPE_BUILD</span><span class="p">,</span>
+    <span class="n">SCOPE_BRANCH</span><span class="p">,</span>
+    <span class="n">SCOPE_APP</span><span class="p">,</span>
+    <span class="n">SCOPE_PORTFOLIO</span><span class="p">,</span>
+    <span class="n">ENV_PORTFOLIO</span><span class="p">,</span>
+    <span class="n">ENV_AWS_PROFILE</span><span class="p">,</span>
+    <span class="n">ENV_APP</span><span class="p">,</span>
+    <span class="n">ENV_BRANCH</span><span class="p">,</span>
+    <span class="n">ENV_BUILD</span><span class="p">,</span>
+    <span class="n">ENV_CLIENT</span><span class="p">,</span>
+    <span class="n">V_EMPTY</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="DeploymentDetails">
+<a class="viewcode-back" href="../../../technical_reference/core-framework/_autosummary/core_framework.models.deployment_details.DeploymentDetails.html#core_framework.models.deployment_details.DeploymentDetails">[docs]</a>
+<span class="k">class</span> <span class="nc">DeploymentDetails</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    DeploymentDetails is the class that identifies the Client, Portfolio, App, Branch, Build, Component, Environment, DataCenter, Scope, Tags, and StackFile for a deployment.</span>
+
+<span class="sd">    Attributes:</span>
+
+<span class="sd">        Client (str): The name of the client or customer (installation or AWS Organizatoion)</span>
+<span class="sd">        Portfolio (str): Portfolio name is the BizApp name</span>
+<span class="sd">        App (str): The name of the part of the BizApp.  The deployment unit.</span>
+<span class="sd">        Branch (str): The name of the branch of the deployment unit being deployed</span>
+<span class="sd">        BranchShortName (str): The short name of the branch of the deployment unit being deployed.</span>
+<span class="sd">        Build (str): The build number, version number.  Or repo tag.  May even have the repository commit ID in the name.  (Ex. 0.0.6-pre.204+f9908cc6)</span>
+<span class="sd">        Component (str): The item deployed (EC2, Volumne, ResourceGrooup, etc).  These are parts of the deploment unit.</span>
+<span class="sd">        Environment (str): Related to the Zone.  Examples are Prod, Dev, Non-Prod, UAT, PEN, PERF, PT, etc</span>
+<span class="sd">        DataCenter (str): This is the physical location.  This is almost identical to an AWS region.  Examples are us-east-1, us-west-2, etc</span>
+<span class="sd">        Scope (str): The deployment scope from the values: portfolio, app, branch, build.  It does not include the component or environment. It&#39;s primarily used to determine the location in S3 folder hierarchy to store packages, artefacts, and files for the deployment.</span>
+<span class="sd">        Tags (dict[str, str]): Tags are key value pairs that can be applied to resources.  These values can come from the FACTS database from Apps or Zone defaults.  Your deployment may specify additional tags.</span>
+<span class="sd">        StackFile (str): The name of the CloudFormation stack file that was used in the deployment.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">data</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        If you do not provide a value for a field, sane defaults will calculated based on the environment</span>
+
+<span class="sd">        Example - Certain enviroment variables are examined:</span>
+<span class="sd">            CLIENT</span>
+<span class="sd">            PORTFOLIO</span>
+<span class="sd">            APP</span>
+<span class="sd">            BRANCH</span>
+<span class="sd">            BUILD</span>
+<span class="sd">            ENVIRONMENT</span>
+<span class="sd">            SCOPE</span>
+
+<span class="sd">        Other values are calculated.  Some will remain None.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">data</span><span class="p">)</span>
+
+    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">populate_by_name</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validate_assignment</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">Client</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Client is the name of the client or customer (installation or AWS Organizatoion)&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">Portfolio</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Portfolio name is the BizApp name&quot;</span><span class="p">)</span>
+
+    <span class="n">App</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;App is the name of the part of the BizApp.  The deployment unit.&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">Branch</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Branch is the name of the branch of the deployment unit being deployed&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">BranchShortName</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;BranchShortName is the short name of the branch of the deployment unit being deployed.  &quot;</span>
+        <span class="s2">&quot;Done because of special characters that cannot be used as AWS resource names&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">Build</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Build is the build number, version number.  Or repo tag.  May even have the repository &quot;</span>
+        <span class="s2">&quot;commit ID in the name.  (Ex. 0.0.6-pre.204+f9908cc6)&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">Component</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Component is the item deployed (EC2, Volumne, ResourceGrooup, etc).  &quot;</span>
+        <span class="s2">&quot;These are parts of the deploment unit.&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">Environment</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Environment is related to the Zone.  Examples are Prod, Dev, Non-Prod, UAT, PEN, PERF, PT, etc&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">DataCenter</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;DataCenter is the physical location.  This is almost identical to an AWS region, but different.  &quot;</span>
+        <span class="s2">&quot;Examples are us-east-1, us-west-2, etc&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">Scope</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Scope is the deployment scope from the values: portfolio, app, branch, build.  It does not &quot;</span>
+        <span class="s2">&quot;include the component or environment. It&#39;s primarily used to determine the location in S3 folder hierarchy &quot;</span>
+        <span class="s2">&quot;to store packages, artefacts, and files for the deployment.&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">Tags</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Tags are key value pairs that can be applied to resources.  These values can come from the &quot;</span>
+        <span class="s2">&quot;FACTS database from Apps or Zone defaults.  Your deployment may specify additional tags.&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">StackFile</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;StackFile is the name of the CloudFormation stack file that was used in the deployment.&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">DeliveredBy</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;DeliveredBy is the name of the person or system that delivered the deployment.&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_portfolio_prn</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;prn:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Portfolio</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">get_app_prn</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;prn:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Portfolio</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">App</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">get_branch_prn</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;prn:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Portfolio</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">App</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">BranchShortName</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">get_build_prn</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;prn:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Portfolio</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">App</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">BranchShortName</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Build</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">get_component_prn</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;prn:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Portfolio</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">App</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">BranchShortName</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Build</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Component</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+    <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;before&quot;</span><span class="p">)</span>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">validate_incoming</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Client&quot;</span><span class="p">):</span>
+                <span class="n">values</span><span class="p">[</span><span class="s2">&quot;Client&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span>
+                    <span class="n">ENV_CLIENT</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="n">ENV_AWS_PROFILE</span><span class="p">,</span> <span class="s2">&quot;default&quot;</span><span class="p">)</span>
+                <span class="p">)</span>
+            <span class="n">branch</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Branch&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">branch</span><span class="p">:</span>
+                <span class="n">values</span><span class="p">[</span><span class="s2">&quot;BranchShortName&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">branch_short_name</span><span class="p">(</span><span class="n">branch</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">values</span><span class="p">[</span><span class="s2">&quot;BranchShortName&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">branch</span>  <span class="c1"># branch might by V_EMPTY</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;DeliveredBy&quot;</span><span class="p">):</span>
+                <span class="n">values</span><span class="p">[</span><span class="s2">&quot;DeliveredBy&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">get_delivered_by</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">values</span>
+
+    <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">check_conditional_fields</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">Component</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">Build</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Build is required when Component is provided&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">Build</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">Branch</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Branch is required when Build is provided&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">Branch</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">App</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;App is required when Branch is provided&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">Scope</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">Scope</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_scope</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">get_scope</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">DeploymentDetails</span><span class="o">.</span><span class="n">_get_standard_scope</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">Portfolio</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">App</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Branch</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Build</span>
+        <span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_get_standard_scope</span><span class="p">(</span>
+        <span class="n">portfolio</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">app</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">branch</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">build</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">ENV_SCOPE</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="n">ENV_SCOPE</span><span class="p">,</span> <span class="n">SCOPE_BUILD</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">build</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">SCOPE_BUILD</span>
+        <span class="k">if</span> <span class="n">branch</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">SCOPE_BRANCH</span>
+        <span class="k">if</span> <span class="n">app</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">SCOPE_APP</span>
+        <span class="k">if</span> <span class="n">portfolio</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">SCOPE_PORTFOLIO</span>
+        <span class="k">return</span> <span class="n">SCOPE_BUILD</span>
+
+    <span class="k">def</span> <span class="nf">get_identity</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+
+        <span class="n">portfolio</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Portfolio</span> <span class="ow">or</span> <span class="s2">&quot;*&quot;</span>
+        <span class="n">app</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">App</span> <span class="ow">or</span> <span class="s2">&quot;*&quot;</span>
+        <span class="n">branch_short_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">BranchShortName</span> <span class="ow">or</span> <span class="s2">&quot;*&quot;</span>
+        <span class="n">build</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Build</span> <span class="ow">or</span> <span class="s2">&quot;*&quot;</span>
+
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;prn:</span><span class="si">{</span><span class="n">portfolio</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">app</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">branch_short_name</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">build</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_arguments</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+        <span class="n">client</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;client&quot;</span><span class="p">,</span> <span class="n">util</span><span class="o">.</span><span class="n">get_client</span><span class="p">())</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">client</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Client is required&quot;</span><span class="p">)</span>
+
+        <span class="n">prn</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;prn&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">prn</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">portfolio</span><span class="p">,</span> <span class="n">app</span><span class="p">,</span> <span class="n">branch</span><span class="p">,</span> <span class="n">build</span><span class="p">,</span> <span class="n">component</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">split_prn</span><span class="p">(</span><span class="n">prn</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">portfolio</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;portfolio&quot;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="n">ENV_PORTFOLIO</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+            <span class="n">app</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;app&quot;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="n">ENV_APP</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+            <span class="n">branch</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;branch&quot;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="n">ENV_BRANCH</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">branch</span><span class="p">:</span>
+                <span class="n">branch_short_name</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                    <span class="s2">&quot;branch_short_name&quot;</span><span class="p">,</span> <span class="n">util</span><span class="o">.</span><span class="n">branch_short_name</span><span class="p">(</span><span class="n">branch</span><span class="p">)</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">branch_short_name</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">build</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;build&quot;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="n">ENV_BUILD</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+            <span class="n">component</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;component&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="n">scope</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="s2">&quot;scope&quot;</span><span class="p">,</span>
+            <span class="n">DeploymentDetails</span><span class="o">.</span><span class="n">_get_standard_scope</span><span class="p">(</span><span class="n">portfolio</span><span class="p">,</span> <span class="n">app</span><span class="p">,</span> <span class="n">branch</span><span class="p">,</span> <span class="n">build</span><span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">DeploymentDetails</span><span class="p">(</span>
+            <span class="n">Client</span><span class="o">=</span><span class="n">client</span><span class="p">,</span>
+            <span class="n">Portfolio</span><span class="o">=</span><span class="n">portfolio</span><span class="p">,</span>
+            <span class="n">App</span><span class="o">=</span><span class="n">app</span><span class="p">,</span>
+            <span class="n">Branch</span><span class="o">=</span><span class="n">branch</span><span class="p">,</span>
+            <span class="n">BranchShortName</span><span class="o">=</span><span class="n">branch_short_name</span><span class="p">,</span>
+            <span class="n">Build</span><span class="o">=</span><span class="n">build</span><span class="p">,</span>
+            <span class="n">Component</span><span class="o">=</span><span class="n">component</span><span class="p">,</span>
+            <span class="n">Scope</span><span class="o">=</span><span class="n">scope</span><span class="p">,</span>
+            <span class="n">Environment</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;environment&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+            <span class="n">DataCenter</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;data_center&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+            <span class="n">Tags</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;tags&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+            <span class="n">StackFile</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;stack_file&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+            <span class="n">DeliveredBy</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;delivered_by&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+        <span class="p">)</span>
+
+    <span class="c1"># Override</span>
+<div class="viewcode-block" id="DeploymentDetails.model_dump">
+<a class="viewcode-back" href="../../../technical_reference/core-framework/_autosummary/core_framework.models.deployment_details.DeploymentDetails.html#core_framework.models.deployment_details.DeploymentDetails.model_dump">[docs]</a>
+    <span class="k">def</span> <span class="nf">model_dump</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="s2">&quot;exclude_none&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;exclude_none&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DeploymentDetails.get_object_key">
+<a class="viewcode-back" href="../../../technical_reference/core-framework/_autosummary/core_framework.models.deployment_details.DeploymentDetails.html#core_framework.models.deployment_details.DeploymentDetails.get_object_key">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_object_key</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">object_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">scope</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">s3</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the object path from the payload&#39;s deployment details. This will use os delimiters &#39;/&#39; for linux or SR</span>
+<span class="sd">        or &#39;\\&#39; for Windows.  And if you need s3 keys, make sure that s3 parameter is set to True to for / delimiter.</span>
+
+<span class="sd">        If you specify the **scope** then it will override the scope in the deployment details.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            object_type (str): The type of object to get the path for.  (files, packages, artefacts)</span>
+<span class="sd">            name (str, optional): The name of the object to get the path for. (default: None)</span>
+<span class="sd">            scope (str, optional): The scope of the artefacts (default: None).  Allowed values are: portfolio, app, branch, build.</span>
+<span class="sd">            s3 (bool, optional): Forces slashes to &#39;/&#39; instead of os dependent (default: False)</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            str: The path to the object in the core automation s3 bucket</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">portfolio</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Portfolio</span> <span class="ow">or</span> <span class="n">V_EMPTY</span>
+        <span class="n">portfolio</span> <span class="o">=</span> <span class="n">portfolio</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+        <span class="n">app</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">App</span> <span class="ow">or</span> <span class="n">V_EMPTY</span>
+        <span class="n">app</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+        <span class="n">branch</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">BranchShortName</span> <span class="ow">or</span> <span class="n">V_EMPTY</span>
+        <span class="n">branch</span> <span class="o">=</span> <span class="n">branch</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+        <span class="n">build</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Build</span> <span class="ow">or</span> <span class="n">V_EMPTY</span>
+        <span class="n">build</span> <span class="o">=</span> <span class="n">build</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+        <span class="n">separator</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span> <span class="k">if</span> <span class="n">s3</span> <span class="k">else</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">sep</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">scope</span><span class="p">:</span>
+            <span class="n">scope</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Scope</span>
+
+        <span class="k">if</span> <span class="n">scope</span> <span class="o">==</span> <span class="n">SCOPE_PORTFOLIO</span> <span class="ow">and</span> <span class="n">portfolio</span><span class="p">:</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="n">separator</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">object_type</span><span class="p">,</span> <span class="n">portfolio</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="n">scope</span> <span class="o">==</span> <span class="n">SCOPE_APP</span> <span class="ow">and</span> <span class="n">portfolio</span> <span class="ow">and</span> <span class="n">app</span><span class="p">:</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="n">separator</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">object_type</span><span class="p">,</span> <span class="n">portfolio</span><span class="p">,</span> <span class="n">app</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="n">scope</span> <span class="o">==</span> <span class="n">SCOPE_BRANCH</span> <span class="ow">and</span> <span class="n">portfolio</span> <span class="ow">and</span> <span class="n">app</span> <span class="ow">and</span> <span class="n">branch</span><span class="p">:</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="n">separator</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">object_type</span><span class="p">,</span> <span class="n">portfolio</span><span class="p">,</span> <span class="n">app</span><span class="p">,</span> <span class="n">branch</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="n">scope</span> <span class="o">==</span> <span class="n">SCOPE_BUILD</span> <span class="ow">and</span> <span class="n">portfolio</span> <span class="ow">and</span> <span class="n">app</span> <span class="ow">and</span> <span class="n">branch</span> <span class="ow">and</span> <span class="n">build</span><span class="p">:</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="n">separator</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">object_type</span><span class="p">,</span> <span class="n">portfolio</span><span class="p">,</span> <span class="n">app</span><span class="p">,</span> <span class="n">branch</span><span class="p">,</span> <span class="n">build</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="n">object_type</span>
+
+        <span class="k">return</span> <span class="n">key</span> <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">key</span><span class="si">}{</span><span class="n">separator</span><span class="si">}{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,6 @@
+core\_framework.models.models.get\_artefacts\_path
+==================================================
+
+.. currentmodule:: core_framework.models.models
+
+.. autofunction:: get_artefacts_path

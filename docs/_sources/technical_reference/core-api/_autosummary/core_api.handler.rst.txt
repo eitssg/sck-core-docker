@@ -1,0 +1,30 @@
+core_api.handler
+================
+
+.. automodule:: core_api.handler
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+      handler
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

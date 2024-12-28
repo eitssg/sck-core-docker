@@ -1,0 +1,6 @@
+core\_api.handler\_direct.handler\_direct
+=========================================
+
+.. currentmodule:: core_api.handler_direct
+
+.. autofunction:: handler_direct

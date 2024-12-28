@@ -1,0 +1,57 @@
+core\_db.registry.zone.models.ExtendedMapAttribute
+==================================================
+
+.. currentmodule:: core_db.registry.zone.models
+
+.. autoclass:: ExtendedMapAttribute
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ExtendedMapAttribute.attr_name
+      ~ExtendedMapAttribute.attr_type
+      ~ExtendedMapAttribute.attribute_args
+      ~ExtendedMapAttribute.null
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ExtendedMapAttribute.__init__
+      ~ExtendedMapAttribute.add
+      ~ExtendedMapAttribute.append
+      ~ExtendedMapAttribute.as_dict
+      ~ExtendedMapAttribute.between
+      ~ExtendedMapAttribute.contains
+      ~ExtendedMapAttribute.delete
+      ~ExtendedMapAttribute.deserialize
+      ~ExtendedMapAttribute.does_not_exist
+      ~ExtendedMapAttribute.exists
+      ~ExtendedMapAttribute.from_dynamodb_dict
+      ~ExtendedMapAttribute.from_simple_dict
+      ~ExtendedMapAttribute.get_attributes
+      ~ExtendedMapAttribute.get_value
+      ~ExtendedMapAttribute.is_correctly_typed
+      ~ExtendedMapAttribute.is_in
+      ~ExtendedMapAttribute.is_raw
+      ~ExtendedMapAttribute.is_type
+      ~ExtendedMapAttribute.prepend
+      ~ExtendedMapAttribute.remove
+      ~ExtendedMapAttribute.serialize
+      ~ExtendedMapAttribute.set
+      ~ExtendedMapAttribute.startswith
+      ~ExtendedMapAttribute.to_dynamodb_dict
+      ~ExtendedMapAttribute.to_simple_dict
+      ~ExtendedMapAttribute.validate
+   
+   

@@ -1,0 +1,6 @@
+core\_logging.log\_classes.L\_MESSAGE
+=====================================
+
+.. currentmodule:: core_logging.log_classes
+
+.. autodata:: L_MESSAGE

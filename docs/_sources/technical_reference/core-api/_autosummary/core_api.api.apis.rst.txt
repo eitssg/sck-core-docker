@@ -1,0 +1,33 @@
+core_api.api.apis
+=================
+
+.. automodule:: core_api.api.apis
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+      generate_event_context_for_lambda
+      generate_response_from_lamnba
+      get_fast_api_router
+      proxy_forward
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

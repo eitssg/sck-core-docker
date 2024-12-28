@@ -1,0 +1,69 @@
+core\_db.registry.app.models.AppFacts
+=====================================
+
+.. currentmodule:: core_db.registry.app.models
+
+.. autoclass:: AppFacts
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~AppFacts.Account
+      ~AppFacts.AppRegex
+      ~AppFacts.ClientPortfolio
+      ~AppFacts.EnforceValidation
+      ~AppFacts.Environment
+      ~AppFacts.ImgeAliases
+      ~AppFacts.Metadata
+      ~AppFacts.Name
+      ~AppFacts.Region
+      ~AppFacts.Repository
+      ~AppFacts.Tags
+      ~AppFacts.UserInstantiated
+      ~AppFacts.Zone
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~AppFacts.__init__
+      ~AppFacts.batch_get
+      ~AppFacts.batch_write
+      ~AppFacts.count
+      ~AppFacts.create_table
+      ~AppFacts.delete
+      ~AppFacts.delete_table
+      ~AppFacts.describe_table
+      ~AppFacts.deserialize
+      ~AppFacts.exists
+      ~AppFacts.from_dynamodb_dict
+      ~AppFacts.from_raw_data
+      ~AppFacts.from_simple_dict
+      ~AppFacts.get
+      ~AppFacts.get_attributes
+      ~AppFacts.get_delete_kwargs_from_instance
+      ~AppFacts.get_operation_kwargs_from_class
+      ~AppFacts.get_save_kwargs_from_instance
+      ~AppFacts.get_update_kwargs_from_instance
+      ~AppFacts.query
+      ~AppFacts.refresh
+      ~AppFacts.save
+      ~AppFacts.scan
+      ~AppFacts.serialize
+      ~AppFacts.to_dynamodb_dict
+      ~AppFacts.to_simple_dict
+      ~AppFacts.update
+      ~AppFacts.update_local_version_attribute
+      ~AppFacts.update_ttl
+   
+   

@@ -1,0 +1,80 @@
+core\_framework.models.deployment\_details.DeploymentDetails
+============================================================
+
+.. currentmodule:: core_framework.models.deployment_details
+
+.. autoclass:: DeploymentDetails
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~DeploymentDetails.model_computed_fields
+      ~DeploymentDetails.model_config
+      ~DeploymentDetails.model_extra
+      ~DeploymentDetails.model_fields
+      ~DeploymentDetails.model_fields_set
+      ~DeploymentDetails.Client
+      ~DeploymentDetails.Portfolio
+      ~DeploymentDetails.App
+      ~DeploymentDetails.Branch
+      ~DeploymentDetails.BranchShortName
+      ~DeploymentDetails.Build
+      ~DeploymentDetails.Component
+      ~DeploymentDetails.Environment
+      ~DeploymentDetails.DataCenter
+      ~DeploymentDetails.Scope
+      ~DeploymentDetails.Tags
+      ~DeploymentDetails.StackFile
+      ~DeploymentDetails.DeliveredBy
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~DeploymentDetails.__init__
+      ~DeploymentDetails.check_conditional_fields
+      ~DeploymentDetails.construct
+      ~DeploymentDetails.copy
+      ~DeploymentDetails.dict
+      ~DeploymentDetails.from_arguments
+      ~DeploymentDetails.from_orm
+      ~DeploymentDetails.get_app_prn
+      ~DeploymentDetails.get_branch_prn
+      ~DeploymentDetails.get_build_prn
+      ~DeploymentDetails.get_component_prn
+      ~DeploymentDetails.get_identity
+      ~DeploymentDetails.get_object_key
+      ~DeploymentDetails.get_portfolio_prn
+      ~DeploymentDetails.get_scope
+      ~DeploymentDetails.json
+      ~DeploymentDetails.model_construct
+      ~DeploymentDetails.model_copy
+      ~DeploymentDetails.model_dump
+      ~DeploymentDetails.model_dump_json
+      ~DeploymentDetails.model_json_schema
+      ~DeploymentDetails.model_parametrized_name
+      ~DeploymentDetails.model_post_init
+      ~DeploymentDetails.model_rebuild
+      ~DeploymentDetails.model_validate
+      ~DeploymentDetails.model_validate_json
+      ~DeploymentDetails.model_validate_strings
+      ~DeploymentDetails.parse_file
+      ~DeploymentDetails.parse_obj
+      ~DeploymentDetails.parse_raw
+      ~DeploymentDetails.schema
+      ~DeploymentDetails.schema_json
+      ~DeploymentDetails.update_forward_refs
+      ~DeploymentDetails.validate
+      ~DeploymentDetails.validate_incoming
+   
+   

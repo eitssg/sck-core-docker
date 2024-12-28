@@ -1,0 +1,6 @@
+core\_framework.constants.DD\_TAGS
+==================================
+
+.. currentmodule:: core_framework.constants
+
+.. autodata:: DD_TAGS

@@ -1,0 +1,40 @@
+﻿core_framework.models
+=====================
+
+.. automodule:: core_framework.models
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :template: custom-module-template.rst
+   :recursive:
+   
+      action_details
+      actions
+      deployment_details
+      deployspec
+      models
+      package_details
+      state_details
+      task_payload
+
+

@@ -1,0 +1,6 @@
+core\_framework.constants.V\_PACKAGE\_ZIP
+=========================================
+
+.. currentmodule:: core_framework.constants
+
+.. autodata:: V_PACKAGE_ZIP

@@ -1,0 +1,276 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Organizations &mdash; SCK Core Automation 1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a3c9731c" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=45d66dd6" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=29a6c3e3"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Using Core Automation" href="commandline.html" />
+    <link rel="prev" title="Using Core Automation" href="using.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            SCK Core Automation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">User Guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="features.html">Features</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="using.html">Using Core Automation</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Organizations</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#configuration">Configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="commandline.html">Using Core Automation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="faq.html">FAQ</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/index.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../technical_reference/index.html">Technical Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SCK Core Automation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">User Guide</a></li>
+          <li class="breadcrumb-item"><a href="using.html">Using Core Automation</a></li>
+      <li class="breadcrumb-item active">Organizations</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/user_guide/organizations.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="organizations">
+<h1>Organizations<a class="headerlink" href="#organizations" title="Link to this heading"></a></h1>
+<p>AWS Organizations ore fundamental to Core Automation.  An AWS Organization is required to deploy infrastructure.</p>
+<p>The AWS Organization is the CLIENT.  Throughout the documentation, the CLIENT is a term used to specify which
+AWS Organization to use when deploying infrastrcture.</p>
+<p>You will use the core automation command line to configure the CLIENT for your AWS Organization.</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>core --client myorg configure
+
+# or
+
+export CLIENT=myorg
+
+core configure
+</pre></div>
+</div>
+<p>Since the CLIENT and AWS_PROFILE are synonymous, we strongly recommend you setup an AWS_PROFILE for each CLIENT.</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>PS C:\Users\user&amp;gt; aws --profile abc configure
+AWS Access Key ID [\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*GJW3]:
+AWS Secret Access Key [\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*\*qUe4]:
+Default region name [ap-southeast-1]:
+Default output format [json]:
+PS C:\Users\user&amp;gt;
+</pre></div>
+</div>
+<p>Then you will be able to use the –client or –aws-profile commandline options to select your Organization.</p>
+<section id="configuration">
+<h2>Configuration<a class="headerlink" href="#configuration" title="Link to this heading"></a></h2>
+<p>When configuring the client there be a series of questions that are asked about the organization. It is
+assumed that you have the appropriate permissions to create the necessary resources in the AWS Organization
+in the Billing Account.</p>
+<p>Running the core configure command will being with a set of defaults and as you begin to use core automation
+more and become familier with your options, you may reconfigure the CLIENT at any time.</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>export AWS_PROFILE=myorg
+
+core configure
+
+Welcome to the Core Automation Configuration Wizard:
+
+User: aws_username
+UserArn: arn:aws:iam::123456789012:user/aws_username
+Account: 123456789012
+Region: ap-southeast-1
+
+Please enter the following information:
+
+Client Name [myorg]: myorg
+Organization ID [o-123456789012]: o-123456789012
+Organization Name [MyOrg]: MyOrg
+Organization Account [123456789012]: 123456789012
+Audit Account [123456789012]: 123456789012
+Master Region [ap-southeast-1]: ap-southeast-1
+Docs Bucket [myorg-core-automation-docs]: myorg-core-automation-docs
+Client Region [ap-southeast-1]: ap-southeast-1
+Automation Bucket [myorg-core-automation]: myorg-core-automation
+Bucket Region [ap-southeast-1]: ap-southeast-1
+Automation Account [123456789012]: 123456789012
+Security Account [123456789012]: 123456789012
+UI Bucket [myorg-core-automation-ui]: myorg-core-automation-ui
+Scope Prefix []:
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The above default values will be derrived automatically by the configuration wizard.  You may change them
+as you see fit.  When you want to use Multi-Account-Landing-Zones, you will need to reconfigure.</p>
+</div>
+<p>The configuration wizard will create a file in the <strong>~/.core</strong> directory called <strong>config.json</strong> at the same
+time this data will be stored in the DynamoDB table <strong>core-automation-clients</strong>.</p>
+<p class="rubric">Attributes</p>
+<p><strong>organization_id</strong></p>
+<p>The ID for the organization.  Derrived by scanning for the AWS Organziation that is enabled in the account.
+that the AWS_PROFILE is set to.  The Organization must be created manually in the AWS Console.  There is no
+API that is available to create an AWS Organization.</p>
+<p><strong>organization_name</strong></p>
+<p>This will default to the AWS_PROFILE name.  You may change it.  This will then be the CLIENT paramter that
+is used to identify resources by org.</p>
+<p><strong>organization_account</strong></p>
+<p>This is the AWS Account Number (e.g. 123456789012) that is the root account for the organization.  This is
+the Billing Account or the Root Account and is where Control-Tower, Organizations, AWS SSO, and identity
+Center are setup.</p>
+<p><strong>client_region</strong></p>
+<p>When running local resources in the Organization Account (most resources will be global), specify the region
+that you want to use.  This is the region that the CLI will use to deploy resources.  Mose likely you will
+use us-east-1 for the Organization Accoun if the resource is not global as this is required for several AWS services.</p>
+<p><strong>audit_account</strong></p>
+<p>Many organizations require centralized Logging.  This account is used to store logs for all accounts in the
+Landing Zones.  You will want to setup a “Zone” for logging and is where you would deploy the CloudWatch
+Dashboards, Logs, or ELK Stack. (Grafana, Prometheus, Loki, etc.)</p>
+<p>Please note that this account is automationcally created by Control Tower and the default value is derrived
+from the Control-Tower service.</p>
+<blockquote>
+<div><p><strong>Note</strong>: Control-Tower logging consists of VPC Flow-Logs and CloudTrail.  This is primarily an <strong>infrastrcture</strong>
+service.  If you wish to use a separate account for <strong>Applicaation Logging</strong> ELK Stacks and CloudWatch Logs and
+Dashboards, use a separate AWS account for the <strong>audit_account</strong>.</p>
+</div></blockquote>
+<p><strong>security_account</strong></p>
+<p>This is the account where security tools are deployed.  This is where the Security Hub, GuardDuty, and other
+SIEM systems are located for centralized monitoring.</p>
+<p>This account is automatically created by Control Tower and the default value is derrived from the Control-Tower service.</p>
+<p>If your SOC or Security Operations Center is in a different account, update the value for the security account.  And,
+your SOC may need to additionally access the Control-Tower security account.</p>
+<p><strong>automation_account</strong></p>
+<p>Defaults to the Billing Account or Organization account. If your infrastructure Automation team has its own
+AWS account, update the value for the automation account. This the account where infrastructure package, files,
+and artefacts are stored as well as the DynamoDB tables for the core automation.</p>
+<p><strong>master_region</strong> = UnicodeAttribute(null=True)</p>
+<p>This is the AWS Region where automation tools are deployed such as the DynamoDB tables.</p>
+<p><strong>automation_bucket</strong></p>
+<p>This is the bucekt name for the core automation.  This is where the core automation stores its files, packages, and artefacts.</p>
+<p>Defaults to <strong>core-autoamtion</strong>.  Unless you know, don’t change this value.</p>
+<p><strong>bucket_region</strong></p>
+<p>This is the region for the S3 buckets that are used by the core automation.  This is the region
+where the core automation stores its files, packages, and artefactsa and table data.  This is the same
+as the <strong>master_region</strong> unless you have a specific reason to change it.</p>
+<p><strong>docs_bucket</strong></p>
+<p>This is the bucket name for the core automation documentation (This manual you are reading).</p>
+<p>The default value is <strong>core-automaton-docs</strong> and is a public S3 bucket behind a CloudFront resource.</p>
+<p><strong>ui_bucket</strong></p>
+<p>Core Automation has a web interface that is used to manage the automation tools.  This is the bucket where the
+web interface is stored.  The default value is <strong>core-automation-ui</strong>.  This will  use the <strong>master_region</strong></p>
+<p><strong>scope_prefix</strong> = UnicodeAttribute(null=True)</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you have not setup Core-Automation with the <em>core engine init</em> command, you will need to do this FIRST or
+else this command will fail to operate.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>If you are developing core-automation you can configure infrastructure to be deployed to a
+development Organization.</p>
+<p>It is highly recommended that you do not deploy branches of core-automation to production.
+Always deploy the <strong>master</strong> branch to production.</p>
+<p>The <strong>CLIENT</strong> environment variable or <strong>–client</strong> parameter is used to specify
+which AWS Organizaton to use.</p>
+<p>Create a different organization for Developing core automation</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Deploy core-automation and then deploy application infrastructure</span>
+
+core<span class="w"> </span>--client<span class="w"> </span>dev-org<span class="w"> </span>configure
+core<span class="w"> </span>--client<span class="w"> </span>dev-org<span class="w"> </span>engine<span class="w"> </span>deploy
+core<span class="w"> </span>--client<span class="w"> </span>dev-org<span class="w"> </span>run<span class="w"> </span>package<span class="w"> </span>upload<span class="w"> </span>compile<span class="w"> </span>deploy<span class="w"> </span>-p<span class="w"> </span>demo<span class="w"> </span>-a<span class="w"> </span>canary<span class="w"> </span>-b<span class="w"> </span>mybranch<span class="w"> </span>-n<span class="w"> </span><span class="m">1</span>
+
+<span class="c1"># or</span>
+
+<span class="nb">export</span><span class="w"> </span><span class="nv">CLIENT</span><span class="o">=</span>dev-org
+
+core<span class="w"> </span>configure
+core<span class="w"> </span>engine<span class="w"> </span>deploy
+core<span class="w"> </span>run<span class="w"> </span>package<span class="w"> </span>upload<span class="w"> </span>compile<span class="w"> </span>deploy<span class="w"> </span>-p<span class="w"> </span>demo<span class="w"> </span>-a<span class="w"> </span>canary<span class="w"> </span>-b<span class="w"> </span>mybranch<span class="w"> </span>-n<span class="w"> </span><span class="m">1</span>
+</pre></div>
+</div>
+</div>
+<p>See the developers guide <a class="reference internal" href="../developer_guide/index.html#developer-guide"><span class="std std-ref">Developer Guide</span></a> for more information on how to enhance or customize core-automation</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="using.html" class="btn btn-neutral float-left" title="Using Core Automation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="commandline.html" class="btn btn-neutral float-right" title="Using Core Automation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

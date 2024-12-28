@@ -1,0 +1,6 @@
+core\_db.constants.OWNER
+========================
+
+.. currentmodule:: core_db.constants
+
+.. autodata:: OWNER

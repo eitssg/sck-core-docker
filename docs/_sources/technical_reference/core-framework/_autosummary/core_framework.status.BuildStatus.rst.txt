@@ -1,0 +1,33 @@
+core\_framework.status.BuildStatus
+==================================
+
+.. currentmodule:: core_framework.status
+
+.. autoclass:: BuildStatus
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~BuildStatus.__init__
+      ~BuildStatus.from_str
+      ~BuildStatus.is_allowed_to_release
+      ~BuildStatus.is_allowed_to_teardown
+      ~BuildStatus.is_complete
+      ~BuildStatus.is_deploy
+      ~BuildStatus.is_failed
+      ~BuildStatus.is_in_progress
+      ~BuildStatus.is_init
+      ~BuildStatus.is_release
+      ~BuildStatus.is_teardown
+   
+   

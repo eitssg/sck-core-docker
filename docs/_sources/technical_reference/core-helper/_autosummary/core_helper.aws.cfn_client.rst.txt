@@ -1,0 +1,6 @@
+core\_helper.aws.cfn\_client
+============================
+
+.. currentmodule:: core_helper.aws
+
+.. autofunction:: cfn_client

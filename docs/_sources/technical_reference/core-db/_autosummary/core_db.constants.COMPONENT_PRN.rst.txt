@@ -1,0 +1,6 @@
+core\_db.constants.COMPONENT\_PRN
+=================================
+
+.. currentmodule:: core_db.constants
+
+.. autodata:: COMPONENT_PRN

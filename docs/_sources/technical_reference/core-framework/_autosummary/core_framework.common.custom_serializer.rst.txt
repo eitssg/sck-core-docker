@@ -1,0 +1,6 @@
+core\_framework.common.custom\_serializer
+=========================================
+
+.. currentmodule:: core_framework.common
+
+.. autofunction:: custom_serializer

@@ -1,0 +1,65 @@
+core\_db.item.app.models.AppModel
+=================================
+
+.. currentmodule:: core_db.item.app.models
+
+.. autoclass:: AppModel
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~AppModel.contact_email
+      ~AppModel.created_at
+      ~AppModel.item_type
+      ~AppModel.name
+      ~AppModel.parent_created_at_index
+      ~AppModel.parent_prn
+      ~AppModel.portfolio_prn
+      ~AppModel.prn
+      ~AppModel.updated_at
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~AppModel.__init__
+      ~AppModel.batch_get
+      ~AppModel.batch_write
+      ~AppModel.count
+      ~AppModel.create_table
+      ~AppModel.delete
+      ~AppModel.delete_table
+      ~AppModel.describe_table
+      ~AppModel.deserialize
+      ~AppModel.exists
+      ~AppModel.from_dynamodb_dict
+      ~AppModel.from_raw_data
+      ~AppModel.from_simple_dict
+      ~AppModel.get
+      ~AppModel.get_attributes
+      ~AppModel.get_delete_kwargs_from_instance
+      ~AppModel.get_operation_kwargs_from_class
+      ~AppModel.get_save_kwargs_from_instance
+      ~AppModel.get_update_kwargs_from_instance
+      ~AppModel.query
+      ~AppModel.refresh
+      ~AppModel.save
+      ~AppModel.scan
+      ~AppModel.serialize
+      ~AppModel.to_dynamodb_dict
+      ~AppModel.to_simple_dict
+      ~AppModel.update
+      ~AppModel.update_local_version_attribute
+      ~AppModel.update_ttl
+   
+   

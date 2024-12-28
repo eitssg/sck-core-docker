@@ -1,0 +1,6 @@
+core\_execute.actionlib.actions.aws.unprotect\_elb.generate\_template
+=====================================================================
+
+.. currentmodule:: core_execute.actionlib.actions.aws.unprotect_elb
+
+.. autofunction:: generate_template

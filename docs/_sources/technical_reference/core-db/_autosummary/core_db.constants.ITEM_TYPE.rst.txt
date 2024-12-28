@@ -1,0 +1,6 @@
+core\_db.constants.ITEM\_TYPE
+=============================
+
+.. currentmodule:: core_db.constants
+
+.. autodata:: ITEM_TYPE

@@ -1,0 +1,6 @@
+core\_db.facter.facter.get\_facts
+=================================
+
+.. currentmodule:: core_db.facter.facter
+
+.. autofunction:: get_facts

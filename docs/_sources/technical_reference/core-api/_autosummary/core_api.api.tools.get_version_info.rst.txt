@@ -1,0 +1,6 @@
+core\_api.api.tools.get\_version\_info
+======================================
+
+.. currentmodule:: core_api.api.tools
+
+.. autofunction:: get_version_info

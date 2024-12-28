@@ -1,0 +1,6 @@
+core\_renderer.monkeypatch.represent\_string
+============================================
+
+.. currentmodule:: core_renderer.monkeypatch
+
+.. autofunction:: represent_string

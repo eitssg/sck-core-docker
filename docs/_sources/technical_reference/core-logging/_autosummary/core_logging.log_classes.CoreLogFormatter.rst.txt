@@ -1,0 +1,38 @@
+core\_logging.log\_classes.CoreLogFormatter
+===========================================
+
+.. currentmodule:: core_logging.log_classes
+
+.. autoclass:: CoreLogFormatter
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~CoreLogFormatter.default_msec_format
+      ~CoreLogFormatter.default_time_format
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~CoreLogFormatter.__init__
+      ~CoreLogFormatter.converter
+      ~CoreLogFormatter.format
+      ~CoreLogFormatter.formatException
+      ~CoreLogFormatter.formatMessage
+      ~CoreLogFormatter.formatStack
+      ~CoreLogFormatter.formatTime
+      ~CoreLogFormatter.format_datetime
+      ~CoreLogFormatter.usesTime
+   
+   

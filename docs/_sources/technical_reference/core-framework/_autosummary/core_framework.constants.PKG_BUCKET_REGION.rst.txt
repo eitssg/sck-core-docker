@@ -1,0 +1,6 @@
+core\_framework.constants.PKG\_BUCKET\_REGION
+=============================================
+
+.. currentmodule:: core_framework.constants
+
+.. autodata:: PKG_BUCKET_REGION

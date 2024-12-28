@@ -1,0 +1,6 @@
+core\_framework.constants.PKG\_COMPILE\_MODE
+============================================
+
+.. currentmodule:: core_framework.constants
+
+.. autodata:: PKG_COMPILE_MODE

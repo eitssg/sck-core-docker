@@ -1,0 +1,366 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>core_framework.magic &mdash; SCK Core Automation 1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a3c9731c" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=45d66dd6" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=29a6c3e3"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            SCK Core Automation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/index.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/index.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../technical_reference/index.html">Technical Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">SCK Core Automation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">core_framework.magic</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for core_framework.magic</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; Magic module for emulating the boto3 S3 client and Buckets so we can elect to store files locally instead of in S3 &quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+
+
+<div class="viewcode-block" id="MagicBucket">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.magic.MagicBucket.html#core_framework.magic.MagicBucket">[docs]</a>
+<span class="k">class</span> <span class="nc">MagicBucket</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Provides a Magic Bucket with the S3 Bucket API for downloading fileobj and getting a MagicObject that behaves like an S3 Object.</span>
+
+<span class="sd">    The purpose is to read objects from the local filesystem instead of S3 using s3 api.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bucket_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">bucket_region</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize a MagicBucket object.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            bucket_name (_type_): _description_</span>
+<span class="sd">            bucket_region (_type_): _description_</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bucket_name</span> <span class="o">=</span> <span class="n">bucket_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bucket_region</span> <span class="o">=</span> <span class="n">bucket_region</span>
+
+<div class="viewcode-block" id="MagicBucket.Object">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.magic.MagicBucket.html#core_framework.magic.MagicBucket.Object">[docs]</a>
+    <span class="k">def</span> <span class="nf">Object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Emulate the S3 Object() API method to return a MagicObject instead of an S3 Object</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            key (str): The key of the object</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            MagicObject: A MagicObject that behaves like an S3 Object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">MagicObject</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bucket_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bucket_region</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MagicBucket.download_fileobj">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.magic.MagicBucket.html#core_framework.magic.MagicBucket.download_fileobj">[docs]</a>
+    <span class="k">def</span> <span class="nf">download_fileobj</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Emulate the S3 download_fileobj() API method to download a fileobj from the local filesystem.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            Key (str): The key of the object</span>
+<span class="sd">            Fileobj (file): The file object to write the data to</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Key&quot;</span><span class="p">)</span>
+        <span class="n">fileobj</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Fileobj&quot;</span><span class="p">)</span>
+        <span class="c1"># extra_args = kwargs.get(&quot;ExtraArgs&quot;)</span>
+
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">and</span> <span class="n">fileobj</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+                <span class="n">fileobj</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+            <span class="n">fileobj</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="MagicObject">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.magic.MagicObject.html#core_framework.magic.MagicObject">[docs]</a>
+<span class="k">class</span> <span class="nc">MagicObject</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    MagicObject class to emulate an S3 Object.  Currently only emulates the &quot;copy_from&quot; method.</span>
+
+<span class="sd">    The purpose is to copy objects from the local filesystem instead of S3 using s3 api.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bucket_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">bucket_region</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize a MagicObject object.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            bucket_name (str): The name of the bucket</span>
+<span class="sd">            bucket_region (str): The region of the bucket</span>
+<span class="sd">            key (str): The key of the object</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bucket_name</span> <span class="o">=</span> <span class="n">bucket_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bucket_region</span> <span class="o">=</span> <span class="n">bucket_region</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">key</span> <span class="o">=</span> <span class="n">key</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">version_id</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="MagicObject.copy_from">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.magic.MagicObject.html#core_framework.magic.MagicObject.copy_from">[docs]</a>
+    <span class="k">def</span> <span class="nf">copy_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Copies the artefact on the local filessystem instead of S3</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            CopySource (dict): The source object to copy from</span>
+<span class="sd">            Bucket (str): The source bucket name</span>
+<span class="sd">            Key (str): The source key</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">source</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;CopySource&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">source_bucket</span> <span class="o">=</span> <span class="n">source</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Bucket&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">source_key</span> <span class="o">=</span> <span class="n">source</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Key&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="n">error</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">source_bucket</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bucket_name</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;Source S3 bucket must be in same bucket as the target &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">bucket_name</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">source_key</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="p">:</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="p">),</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">source_key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Source and destination keys are required&quot;</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">error</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+
+        <span class="n">rv</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;BucketName&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">bucket_name</span><span class="p">,</span>
+            <span class="s2">&quot;BucketRegion&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">bucket_region</span><span class="p">,</span>
+            <span class="s2">&quot;Key&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="p">,</span>
+            <span class="s2">&quot;VersionId&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">version_id</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="n">error</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">rv</span><span class="p">[</span><span class="s2">&quot;Error&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">error</span>
+
+        <span class="k">return</span> <span class="n">rv</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="MagicS3Client">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.magic.MagicS3Client.html#core_framework.magic.MagicS3Client">[docs]</a>
+<span class="k">class</span> <span class="nc">MagicS3Client</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    MagicS3Client class to emulate an S3 client.  Currently only emulates the &quot;download_fileobj&quot; and &quot;put_object&quot; methods.</span>
+
+<span class="sd">    The purpose is to read and write objects to the local filesystem instead of S3 using s3 api.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialze a MagicS3Client object</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            bucket_name (str): The name of the bucket</span>
+<span class="sd">            region (str): The region of the bucket</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bucket_name</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;bucket_name&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">region</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;region&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">app_path</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;app_path&quot;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="s2">&quot;local&quot;</span><span class="p">))</span>
+
+<div class="viewcode-block" id="MagicS3Client.download_fileobj">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.magic.MagicS3Client.html#core_framework.magic.MagicS3Client.download_fileobj">[docs]</a>
+    <span class="k">def</span> <span class="nf">download_fileobj</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Emulate the S3 download_fileobj() API method to download a fileobj from the local filesystem.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            Bucket (str): The name of the bucket</span>
+<span class="sd">            Key (str): The key of the object</span>
+<span class="sd">            Fileobj (file): The file object to write the data to</span>
+<span class="sd">            ExtraArgs (dict): Extra arguments to pass to the download</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: If missing the Key or Fileobj buffer</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: A dictionary emulating what S3 would return for a download_fileobj() call</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bucket</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Bucket&quot;</span><span class="p">)</span>
+        <span class="n">Key</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Key&quot;</span><span class="p">)</span>
+        <span class="n">Fileobj</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Fileobj&quot;</span><span class="p">)</span>
+        <span class="n">ExtraArgs</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ExtraArgs&quot;</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">verion_id</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">error</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="n">Key</span> <span class="ow">and</span> <span class="n">Fileobj</span><span class="p">:</span>
+                <span class="n">fn</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">app_path</span><span class="p">,</span> <span class="n">Key</span><span class="p">)</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+                    <span class="n">Fileobj</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+                <span class="n">Fileobj</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                <span class="n">verion_id</span> <span class="o">=</span> <span class="s2">&quot;1&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Key and Fileobj are required&quot;</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">error</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+
+        <span class="n">rv</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;Bucket&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">bucket</span><span class="p">,</span>
+            <span class="s2">&quot;Key&quot;</span><span class="p">:</span> <span class="n">Key</span><span class="p">,</span>
+            <span class="s2">&quot;ExtraArgs&quot;</span><span class="p">:</span> <span class="n">ExtraArgs</span><span class="p">,</span>
+            <span class="s2">&quot;ContentType&quot;</span><span class="p">:</span> <span class="s2">&quot;application/x-yaml&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;VersionId&quot;</span><span class="p">:</span> <span class="n">verion_id</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="n">error</span><span class="p">:</span>
+            <span class="n">rv</span><span class="p">[</span><span class="s2">&quot;Error&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">error</span>
+
+        <span class="k">return</span> <span class="n">rv</span></div>
+
+
+<div class="viewcode-block" id="MagicS3Client.put_object">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.magic.MagicS3Client.html#core_framework.magic.MagicS3Client.put_object">[docs]</a>
+    <span class="k">def</span> <span class="nf">put_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Emulate the S3 put_object() API method to store a file on the local filesystem.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            Bucket (str): The name of the bucket</span>
+<span class="sd">            Key (str): The key of the object</span>
+<span class="sd">            Body (str): The body of the object</span>
+<span class="sd">            ContentType (str): The content type of the object</span>
+<span class="sd">            ServerSideEncryption (str): The server side encryption type</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: A dictionary that would emulate what S3 would return for a put_object() call</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">bucket</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Bucket&quot;</span><span class="p">)</span>
+        <span class="n">Key</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Key&quot;</span><span class="p">)</span>
+        <span class="n">Body</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Body&quot;</span><span class="p">)</span>
+        <span class="n">ContentType</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ContentType&quot;</span><span class="p">)</span>
+        <span class="n">ServerSideEncryption</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ServerSideEncryption&quot;</span><span class="p">)</span>
+
+        <span class="n">version_id</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">Key</span> <span class="ow">and</span> <span class="n">Body</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">fn</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">app_path</span><span class="p">,</span> <span class="n">Key</span><span class="p">)</span>
+                <span class="c1"># get the directory of the file fn</span>
+                <span class="n">dirname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">dirname</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">Body</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                    <span class="n">Body</span> <span class="o">=</span> <span class="n">Body</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">Body</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">):</span>
+                    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+                        <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">Body</span><span class="p">)</span>
+                    <span class="n">version_id</span> <span class="o">=</span> <span class="s2">&quot;1&quot;</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">error</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+
+        <span class="n">rv</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;Bucket&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">bucket</span><span class="p">,</span>
+            <span class="s2">&quot;Key&quot;</span><span class="p">:</span> <span class="n">Key</span><span class="p">,</span>
+            <span class="s2">&quot;ContentType&quot;</span><span class="p">:</span> <span class="n">ContentType</span><span class="p">,</span>
+            <span class="s2">&quot;ServerSideEncryption&quot;</span><span class="p">:</span> <span class="n">ServerSideEncryption</span><span class="p">,</span>
+            <span class="s2">&quot;VersionId&quot;</span><span class="p">:</span> <span class="n">version_id</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="n">error</span><span class="p">:</span>
+            <span class="n">rv</span><span class="p">[</span><span class="s2">&quot;Error&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">error</span>
+
+        <span class="k">return</span> <span class="n">rv</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

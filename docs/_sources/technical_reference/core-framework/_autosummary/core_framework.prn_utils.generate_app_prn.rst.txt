@@ -1,0 +1,6 @@
+core\_framework.prn\_utils.generate\_app\_prn
+=============================================
+
+.. currentmodule:: core_framework.prn_utils
+
+.. autofunction:: generate_app_prn

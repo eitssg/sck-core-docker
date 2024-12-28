@@ -1,0 +1,6 @@
+core\_db.exceptions.UnauthorizedException
+=========================================
+
+.. currentmodule:: core_db.exceptions
+
+.. autoexception:: UnauthorizedException

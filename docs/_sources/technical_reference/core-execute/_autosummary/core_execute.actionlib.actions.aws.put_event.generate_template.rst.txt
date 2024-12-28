@@ -1,0 +1,6 @@
+core\_execute.actionlib.actions.aws.put\_event.generate\_template
+=================================================================
+
+.. currentmodule:: core_execute.actionlib.actions.aws.put_event
+
+.. autofunction:: generate_template

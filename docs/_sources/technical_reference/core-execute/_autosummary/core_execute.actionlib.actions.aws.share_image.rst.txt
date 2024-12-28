@@ -1,0 +1,38 @@
+﻿core_execute.actionlib.actions.aws.share_image
+==============================================
+
+.. automodule:: core_execute.actionlib.actions.aws.share_image
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+      generate_template
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      ShareImageAction
+   
+   
+
+   
+   
+   
+
+
+

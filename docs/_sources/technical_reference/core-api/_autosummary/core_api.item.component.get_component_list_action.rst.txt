@@ -1,0 +1,6 @@
+core\_api.item.component.get\_component\_list\_action
+=====================================================
+
+.. currentmodule:: core_api.item.component
+
+.. autofunction:: get_component_list_action

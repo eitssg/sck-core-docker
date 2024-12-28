@@ -1,0 +1,34 @@
+﻿core_invoker
+============
+
+.. automodule:: core_invoker
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :template: custom-module-template.rst
+   :recursive:
+   
+      handler
+      invoker
+
+

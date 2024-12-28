@@ -1,0 +1,6 @@
+core\_api.registry.client.get\_client\_action
+=============================================
+
+.. currentmodule:: core_api.registry.client
+
+.. autofunction:: get_client_action

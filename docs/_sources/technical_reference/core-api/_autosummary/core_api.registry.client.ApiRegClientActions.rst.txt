@@ -1,0 +1,29 @@
+core\_api.registry.client.ApiRegClientActions
+=============================================
+
+.. currentmodule:: core_api.registry.client
+
+.. autoclass:: ApiRegClientActions
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ApiRegClientActions.__init__
+      ~ApiRegClientActions.create
+      ~ApiRegClientActions.delete
+      ~ApiRegClientActions.get
+      ~ApiRegClientActions.list
+      ~ApiRegClientActions.patch
+      ~ApiRegClientActions.update
+   
+   

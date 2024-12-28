@@ -1,0 +1,6 @@
+core\_framework.common.get\_start\_runner\_lambda\_arn
+======================================================
+
+.. currentmodule:: core_framework.common
+
+.. autofunction:: get_start_runner_lambda_arn

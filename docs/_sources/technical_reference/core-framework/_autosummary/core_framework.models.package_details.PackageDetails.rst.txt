@@ -1,0 +1,70 @@
+core\_framework.models.package\_details.PackageDetails
+======================================================
+
+.. currentmodule:: core_framework.models.package_details
+
+.. autoclass:: PackageDetails
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~PackageDetails.AppPath
+      ~PackageDetails.Mode
+      ~PackageDetails.TempDir
+      ~PackageDetails.model_computed_fields
+      ~PackageDetails.model_config
+      ~PackageDetails.model_extra
+      ~PackageDetails.model_fields
+      ~PackageDetails.model_fields_set
+      ~PackageDetails.Client
+      ~PackageDetails.BucketRegion
+      ~PackageDetails.BucketName
+      ~PackageDetails.Key
+      ~PackageDetails.CompileMode
+      ~PackageDetails.DeploySpec
+      ~PackageDetails.VersionId
+      ~PackageDetails.ContentType
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~PackageDetails.__init__
+      ~PackageDetails.construct
+      ~PackageDetails.copy
+      ~PackageDetails.dict
+      ~PackageDetails.from_arguments
+      ~PackageDetails.from_orm
+      ~PackageDetails.json
+      ~PackageDetails.model_construct
+      ~PackageDetails.model_copy
+      ~PackageDetails.model_dump
+      ~PackageDetails.model_dump_json
+      ~PackageDetails.model_json_schema
+      ~PackageDetails.model_parametrized_name
+      ~PackageDetails.model_post_init
+      ~PackageDetails.model_rebuild
+      ~PackageDetails.model_validate
+      ~PackageDetails.model_validate_json
+      ~PackageDetails.model_validate_strings
+      ~PackageDetails.parse_file
+      ~PackageDetails.parse_obj
+      ~PackageDetails.parse_raw
+      ~PackageDetails.schema
+      ~PackageDetails.schema_json
+      ~PackageDetails.set_key
+      ~PackageDetails.update_forward_refs
+      ~PackageDetails.validate
+      ~PackageDetails.validate_artefacts_before
+   
+   

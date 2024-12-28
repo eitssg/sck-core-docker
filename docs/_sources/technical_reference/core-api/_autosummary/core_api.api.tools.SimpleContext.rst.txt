@@ -1,0 +1,36 @@
+core\_api.api.tools.SimpleContext
+=================================
+
+.. currentmodule:: core_api.api.tools
+
+.. autoclass:: SimpleContext
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~SimpleContext.__init__
+      ~SimpleContext.clear
+      ~SimpleContext.copy
+      ~SimpleContext.fromkeys
+      ~SimpleContext.get
+      ~SimpleContext.get_remaining_time_in_millis
+      ~SimpleContext.items
+      ~SimpleContext.keys
+      ~SimpleContext.pop
+      ~SimpleContext.popitem
+      ~SimpleContext.set_remaining_time_in_millis
+      ~SimpleContext.setdefault
+      ~SimpleContext.update
+      ~SimpleContext.values
+   
+   

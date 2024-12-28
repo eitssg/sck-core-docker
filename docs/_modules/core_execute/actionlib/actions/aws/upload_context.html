@@ -1,0 +1,295 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>core_execute.actionlib.actions.aws.upload_context &mdash; SCK Core Automation 1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=a3c9731c" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/custom.css?v=45d66dd6" />
+
+  
+      <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../_static/documentation_options.js?v=29a6c3e3"></script>
+      <script src="../../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../index.html" class="icon icon-home">
+            SCK Core Automation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../user_guide/index.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developer_guide/index.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../technical_reference/index.html">Technical Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">SCK Core Automation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">core_execute.actionlib.actions.aws.upload_context</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for core_execute.actionlib.actions.aws.upload_context</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Upload the Jinja2 Render context to the appropriate S3 bucket&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">yaml</span>
+
+<span class="kn">import</span> <span class="nn">core_logging</span> <span class="k">as</span> <span class="nn">log</span>
+
+<span class="kn">import</span> <span class="nn">core_helper.aws</span> <span class="k">as</span> <span class="nn">aws</span>
+
+<span class="kn">import</span> <span class="nn">core_framework</span> <span class="k">as</span> <span class="nn">util</span>
+
+<span class="kn">from</span> <span class="nn">core_framework.models</span> <span class="kn">import</span> <span class="n">ActionDefinition</span><span class="p">,</span> <span class="n">DeploymentDetails</span><span class="p">,</span> <span class="n">ActionParams</span>
+
+<span class="kn">from</span> <span class="nn">core_execute.actionlib.action</span> <span class="kn">import</span> <span class="n">BaseAction</span>
+
+
+<div class="viewcode-block" id="generate_template">
+<a class="viewcode-back" href="../../../../../technical_reference/core-execute/_autosummary/core_execute.actionlib.actions.aws.upload_context.generate_template.html#core_execute.actionlib.actions.aws.upload_context.generate_template">[docs]</a>
+<span class="k">def</span> <span class="nf">generate_template</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">ActionDefinition</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate the action definition&quot;&quot;&quot;</span>
+
+    <span class="n">definition</span> <span class="o">=</span> <span class="n">ActionDefinition</span><span class="p">(</span>
+        <span class="n">Label</span><span class="o">=</span><span class="s2">&quot;action-definition-label&quot;</span><span class="p">,</span>
+        <span class="n">Type</span><span class="o">=</span><span class="s2">&quot;AWS::UnprotectELBAction&quot;</span><span class="p">,</span>
+        <span class="n">DependsOn</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;put-a-label-here&quot;</span><span class="p">],</span>
+        <span class="n">Params</span><span class="o">=</span><span class="n">ActionParams</span><span class="p">(</span>
+            <span class="n">Account</span><span class="o">=</span><span class="s2">&quot;The account to use for the action (required)&quot;</span><span class="p">,</span>
+            <span class="n">BucketName</span><span class="o">=</span><span class="s2">&quot;The name of the bucket to upload the context to (required)&quot;</span><span class="p">,</span>
+            <span class="n">Region</span><span class="o">=</span><span class="s2">&quot;The region to create the stack in (required)&quot;</span><span class="p">,</span>
+            <span class="n">Prefix</span><span class="o">=</span><span class="s2">&quot;The prefix to use for the context file (required)&quot;</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="n">Scope</span><span class="o">=</span><span class="s2">&quot;Based on your deployment details, it one of &#39;portfolio&#39;, &#39;app&#39;, &#39;branch&#39;, or &#39;build&#39;&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">definition</span></div>
+
+
+
+<div class="viewcode-block" id="UploadContextAction">
+<a class="viewcode-back" href="../../../../../technical_reference/core-execute/_autosummary/core_execute.actionlib.actions.aws.upload_context.UploadContextAction.html#core_execute.actionlib.actions.aws.upload_context.UploadContextAction">[docs]</a>
+<span class="k">class</span> <span class="nc">UploadContextAction</span><span class="p">(</span><span class="n">BaseAction</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Output the &quot;Context&quot; object (all output variables) to S3</span>
+
+<span class="sd">    Creates a file called &quot;context.yaml&quot; on Se</span>
+
+<span class="sd">    The &quot;Context&quot; is the FACTS output from the Factor API, which is a dictionary of all variables</span>
+<span class="sd">    used in the generation of cloudformation templates</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        Type: Use the value: ``AWS::UploadContext``</span>
+<span class="sd">        Params.Account: The account where the bucket is located</span>
+<span class="sd">        Params.Region: The region where the bucket is located</span>
+<span class="sd">        Params.BucketName: The name of the bucket to upload the context to (required)</span>
+<span class="sd">        Params.Prefix: The prefix to use for the context file (required)</span>
+
+<span class="sd">    .. rubric: ActionDefinition:</span>
+
+<span class="sd">    .. tip:: s3:/&lt;bucket&gt;/artfacts/&lt;deployment_details&gt;/{task}.actions:</span>
+
+<span class="sd">        .. code-block:: yaml</span>
+
+<span class="sd">            - Label: action-aws-uploadcontext-label</span>
+<span class="sd">              Type: &quot;AWS::UploadContext&quot;</span>
+<span class="sd">              Params:</span>
+<span class="sd">                Account: &quot;154798051514&quot;</span>
+<span class="sd">                BucketName: &quot;my-bucket-name&quot;</span>
+<span class="sd">                Region: &quot;ap-southeast-1&quot;</span>
+<span class="sd">                Prefix: &quot;my-prefix&quot;</span>
+<span class="sd">              Scope: &quot;build&quot;</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">definition</span><span class="p">:</span> <span class="n">ActionDefinition</span><span class="p">,</span>
+        <span class="n">context</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+        <span class="n">deployment_details</span><span class="p">:</span> <span class="n">DeploymentDetails</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">definition</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">deployment_details</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__context_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="s2">&quot;UploadContextAction.__context_outputs()&quot;</span><span class="p">)</span>
+
+        <span class="n">outputs</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">prn</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+            <span class="c1"># Only upload output values (not vars or action state)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">prn</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;:output&quot;</span><span class="p">):</span>
+                <span class="k">continue</span>
+
+            <span class="c1"># Example PRN is prn:demo:ecs:testing:2:web2:action/deploy/main/upload-context</span>
+            <span class="k">if</span> <span class="n">prn</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">6</span><span class="p">:</span>
+                <span class="c1"># Component PRN</span>
+                <span class="n">_</span><span class="p">,</span> <span class="n">portfolio</span><span class="p">,</span> <span class="n">app</span><span class="p">,</span> <span class="n">branch</span><span class="p">,</span> <span class="n">build</span><span class="p">,</span> <span class="n">component</span><span class="p">,</span> <span class="n">resource_type</span> <span class="o">=</span> <span class="n">prn</span><span class="o">.</span><span class="n">split</span><span class="p">(</span>
+                    <span class="s2">&quot;:&quot;</span>
+                <span class="p">)</span>
+                <span class="n">var_name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">/</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">component</span><span class="p">,</span> <span class="n">label</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">prn</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
+                <span class="c1"># App PRN</span>
+                <span class="n">_</span><span class="p">,</span> <span class="n">portfolio</span><span class="p">,</span> <span class="n">app</span><span class="p">,</span> <span class="n">branch</span><span class="p">,</span> <span class="n">build</span><span class="p">,</span> <span class="n">resource_type</span> <span class="o">=</span> <span class="n">prn</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
+                <span class="n">var_name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">/</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;pipeline&quot;</span><span class="p">,</span> <span class="n">label</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">log</span><span class="o">.</span><span class="n">fatal</span><span class="p">(</span><span class="s2">&quot;Unsupported PRN format&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unsupported PRN format&quot;</span><span class="p">)</span>
+
+            <span class="n">outputs</span><span class="p">[</span><span class="n">var_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="s2">&quot;Context outputs: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">outputs</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">outputs</span>
+
+    <span class="k">def</span> <span class="nf">_execute</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="s2">&quot;UploadContextAction._execute()&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Obtain an S3 client</span>
+        <span class="n">s3_client</span> <span class="o">=</span> <span class="n">aws</span><span class="o">.</span><span class="n">s3_client</span><span class="p">(</span><span class="n">region</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">Region</span><span class="p">)</span>
+
+        <span class="c1"># Upload context as YAML</span>
+        <span class="n">s3_key</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">/context.yaml&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">Prefix</span><span class="p">)</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Uploading context file &#39;</span><span class="si">{}</span><span class="s2">&#39; to &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="p">,</span> <span class="n">s3_key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">BucketName</span><span class="p">)</span>
+
+        <span class="n">body_hash</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__context_outputs</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">var_path</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+            <span class="n">util</span><span class="o">.</span><span class="n">set_nested</span><span class="p">(</span><span class="n">body_hash</span><span class="p">,</span> <span class="n">var_path</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+        <span class="n">yaml_string</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_dump</span><span class="p">(</span><span class="n">body_hash</span><span class="p">,</span> <span class="n">default_flow_style</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="n">s3_client</span><span class="o">.</span><span class="n">put_object</span><span class="p">(</span>
+            <span class="n">Bucket</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">BucketName</span><span class="p">,</span>
+            <span class="n">Key</span><span class="o">=</span><span class="n">s3_key</span><span class="p">,</span>
+            <span class="n">Body</span><span class="o">=</span><span class="n">yaml_string</span><span class="p">,</span>
+            <span class="n">ServerSideEncryption</span><span class="o">=</span><span class="s2">&quot;AES256&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Upload context as JSON</span>
+        <span class="n">s3_key</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">/context.json&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">Prefix</span><span class="p">)</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Uploading context file &#39;</span><span class="si">{}</span><span class="s2">&#39; to &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="p">,</span> <span class="n">s3_key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">BucketName</span><span class="p">)</span>
+
+        <span class="n">json_string</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">body_hash</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+        <span class="n">s3_client</span><span class="o">.</span><span class="n">put_object</span><span class="p">(</span>
+            <span class="n">Bucket</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">BucketName</span><span class="p">,</span>
+            <span class="n">Key</span><span class="o">=</span><span class="n">s3_key</span><span class="p">,</span>
+            <span class="n">Body</span><span class="o">=</span><span class="n">json_string</span><span class="p">,</span>
+            <span class="n">ServerSideEncryption</span><span class="o">=</span><span class="s2">&quot;AES256&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Upload context as Bash exports</span>
+        <span class="n">s3_key</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">/context.sh&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">Prefix</span><span class="p">)</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Uploading context file &#39;</span><span class="si">{}</span><span class="s2">&#39; to &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="p">,</span> <span class="n">s3_key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">BucketName</span><span class="p">)</span>
+
+        <span class="n">body_array</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__context_outputs</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">var_name</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;[^a-zA-Z0-9]&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+            <span class="n">body_array</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;export </span><span class="si">{}</span><span class="s1">=&quot;</span><span class="si">{}</span><span class="s1">&quot;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">var_name</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span>
+        <span class="n">bash_string</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">body_array</span><span class="p">)</span>
+        <span class="n">s3_client</span><span class="o">.</span><span class="n">put_object</span><span class="p">(</span>
+            <span class="n">Bucket</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">BucketName</span><span class="p">,</span>
+            <span class="n">Key</span><span class="o">=</span><span class="n">s3_key</span><span class="p">,</span>
+            <span class="n">Body</span><span class="o">=</span><span class="n">bash_string</span><span class="p">,</span>
+            <span class="n">ServerSideEncryption</span><span class="o">=</span><span class="s2">&quot;AES256&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_complete</span><span class="p">()</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="s2">&quot;UploadContextAction._execute() complete&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="s2">&quot;UploadContextAction._check()&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_failed</span><span class="p">(</span><span class="s2">&quot;Internal error - _check() should not have been called&quot;</span><span class="p">)</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="s2">&quot;UploadContextAction._check() complete&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_unexecute</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">_cancel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">_resolve</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

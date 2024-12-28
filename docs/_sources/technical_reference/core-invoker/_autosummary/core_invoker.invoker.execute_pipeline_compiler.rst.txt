@@ -1,0 +1,6 @@
+core\_invoker.invoker.execute\_pipeline\_compiler
+=================================================
+
+.. currentmodule:: core_invoker.invoker
+
+.. autofunction:: execute_pipeline_compiler

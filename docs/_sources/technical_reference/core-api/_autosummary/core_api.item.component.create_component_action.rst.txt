@@ -1,0 +1,6 @@
+core\_api.item.component.create\_component\_action
+==================================================
+
+.. currentmodule:: core_api.item.component
+
+.. autofunction:: create_component_action

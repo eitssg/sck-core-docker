@@ -1,0 +1,38 @@
+﻿core_execute.actionlib.actions.system.set_variables
+===================================================
+
+.. automodule:: core_execute.actionlib.actions.system.set_variables
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+      generate_template
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      SetVariablesAction
+   
+   
+
+   
+   
+   
+
+
+

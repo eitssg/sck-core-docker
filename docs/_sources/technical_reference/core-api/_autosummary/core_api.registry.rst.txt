@@ -1,0 +1,36 @@
+core_api.registry
+=================
+
+.. automodule:: core_api.registry
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :template: custom-module-template.rst
+   :recursive:
+   
+      app
+      client
+      portfolio
+      zone
+
+

@@ -1,0 +1,54 @@
+core\_execute.actionlib.actions.aws.share\_image.ShareImageAction
+=================================================================
+
+.. currentmodule:: core_execute.actionlib.actions.aws.share_image
+
+.. autoclass:: ShareImageAction
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ShareImageAction.label
+      ~ShareImageAction.context
+      ~ShareImageAction.action_name
+      ~ShareImageAction.output_namespace
+      ~ShareImageAction.state_namespace
+      ~ShareImageAction.type
+      ~ShareImageAction.condition
+      ~ShareImageAction.after
+      ~ShareImageAction.params
+      ~ShareImageAction.lifecycle_hooks
+      ~ShareImageAction.deployment_details
+      ~ShareImageAction.renderer
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ShareImageAction.__init__
+      ~ShareImageAction.check
+      ~ShareImageAction.execute
+      ~ShareImageAction.get_output
+      ~ShareImageAction.get_state
+      ~ShareImageAction.is_complete
+      ~ShareImageAction.is_failed
+      ~ShareImageAction.is_init
+      ~ShareImageAction.is_running
+      ~ShareImageAction.set_complete
+      ~ShareImageAction.set_failed
+      ~ShareImageAction.set_output
+      ~ShareImageAction.set_running
+      ~ShareImageAction.set_skipped
+      ~ShareImageAction.set_state
+   
+   

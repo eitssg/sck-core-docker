@@ -1,0 +1,33 @@
+core_invoker.invoker
+====================
+
+.. automodule:: core_invoker.invoker
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+      copy_to_artefacts
+      execute_deployspec_compiler
+      execute_pipeline_compiler
+      execute_runner
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

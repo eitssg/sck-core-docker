@@ -1,0 +1,6 @@
+core\_api.api.tools.get\_locale
+===============================
+
+.. currentmodule:: core_api.api.tools
+
+.. autofunction:: get_locale

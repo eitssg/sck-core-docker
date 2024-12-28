@@ -1,0 +1,40 @@
+core_api.event.event
+====================
+
+.. automodule:: core_api.event.event
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+      action_create_event
+      action_delete_event
+      action_get_event_list
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      ApiEventActions
+   
+   
+
+   
+   
+   
+
+
+

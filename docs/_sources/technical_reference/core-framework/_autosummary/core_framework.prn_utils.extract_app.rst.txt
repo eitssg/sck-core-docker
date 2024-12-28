@@ -1,0 +1,6 @@
+core\_framework.prn\_utils.extract\_app
+=======================================
+
+.. currentmodule:: core_framework.prn_utils
+
+.. autofunction:: extract_app

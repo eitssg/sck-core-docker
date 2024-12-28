@@ -1,0 +1,6 @@
+core\_logging.log\_interface.get\_default\_identity
+===================================================
+
+.. currentmodule:: core_logging.log_interface
+
+.. autofunction:: get_default_identity

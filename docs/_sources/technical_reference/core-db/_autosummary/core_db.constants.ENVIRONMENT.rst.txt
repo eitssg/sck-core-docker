@@ -1,0 +1,6 @@
+core\_db.constants.ENVIRONMENT
+==============================
+
+.. currentmodule:: core_db.constants
+
+.. autodata:: ENVIRONMENT

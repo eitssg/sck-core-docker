@@ -1,0 +1,6 @@
+core\_framework.constants.HTTP\_PROXY\_AUTHENTICATION\_REQUIRED
+===============================================================
+
+.. currentmodule:: core_framework.constants
+
+.. autodata:: HTTP_PROXY_AUTHENTICATION_REQUIRED

@@ -1,0 +1,35 @@
+﻿core_db.response
+================
+
+.. automodule:: core_db.response
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      ErrorDetail
+      ErrorResponse
+      NoContentResponse
+      Response
+      SuccessResponse
+   
+   
+
+   
+   
+   
+
+
+

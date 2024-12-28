@@ -1,0 +1,39 @@
+core_db.facter.facter
+=====================
+
+.. automodule:: core_db.facter.facter
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+      derrive_environment_from_branch
+      format_contact
+      get_app_facts
+      get_client_facts
+      get_deployment_details_facts
+      get_facts
+      get_facts_by_identity
+      get_portfolio_facts
+      get_zone_facts
+      get_zone_facts_by_account_id
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

@@ -1,0 +1,59 @@
+core\_framework.models.deployspec.DeploySpec
+============================================
+
+.. currentmodule:: core_framework.models.deployspec
+
+.. autoclass:: DeploySpec
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~DeploySpec.model_computed_fields
+      ~DeploySpec.model_config
+      ~DeploySpec.model_extra
+      ~DeploySpec.model_fields
+      ~DeploySpec.model_fields_set
+      ~DeploySpec.action_specs
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~DeploySpec.__init__
+      ~DeploySpec.construct
+      ~DeploySpec.copy
+      ~DeploySpec.dict
+      ~DeploySpec.from_orm
+      ~DeploySpec.json
+      ~DeploySpec.model_construct
+      ~DeploySpec.model_copy
+      ~DeploySpec.model_dump
+      ~DeploySpec.model_dump_json
+      ~DeploySpec.model_json_schema
+      ~DeploySpec.model_parametrized_name
+      ~DeploySpec.model_post_init
+      ~DeploySpec.model_rebuild
+      ~DeploySpec.model_validate
+      ~DeploySpec.model_validate_json
+      ~DeploySpec.model_validate_strings
+      ~DeploySpec.parse_file
+      ~DeploySpec.parse_obj
+      ~DeploySpec.parse_raw
+      ~DeploySpec.schema
+      ~DeploySpec.schema_json
+      ~DeploySpec.update_forward_refs
+      ~DeploySpec.validate
+      ~DeploySpec.validate_actions
+      ~DeploySpec.validate_deployspecs
+   
+   

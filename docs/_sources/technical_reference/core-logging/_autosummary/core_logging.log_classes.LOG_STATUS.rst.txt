@@ -1,0 +1,6 @@
+core\_logging.log\_classes.LOG\_STATUS
+======================================
+
+.. currentmodule:: core_logging.log_classes
+
+.. autodata:: LOG_STATUS

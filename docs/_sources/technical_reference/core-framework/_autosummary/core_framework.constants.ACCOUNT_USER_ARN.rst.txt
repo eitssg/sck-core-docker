@@ -1,0 +1,6 @@
+core\_framework.constants.ACCOUNT\_USER\_ARN
+============================================
+
+.. currentmodule:: core_framework.constants
+
+.. autodata:: ACCOUNT_USER_ARN

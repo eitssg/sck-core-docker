@@ -1,0 +1,263 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>core_framework.models.task_payload &mdash; SCK Core Automation 1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a3c9731c" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=45d66dd6" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=29a6c3e3"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            SCK Core Automation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_guide/index.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developer_guide/index.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../technical_reference/index.html">Technical Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SCK Core Automation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">core_framework.models.task_payload</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for core_framework.models.task_payload</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; This module provides the TaskPaylaod class that is used throughout Core-Automation to identify the operating Task to perform. &quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Self</span>
+<span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span><span class="p">,</span> <span class="n">ConfigDict</span><span class="p">,</span> <span class="n">model_validator</span>
+
+
+<span class="kn">from</span> <span class="nn">core_framework.constants</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">V_DEPLOYSPEC</span><span class="p">,</span>
+    <span class="n">V_PIPELINE</span><span class="p">,</span>
+    <span class="n">V_EMPTY</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">.deployment_details</span> <span class="kn">import</span> <span class="n">DeploymentDetails</span> <span class="k">as</span> <span class="n">DeploymentDetailsClass</span>
+<span class="kn">from</span> <span class="nn">.package_details</span> <span class="kn">import</span> <span class="n">PackageDetails</span> <span class="k">as</span> <span class="n">PackageDetailsClass</span>
+<span class="kn">from</span> <span class="nn">.action_details</span> <span class="kn">import</span> <span class="n">ActionDetails</span> <span class="k">as</span> <span class="n">ActionDetailsClass</span>
+<span class="kn">from</span> <span class="nn">.state_details</span> <span class="kn">import</span> <span class="n">StateDetails</span> <span class="k">as</span> <span class="n">StateDetailsClass</span>
+
+<span class="n">FLOW_CONTROLS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;execute&quot;</span><span class="p">,</span> <span class="s2">&quot;wait&quot;</span><span class="p">,</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span> <span class="s2">&quot;failure&quot;</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="TaskPayload">
+<a class="viewcode-back" href="../../../technical_reference/core-framework/_autosummary/core_framework.models.task_payload.TaskPayload.html#core_framework.models.task_payload.TaskPayload">[docs]</a>
+<span class="k">class</span> <span class="nc">TaskPayload</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The TaskPayload is the primary artefact that is passed between the various components of Core Automation. You may</span>
+<span class="sd">    consider this the &quot;Top Level&quot; object that contains all of the information needed to perform a task.  This object</span>
+<span class="sd">    contains all of the information necessary to perform perations on the cloud and is the artefact that is passed</span>
+<span class="sd">    to all core &quot;Lambda Functions&quot; in the event method (except DB and API).</span>
+
+<span class="sd">    TaskPayload == Lambda Fuction *event* object for core lambda</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        Task (str): The task to perform.  See the ACT\\_ constants in constants.py</span>
+<span class="sd">        Force (bool): Force the task to be performed regardless of the state of the deployment</span>
+<span class="sd">        DryRun (bool): Perform a dry run of the task.  Don&#39;t actually do anything.</span>
+<span class="sd">        Identity (str): The identity of the user performing the task.  Derrived from DeploymentDetails</span>
+<span class="sd">        DeploymentDetails (DeploymentDetails): The deployment details such as Portfolio, App, Branch, Build</span>
+<span class="sd">        Package (PackageDetails): The package details.  Usually stored in packages/\\*\\*/package.zip</span>
+<span class="sd">        Actions (ActionDetails | None): The actions to perform.  Usually stored in artefacts/\\*\\*/{task}.actions</span>
+<span class="sd">        State (StateDetails | None): The state of the task.  Usually stored in artefacts/\\*\\*/{task}.state</span>
+<span class="sd">        Type (str): The type of the task.  Either &quot;deployspec&quot; or &quot;pipeline&quot; (automatically generated)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">populate_by_name</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">validate_assignment</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">Client</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The client to perform the task for.  Usually stored in client-vars.yaml&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="n">V_EMPTY</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">Task</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The task to perform.  See the ACT_ constants in constants.py&quot;</span>
+    <span class="p">)</span>
+    <span class="n">Force</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot; Force the task to be performed regardless of the state of the deployment&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">DryRun</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Perform a dry run of the task.  Don&#39;t actually do anything.&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">Identity</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The identity of the user performing the task.  Derrived from DeploymentDetails&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="n">V_EMPTY</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">DeploymentDetails</span><span class="p">:</span> <span class="n">DeploymentDetailsClass</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The deployment details such as Portfolio, App, Branch, Build&quot;</span>
+    <span class="p">)</span>
+    <span class="n">Package</span><span class="p">:</span> <span class="n">PackageDetailsClass</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="o">...</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The package details.  Usually stored in packages/**/package.zip&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">Actions</span><span class="p">:</span> <span class="n">ActionDetailsClass</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The actions to perform.  Usually stored in artefacts/**/</span><span class="si">{task}</span><span class="s2">.actions&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">State</span><span class="p">:</span> <span class="n">StateDetailsClass</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The state of the task.  Usually stored in artefacts/**/</span><span class="si">{task}</span><span class="s2">.state&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">FlowControl</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The flow control of the task&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;execute&quot;</span>
+    <span class="p">)</span>
+
+    <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;before&quot;</span><span class="p">)</span>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">validate_model_before</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;DeploymentDetails&quot;</span><span class="p">):</span>
+                <span class="n">values</span><span class="p">[</span><span class="s2">&quot;DeploymentDetails&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">DeploymentDetailsClass</span><span class="p">(</span><span class="n">Client</span><span class="o">=</span><span class="n">values</span><span class="p">[</span><span class="s2">&quot;Client&quot;</span><span class="p">])</span>
+                    <span class="k">if</span> <span class="n">values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Client&quot;</span><span class="p">)</span>
+                    <span class="k">else</span> <span class="n">DeploymentDetailsClass</span><span class="p">()</span>
+                <span class="p">)</span>
+            <span class="n">dd</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;DeploymentDetails&quot;</span><span class="p">)</span>
+            <span class="n">client</span> <span class="o">=</span> <span class="n">dd</span><span class="o">.</span><span class="n">Client</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dd</span><span class="p">,</span> <span class="n">DeploymentDetailsClass</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Package&quot;</span><span class="p">):</span>
+                <span class="n">values</span><span class="p">[</span><span class="s2">&quot;Package&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">PackageDetailsClass</span><span class="p">(</span><span class="n">Client</span><span class="o">=</span><span class="n">client</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Actions&quot;</span><span class="p">):</span>
+                <span class="n">values</span><span class="p">[</span><span class="s2">&quot;Actions&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ActionDetailsClass</span><span class="p">(</span><span class="n">Client</span><span class="o">=</span><span class="n">client</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;State&quot;</span><span class="p">):</span>
+                <span class="n">values</span><span class="p">[</span><span class="s2">&quot;State&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">StateDetailsClass</span><span class="p">(</span><span class="n">Client</span><span class="o">=</span><span class="n">client</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;FlowControl&quot;</span><span class="p">):</span>
+                <span class="n">values</span><span class="p">[</span><span class="s2">&quot;FlowControl&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;execute&quot;</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="n">values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;FlowControl&quot;</span><span class="p">)</span>
+                <span class="ow">and</span> <span class="n">values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;FlowControl&quot;</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">FLOW_CONTROLS</span>
+            <span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;FlowControl must be one of </span><span class="si">{</span><span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">FLOW_CONTROLS</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+        <span class="k">return</span> <span class="n">values</span>
+
+    <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">validate_task</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">Client</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">Client</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">DeploymentDetails</span><span class="o">.</span><span class="n">Client</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">Identity</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">Identity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">DeploymentDetails</span><span class="o">.</span><span class="n">get_identity</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">Package</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">Package</span><span class="o">.</span><span class="n">Key</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">Package</span><span class="o">.</span><span class="n">set_key</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">DeploymentDetails</span><span class="p">,</span> <span class="s2">&quot;package.zip&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">Actions</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">Actions</span><span class="o">.</span><span class="n">Key</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">Actions</span><span class="o">.</span><span class="n">set_key</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">DeploymentDetails</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Task</span> <span class="o">+</span> <span class="s2">&quot;.actions&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">State</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">State</span><span class="o">.</span><span class="n">Key</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">State</span><span class="o">.</span><span class="n">set_key</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">DeploymentDetails</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Task</span> <span class="o">+</span> <span class="s2">&quot;.state&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">Type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">V_DEPLOYSPEC</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">Package</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">Package</span><span class="o">.</span><span class="n">DeploySpec</span> <span class="k">else</span> <span class="n">V_PIPELINE</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_arguments</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;TaskPayload&quot;</span><span class="p">:</span>
+
+        <span class="n">dd</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;deployment_details&quot;</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dd</span><span class="p">,</span> <span class="n">DeploymentDetailsClass</span><span class="p">):</span>
+            <span class="n">dd</span> <span class="o">=</span> <span class="n">DeploymentDetailsClass</span><span class="o">.</span><span class="n">from_arguments</span><span class="p">(</span><span class="o">**</span><span class="n">dd</span><span class="p">)</span>
+
+            <span class="c1"># DeplymentDetailsClass is needed for Package/ActionDefinition/StateDetailsClass</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;deployment_details&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dd</span>
+
+        <span class="k">return</span> <span class="n">TaskPayload</span><span class="p">(</span>
+            <span class="n">Client</span><span class="o">=</span><span class="n">dd</span><span class="o">.</span><span class="n">Client</span><span class="p">,</span>
+            <span class="n">Task</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;task&quot;</span><span class="p">,</span> <span class="n">V_EMPTY</span><span class="p">),</span>
+            <span class="n">Force</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;force&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+            <span class="n">DryRun</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;dry_run&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+            <span class="n">Identity</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;identity&quot;</span><span class="p">,</span> <span class="n">dd</span><span class="o">.</span><span class="n">get_identity</span><span class="p">()),</span>
+            <span class="n">DeploymentDetails</span><span class="o">=</span><span class="n">dd</span><span class="p">,</span>
+            <span class="n">Package</span><span class="o">=</span><span class="n">PackageDetailsClass</span><span class="o">.</span><span class="n">from_arguments</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">),</span>
+            <span class="n">Actions</span><span class="o">=</span><span class="n">ActionDetailsClass</span><span class="o">.</span><span class="n">from_arguments</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">),</span>
+            <span class="n">State</span><span class="o">=</span><span class="n">StateDetailsClass</span><span class="o">.</span><span class="n">from_arguments</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">),</span>
+        <span class="p">)</span>
+
+    <span class="c1"># Override</span>
+<div class="viewcode-block" id="TaskPayload.model_dump">
+<a class="viewcode-back" href="../../../technical_reference/core-framework/_autosummary/core_framework.models.task_payload.TaskPayload.html#core_framework.models.task_payload.TaskPayload.model_dump">[docs]</a>
+    <span class="k">def</span> <span class="nf">model_dump</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;exclude_none&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;exclude_none&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

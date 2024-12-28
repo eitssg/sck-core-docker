@@ -1,0 +1,30 @@
+core_api.handler_direct
+=======================
+
+.. automodule:: core_api.handler_direct
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+      handler_direct
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

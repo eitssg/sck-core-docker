@@ -1,0 +1,29 @@
+core\_db.registry.actions.RegistryAction
+========================================
+
+.. currentmodule:: core_db.registry.actions
+
+.. autoclass:: RegistryAction
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~RegistryAction.__init__
+      ~RegistryAction.create
+      ~RegistryAction.delete
+      ~RegistryAction.get
+      ~RegistryAction.list
+      ~RegistryAction.patch
+      ~RegistryAction.update
+   
+   

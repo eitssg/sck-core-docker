@@ -1,0 +1,6 @@
+core\_db.constants.APP\_FACTS
+=============================
+
+.. currentmodule:: core_db.constants
+
+.. autodata:: APP_FACTS

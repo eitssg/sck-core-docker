@@ -1,0 +1,37 @@
+core\_db.event.actions.EventActions
+===================================
+
+.. currentmodule:: core_db.event.actions
+
+.. autoclass:: EventActions
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~EventActions.item_types
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~EventActions.NoneIfEmpty
+      ~EventActions.__init__
+      ~EventActions.create
+      ~EventActions.delete
+      ~EventActions.get
+      ~EventActions.get_item_type
+      ~EventActions.list
+      ~EventActions.patch
+      ~EventActions.update
+   
+   

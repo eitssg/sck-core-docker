@@ -1,0 +1,6 @@
+core\_db.dbhelper.update\_status
+================================
+
+.. currentmodule:: core_db.dbhelper
+
+.. autofunction:: update_status

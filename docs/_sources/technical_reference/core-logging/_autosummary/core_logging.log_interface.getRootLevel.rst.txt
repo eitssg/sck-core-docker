@@ -1,0 +1,6 @@
+core\_logging.log\_interface.getRootLevel
+=========================================
+
+.. currentmodule:: core_logging.log_interface
+
+.. autofunction:: getRootLevel

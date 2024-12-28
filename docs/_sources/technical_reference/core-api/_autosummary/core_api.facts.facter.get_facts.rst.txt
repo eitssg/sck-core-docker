@@ -1,0 +1,6 @@
+core\_api.facts.facter.get\_facts
+=================================
+
+.. currentmodule:: core_api.facts.facter
+
+.. autofunction:: get_facts

@@ -1,0 +1,6 @@
+core\_execute.actionlib.actions.aws.duplicate\_image\_to\_account.generate\_template
+====================================================================================
+
+.. currentmodule:: core_execute.actionlib.actions.aws.duplicate_image_to_account
+
+.. autofunction:: generate_template

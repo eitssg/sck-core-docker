@@ -1,0 +1,6 @@
+core\_db.constants.APPROVERS
+============================
+
+.. currentmodule:: core_db.constants
+
+.. autodata:: APPROVERS

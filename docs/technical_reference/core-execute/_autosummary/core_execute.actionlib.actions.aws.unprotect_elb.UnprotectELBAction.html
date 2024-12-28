@@ -1,0 +1,599 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction &mdash; SCK Core Automation 1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a3c9731c" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=45d66dd6" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=29a6c3e3"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="core_execute.actionlib.actions.aws.upload_context" href="core_execute.actionlib.actions.aws.upload_context.html" />
+    <link rel="prev" title="core_execute.actionlib.actions.aws.unprotect_elb.generate_template" href="core_execute.actionlib.actions.aws.unprotect_elb.generate_template.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            SCK Core Automation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../user_guide/index.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developer_guide/index.html">Developer Guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Technical Reference Guide</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../modules.html">Modules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../core-logging/core-logging.html">core-logging</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-framework/core-framework.html">core-framework</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-db/core-db.html">core-db</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-helper/core-helper.html">core-helper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-renderer/core-renderer.html">core-renderer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-component-compiler/core-component-compiler.html">core-component-compiler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-deployspec-compiler/core-deployspec-compiler.html">core-deployspec-compiler</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../core-execute.html">core-execute</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../actions_library.html">Actions Library</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-organization/core-organization.html">core-organization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-runner/core-runner.html">core-runner</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-invoker/core-invoker.html">core-invoker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-report/core-report.html">core-report</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-api-auth/core-api-auth.html">core-api-auth</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-api/core-api.html">core-api</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-codecommit-listener/core-codecommit-listener.html">core-codecommit-listener</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-automation/core-automation.html">core-automation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../core-db/db_schema.html">Database Schema</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SCK Core Automation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Technical Reference Guide</a></li>
+          <li class="breadcrumb-item"><a href="../../modules.html">Modules</a></li>
+          <li class="breadcrumb-item"><a href="../core-execute.html">core-execute</a></li>
+          <li class="breadcrumb-item"><a href="../actions_library.html">Actions Library</a></li>
+          <li class="breadcrumb-item"><a href="../actionlib_aws.html">actionlib_aws</a></li>
+          <li class="breadcrumb-item"><a href="core_execute.actionlib.actions.aws.unprotect_elb.html">core_execute.actionlib.actions.aws.unprotect_elb</a></li>
+      <li class="breadcrumb-item active">core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/technical_reference/core-execute/_autosummary/core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="core-execute-actionlib-actions-aws-unprotect-elb-unprotectelbaction">
+<h1>core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction<a class="headerlink" href="#core-execute-actionlib-actions-aws-unprotect-elb-unprotectelbaction" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">core_execute.actionlib.actions.aws.unprotect_elb.</span></span><span class="sig-name descname"><span class="pre">UnprotectELBAction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">definition</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../../core-framework/_autosummary/core_framework.models.actions.action.ActionDefinition.html#core_framework.models.actions.action.ActionDefinition" title="core_framework.models.actions.action.ActionDefinition"><span class="pre">ActionDefinition</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deployment_details</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../../core-framework/_autosummary/core_framework.models.deployment_details.DeploymentDetails.html#core_framework.models.deployment_details.DeploymentDetails" title="core_framework.models.deployment_details.DeploymentDetails"><span class="pre">DeploymentDetails</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/core_execute/actionlib/actions/aws/unprotect_elb.html#UnprotectELBAction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="core_execute.actionlib.action.BaseAction.html#core_execute.actionlib.action.BaseAction" title="core_execute.actionlib.action.BaseAction"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseAction</span></code></a></p>
+<p>Unprotect an ELB so it can be deleted</p>
+<p>This action will unprotect an ELB so it can be deleted.  The action will wait for the protection to be removed before returning.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.Type">
+<span class="sig-name descname"><span class="pre">Type</span></span><a class="headerlink" href="#core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.Type" title="Link to this definition"></a></dt>
+<dd><p>Use the value: <code class="docutils literal notranslate"><span class="pre">AWS::UnprotectELB</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.Params.Account">
+<span class="sig-prename descclassname"><span class="pre">Params.</span></span><span class="sig-name descname"><span class="pre">Account</span></span><a class="headerlink" href="#core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.Params.Account" title="Link to this definition"></a></dt>
+<dd><p>The account where the ELB is located</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.Params.Region">
+<span class="sig-prename descclassname"><span class="pre">Params.</span></span><span class="sig-name descname"><span class="pre">Region</span></span><a class="headerlink" href="#core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.Params.Region" title="Link to this definition"></a></dt>
+<dd><p>The region where the ELB is located</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.Params.LoadBalancer">
+<span class="sig-prename descclassname"><span class="pre">Params.</span></span><span class="sig-name descname"><span class="pre">LoadBalancer</span></span><a class="headerlink" href="#core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.Params.LoadBalancer" title="Link to this definition"></a></dt>
+<dd><p>The ARN of the load balancer to unprotect (required)</p>
+</dd></dl>
+
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>s3:/&lt;bucket&gt;/artfacts/&lt;deployment_details&gt;/{task}.actions:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Label</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">action-aws-unprotectelb-label</span>
+<span class="w">  </span><span class="nt">Type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;AWS::UnprotectELB&quot;</span>
+<span class="w">  </span><span class="nt">Params</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">Account</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;154798051514&quot;</span>
+<span class="w">    </span><span class="nt">Region</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ap-southeast-1&quot;</span>
+<span class="w">    </span><span class="nt">LoadBalancer</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;arn:aws:elasticloadbalancing:ap-southeast-1:154798051514:loadbalancer/app/my-load-balancer/1234567890&quot;</span>
+<span class="w">  </span><span class="nt">Scope</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;build&quot;</span>
+</pre></div>
+</div>
+</div>
+<p class="rubric">Attributes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.label" title="core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.label"><code class="xref py py-obj docutils literal notranslate"><span class="pre">label</span></code></a></p></td>
+<td><p>The label of the action is the unique identifier of the action.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.context" title="core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.context"><code class="xref py py-obj docutils literal notranslate"><span class="pre">context</span></code></a></p></td>
+<td><p>The context of the action is the Jinja2 Rendering Context.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.action_name" title="core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.action_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">action_name</span></code></a></p></td>
+<td><p>The action name is the name of the action.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.output_namespace" title="core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.output_namespace"><code class="xref py py-obj docutils literal notranslate"><span class="pre">output_namespace</span></code></a></p></td>
+<td><p>The output namespace is the namespace where the output of the action is stored.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.state_namespace" title="core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.state_namespace"><code class="xref py py-obj docutils literal notranslate"><span class="pre">state_namespace</span></code></a></p></td>
+<td><p>The state namespace is the namespace where the state of the action is stored.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.type" title="core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">type</span></code></a></p></td>
+<td><p>The type of the action.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.condition" title="core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.condition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">condition</span></code></a></p></td>
+<td><p>The condition of the action.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.after" title="core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.after"><code class="xref py py-obj docutils literal notranslate"><span class="pre">after</span></code></a></p></td>
+<td><p>The actions that should be perfomed after this action.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.params" title="core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">params</span></code></a></p></td>
+<td><p>The parameters of the action.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.lifecycle_hooks" title="core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.lifecycle_hooks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lifecycle_hooks</span></code></a></p></td>
+<td><p>The lifecycle hooks of the action.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.deployment_details" title="core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.deployment_details"><code class="xref py py-obj docutils literal notranslate"><span class="pre">deployment_details</span></code></a></p></td>
+<td><p>The deployment details of the action.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.renderer" title="core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.renderer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">renderer</span></code></a></p></td>
+<td><p>The Jinja2 Renderer for the action.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code>(definition, context, deployment_details)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.check" title="core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.check"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check</span></code></a>()</p></td>
+<td><p>Check the action to determine if it is oc to run</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.execute" title="core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.execute"><code class="xref py py-obj docutils literal notranslate"><span class="pre">execute</span></code></a>()</p></td>
+<td><p>Execute the action.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.get_output" title="core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.get_output"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_output</span></code></a>(name)</p></td>
+<td><p>Get the output variable from the action within the output namespace</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.get_state" title="core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.get_state"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_state</span></code></a>(name)</p></td>
+<td><p>Get a state variable of the action within the action state namespace</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.is_complete" title="core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.is_complete"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_complete</span></code></a>()</p></td>
+<td><p>Check if the action is in the complete state.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.is_failed" title="core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.is_failed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_failed</span></code></a>()</p></td>
+<td><p>Check if the action is in the failed state.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.is_init" title="core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.is_init"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_init</span></code></a>()</p></td>
+<td><p>Check if the action is in the init state.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.is_running" title="core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.is_running"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_running</span></code></a>()</p></td>
+<td><p>Check if the action is in the running state.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.set_complete" title="core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.set_complete"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_complete</span></code></a>(reason)</p></td>
+<td><p>Set the status to complete and supply the given reason</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.set_failed" title="core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.set_failed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_failed</span></code></a>(reason)</p></td>
+<td><p>Set the status to failed and supply the given reason</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.set_output" title="core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.set_output"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_output</span></code></a>(name, value)</p></td>
+<td><p>Set the output of the action</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.set_running" title="core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.set_running"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_running</span></code></a>(reason)</p></td>
+<td><p>Set the status to running and supply the given reason</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.set_skipped" title="core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.set_skipped"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_skipped</span></code></a>(reason)</p></td>
+<td><p>Set the status to skipped and supply the given reason</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.set_state" title="core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.set_state"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_state</span></code></a>(name, value)</p></td>
+<td><p>Set a state variable of the action within the action state namespace</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.action_name">
+<span class="sig-name descname"><span class="pre">action_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.action_name" title="Link to this definition"></a></dt>
+<dd><p>The action name is the name of the action.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.after">
+<span class="sig-name descname"><span class="pre">after</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.after" title="Link to this definition"></a></dt>
+<dd><p>The actions that should be perfomed after this action.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.check">
+<span class="sig-name descname"><span class="pre">check</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="headerlink" href="#core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.check" title="Link to this definition"></a></dt>
+<dd><p>Check the action to determine if it is oc to run</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>_description_</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Self</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.condition">
+<span class="sig-name descname"><span class="pre">condition</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.condition" title="Link to this definition"></a></dt>
+<dd><p>The condition of the action.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.context">
+<span class="sig-name descname"><span class="pre">context</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.context" title="Link to this definition"></a></dt>
+<dd><p>The context of the action is the Jinja2 Rendering Context.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict[str, Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.deployment_details">
+<span class="sig-name descname"><span class="pre">deployment_details</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../core-framework/_autosummary/core_framework.models.deployment_details.DeploymentDetails.html#core_framework.models.deployment_details.DeploymentDetails" title="core_framework.models.deployment_details.DeploymentDetails"><span class="pre">DeploymentDetails</span></a></em><a class="headerlink" href="#core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.deployment_details" title="Link to this definition"></a></dt>
+<dd><p>The deployment details of the action. client/portfolio/app/branch/build information.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../../core-framework/_autosummary/core_framework.models.deployment_details.DeploymentDetails.html#core_framework.models.deployment_details.DeploymentDetails" title="core_framework.models.deployment_details.DeploymentDetails">DeploymentDetails</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.execute">
+<span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="headerlink" href="#core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.execute" title="Link to this definition"></a></dt>
+<dd><p>Execute the action.  It will first check the condition, and if true, execute the action.</p>
+<p>The context is used to render action variables and paramters and the action is executed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>This action object</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Self</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.get_output">
+<span class="sig-name descname"><span class="pre">get_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.get_output" title="Link to this definition"></a></dt>
+<dd><p>Get the output variable from the action within the output namespace</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – Name of the output variable</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Value of the output variable</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str | None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.get_state">
+<span class="sig-name descname"><span class="pre">get_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.get_state" title="Link to this definition"></a></dt>
+<dd><p>Get a state variable of the action within the action state namespace</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – Name of the state variable</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Value of the state variable</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.is_complete">
+<span class="sig-name descname"><span class="pre">is_complete</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.is_complete" title="Link to this definition"></a></dt>
+<dd><p>Check if the action is in the complete state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the action is in the complete state</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.is_failed">
+<span class="sig-name descname"><span class="pre">is_failed</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.is_failed" title="Link to this definition"></a></dt>
+<dd><p>Check if the action is in the failed state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the action is in the failed state</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.is_init">
+<span class="sig-name descname"><span class="pre">is_init</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.is_init" title="Link to this definition"></a></dt>
+<dd><p>Check if the action is in the init state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the action is in the init state</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.is_running">
+<span class="sig-name descname"><span class="pre">is_running</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.is_running" title="Link to this definition"></a></dt>
+<dd><p>Check if the action is in the running state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the action is in the running state</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.label">
+<span class="sig-name descname"><span class="pre">label</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.label" title="Link to this definition"></a></dt>
+<dd><p>The label of the action is the unique identifier of the action.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.lifecycle_hooks">
+<span class="sig-name descname"><span class="pre">lifecycle_hooks</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.lifecycle_hooks" title="Link to this definition"></a></dt>
+<dd><p>The lifecycle hooks of the action.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[dict[str, Any]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.output_namespace">
+<span class="sig-name descname"><span class="pre">output_namespace</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.output_namespace" title="Link to this definition"></a></dt>
+<dd><p>The output namespace is the namespace where the output of the action is stored.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str | None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.params">
+<span class="sig-name descname"><span class="pre">params</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../core-framework/_autosummary/core_framework.models.actions.action_params.ActionParams.html#core_framework.models.actions.action_params.ActionParams" title="core_framework.models.actions.action_params.ActionParams"><span class="pre">ActionParams</span></a></em><a class="headerlink" href="#core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.params" title="Link to this definition"></a></dt>
+<dd><p>The parameters of the action.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../../core-framework/_autosummary/core_framework.models.actions.action_params.ActionParams.html#core_framework.models.actions.action_params.ActionParams" title="core_framework.models.actions.action_params.ActionParams">ActionParams</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.renderer">
+<span class="sig-name descname"><span class="pre">renderer</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../core-renderer/_autosummary/core_renderer.renderer.Jinja2Renderer.html#core_renderer.renderer.Jinja2Renderer" title="core_renderer.renderer.Jinja2Renderer"><span class="pre">Jinja2Renderer</span></a></em><a class="headerlink" href="#core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.renderer" title="Link to this definition"></a></dt>
+<dd><p>The Jinja2 Renderer for the action.  Uses the context to render templates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../../core-renderer/_autosummary/core_renderer.renderer.Jinja2Renderer.html#core_renderer.renderer.Jinja2Renderer" title="core_renderer.renderer.Jinja2Renderer">Jinja2Renderer</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.set_complete">
+<span class="sig-name descname"><span class="pre">set_complete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reason</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.set_complete" title="Link to this definition"></a></dt>
+<dd><p>Set the status to complete and supply the given reason</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>reason</strong> (<em>str</em>) – The reason the status is complete.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.set_failed">
+<span class="sig-name descname"><span class="pre">set_failed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reason</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.set_failed" title="Link to this definition"></a></dt>
+<dd><p>Set the status to failed and supply the given reason</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>reason</strong> (<em>str</em>) – Reason the status failed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.set_output">
+<span class="sig-name descname"><span class="pre">set_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.set_output" title="Link to this definition"></a></dt>
+<dd><p>Set the output of the action</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Variable name of the output within the action output namespace.</p></li>
+<li><p><strong>value</strong> (<em>Any</em>) – Value of this variable</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.set_running">
+<span class="sig-name descname"><span class="pre">set_running</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reason</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.set_running" title="Link to this definition"></a></dt>
+<dd><p>Set the status to running and supply the given reason</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>reason</strong> (<em>str</em>) – The reason the status is running.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.set_skipped">
+<span class="sig-name descname"><span class="pre">set_skipped</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reason</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.set_skipped" title="Link to this definition"></a></dt>
+<dd><p>Set the status to skipped and supply the given reason</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>reason</strong> (<em>str</em>) – The reason the status is skipped.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.set_state">
+<span class="sig-name descname"><span class="pre">set_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.set_state" title="Link to this definition"></a></dt>
+<dd><p>Set a state variable of the action within the action state namespace</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Name of the state variable</p></li>
+<li><p><strong>value</strong> (<em>Any</em>) – vaue of the state variable</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.state_namespace">
+<span class="sig-name descname"><span class="pre">state_namespace</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.state_namespace" title="Link to this definition"></a></dt>
+<dd><p>The state namespace is the namespace where the state of the action is stored.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.type">
+<span class="sig-name descname"><span class="pre">type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#core_execute.actionlib.actions.aws.unprotect_elb.UnprotectELBAction.type" title="Link to this definition"></a></dt>
+<dd><p>The type of the action.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="core_execute.actionlib.actions.aws.unprotect_elb.generate_template.html" class="btn btn-neutral float-left" title="core_execute.actionlib.actions.aws.unprotect_elb.generate_template" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="core_execute.actionlib.actions.aws.upload_context.html" class="btn btn-neutral float-right" title="core_execute.actionlib.actions.aws.upload_context" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

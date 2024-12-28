@@ -1,0 +1,62 @@
+core\_db.registry.zone.models.ZoneFacts
+=======================================
+
+.. currentmodule:: core_db.registry.zone.models
+
+.. autoclass:: ZoneFacts
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ZoneFacts.AccountFacts
+      ~ZoneFacts.ClientPortfolio
+      ~ZoneFacts.RegionFacts
+      ~ZoneFacts.UserInstantiated
+      ~ZoneFacts.Zone
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ZoneFacts.__init__
+      ~ZoneFacts.batch_get
+      ~ZoneFacts.batch_write
+      ~ZoneFacts.count
+      ~ZoneFacts.create_table
+      ~ZoneFacts.delete
+      ~ZoneFacts.delete_table
+      ~ZoneFacts.describe_table
+      ~ZoneFacts.deserialize
+      ~ZoneFacts.exists
+      ~ZoneFacts.from_dynamodb_dict
+      ~ZoneFacts.from_raw_data
+      ~ZoneFacts.from_simple_dict
+      ~ZoneFacts.get
+      ~ZoneFacts.get_attribute_class
+      ~ZoneFacts.get_attributes
+      ~ZoneFacts.get_delete_kwargs_from_instance
+      ~ZoneFacts.get_operation_kwargs_from_class
+      ~ZoneFacts.get_save_kwargs_from_instance
+      ~ZoneFacts.get_update_kwargs_from_instance
+      ~ZoneFacts.query
+      ~ZoneFacts.refresh
+      ~ZoneFacts.save
+      ~ZoneFacts.scan
+      ~ZoneFacts.serialize
+      ~ZoneFacts.to_dynamodb_dict
+      ~ZoneFacts.to_simple_dict
+      ~ZoneFacts.update
+      ~ZoneFacts.update_local_version_attribute
+      ~ZoneFacts.update_ttl
+   
+   

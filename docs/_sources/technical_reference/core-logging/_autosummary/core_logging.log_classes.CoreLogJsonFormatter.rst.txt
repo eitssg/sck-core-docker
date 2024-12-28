@@ -1,0 +1,39 @@
+core\_logging.log\_classes.CoreLogJsonFormatter
+===============================================
+
+.. currentmodule:: core_logging.log_classes
+
+.. autoclass:: CoreLogJsonFormatter
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~CoreLogJsonFormatter.default_msec_format
+      ~CoreLogJsonFormatter.default_time_format
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~CoreLogJsonFormatter.__init__
+      ~CoreLogJsonFormatter.converter
+      ~CoreLogJsonFormatter.format
+      ~CoreLogJsonFormatter.formatException
+      ~CoreLogJsonFormatter.formatMessage
+      ~CoreLogJsonFormatter.formatStack
+      ~CoreLogJsonFormatter.formatTime
+      ~CoreLogJsonFormatter.format_datetime
+      ~CoreLogJsonFormatter.set_element
+      ~CoreLogJsonFormatter.usesTime
+   
+   

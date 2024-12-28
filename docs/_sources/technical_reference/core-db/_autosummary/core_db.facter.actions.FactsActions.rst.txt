@@ -1,0 +1,30 @@
+core\_db.facter.actions.FactsActions
+====================================
+
+.. currentmodule:: core_db.facter.actions
+
+.. autoclass:: FactsActions
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~FactsActions.__init__
+      ~FactsActions.create
+      ~FactsActions.delete
+      ~FactsActions.get
+      ~FactsActions.list
+      ~FactsActions.patch
+      ~FactsActions.update
+      ~FactsActions.validate_prn_scope
+   
+   

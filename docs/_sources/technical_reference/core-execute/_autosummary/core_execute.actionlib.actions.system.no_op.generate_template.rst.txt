@@ -1,0 +1,6 @@
+core\_execute.actionlib.actions.system.no\_op.generate\_template
+================================================================
+
+.. currentmodule:: core_execute.actionlib.actions.system.no_op
+
+.. autofunction:: generate_template

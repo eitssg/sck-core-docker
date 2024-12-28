@@ -1,0 +1,6 @@
+core\_execute.actionlib.actions.aws.upload\_context.generate\_template
+======================================================================
+
+.. currentmodule:: core_execute.actionlib.actions.aws.upload_context
+
+.. autofunction:: generate_template

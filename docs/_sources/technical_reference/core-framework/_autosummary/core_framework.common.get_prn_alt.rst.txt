@@ -1,0 +1,6 @@
+core\_framework.common.get\_prn\_alt
+====================================
+
+.. currentmodule:: core_framework.common
+
+.. autofunction:: get_prn_alt

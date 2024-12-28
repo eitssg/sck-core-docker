@@ -1,0 +1,6 @@
+core\_api.api.apis.proxy\_forward
+=================================
+
+.. currentmodule:: core_api.api.apis
+
+.. autofunction:: proxy_forward

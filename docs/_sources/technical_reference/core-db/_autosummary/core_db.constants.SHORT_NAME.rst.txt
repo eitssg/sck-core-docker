@@ -1,0 +1,6 @@
+core\_db.constants.SHORT\_NAME
+==============================
+
+.. currentmodule:: core_db.constants
+
+.. autodata:: SHORT_NAME

@@ -1,0 +1,6 @@
+core\_framework.constants.TASK\_TEARDOWN
+========================================
+
+.. currentmodule:: core_framework.constants
+
+.. autodata:: TASK_TEARDOWN

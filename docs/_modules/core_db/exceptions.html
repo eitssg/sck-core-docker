@@ -1,0 +1,242 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>core_db.exceptions &mdash; SCK Core Automation 1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a3c9731c" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=45d66dd6" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=29a6c3e3"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            SCK Core Automation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/index.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/index.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../technical_reference/index.html">Technical Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">SCK Core Automation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">core_db.exceptions</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for core_db.exceptions</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; Provides a set of Exceptions that the DB engine uses to provide feedback of operations &quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">core_framework.constants</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">HTTP_INTERNAL_SERVER_ERROR</span><span class="p">,</span>
+    <span class="n">HTTP_BAD_REQUEST</span><span class="p">,</span>
+    <span class="n">HTTP_FORBIDDEN</span><span class="p">,</span>
+    <span class="n">HTTP_NOT_FOUND</span><span class="p">,</span>
+    <span class="n">HTTP_CONFLICT</span><span class="p">,</span>
+    <span class="n">HTTP_UNAUTHORIZED</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="TableException">
+<a class="viewcode-back" href="../../technical_reference/core-db/_autosummary/core_db.exceptions.TableException.html#core_db.exceptions.TableException">[docs]</a>
+<span class="k">class</span> <span class="nc">TableException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base exception class for DB table operation errors.</span>
+
+<span class="sd">    This class is used to raise exceptions when a table operation fails.</span>
+
+<span class="sd">    References:</span>
+<span class="sd">        - :class:`NotFoundException`</span>
+<span class="sd">        - :class:`ForbiddenException`</span>
+<span class="sd">        - :class:`UnauthorizedException`</span>
+<span class="sd">        - :class:`ConflictException`</span>
+<span class="sd">        - :class:`BadRequestException`</span>
+<span class="sd">        - :class:`UnknownException`</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        message (str): Human readable error description</span>
+<span class="sd">        code (int): A code that represents the error</span>
+<span class="sd">        context (dict | None): User defined data</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">code</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">code</span> <span class="o">=</span> <span class="n">code</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">context</span> <span class="o">=</span> <span class="n">context</span> <span class="ow">or</span> <span class="p">{}</span></div>
+
+
+
+<div class="viewcode-block" id="NotFoundException">
+<a class="viewcode-back" href="../../technical_reference/core-db/_autosummary/core_db.exceptions.NotFoundException.html#core_db.exceptions.NotFoundException">[docs]</a>
+<span class="k">class</span> <span class="nc">NotFoundException</span><span class="p">(</span><span class="n">TableException</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Exception raised when a resource is not found code 404</span>
+
+<span class="sd">    Extends: :class:`TableException`</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        message (str): Human readable error description</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">HTTP_NOT_FOUND</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="ForbiddenException">
+<a class="viewcode-back" href="../../technical_reference/core-db/_autosummary/core_db.exceptions.ForbiddenException.html#core_db.exceptions.ForbiddenException">[docs]</a>
+<span class="k">class</span> <span class="nc">ForbiddenException</span><span class="p">(</span><span class="n">TableException</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Exception raised when a resource is not found code 403</span>
+
+<span class="sd">    Extends: :class:`TableException`</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        message (str): Human readable error description</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">HTTP_FORBIDDEN</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="UnauthorizedException">
+<a class="viewcode-back" href="../../technical_reference/core-db/_autosummary/core_db.exceptions.UnauthorizedException.html#core_db.exceptions.UnauthorizedException">[docs]</a>
+<span class="k">class</span> <span class="nc">UnauthorizedException</span><span class="p">(</span><span class="n">TableException</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Exception raised when a resource is not found code 401</span>
+
+<span class="sd">    Extends: :class:`TableException`</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        message (str): Human readable error description</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">HTTP_UNAUTHORIZED</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="ConflictException">
+<a class="viewcode-back" href="../../technical_reference/core-db/_autosummary/core_db.exceptions.ConflictException.html#core_db.exceptions.ConflictException">[docs]</a>
+<span class="k">class</span> <span class="nc">ConflictException</span><span class="p">(</span><span class="n">TableException</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Exception raised when a resource is not found code 409</span>
+
+<span class="sd">    Extends: :class:`TableException`</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        message (str): Human readable error description</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">HTTP_CONFLICT</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="BadRequestException">
+<a class="viewcode-back" href="../../technical_reference/core-db/_autosummary/core_db.exceptions.BadRequestException.html#core_db.exceptions.BadRequestException">[docs]</a>
+<span class="k">class</span> <span class="nc">BadRequestException</span><span class="p">(</span><span class="n">TableException</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Exception raised when a resource is not found code 400</span>
+
+<span class="sd">    Extends: :class:`TableException`</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        message (str): Human readable error description</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">HTTP_BAD_REQUEST</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="UnknownException">
+<a class="viewcode-back" href="../../technical_reference/core-db/_autosummary/core_db.exceptions.UnknownException.html#core_db.exceptions.UnknownException">[docs]</a>
+<span class="k">class</span> <span class="nc">UnknownException</span><span class="p">(</span><span class="n">TableException</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Exception raised when a resource is not found code 500</span>
+
+<span class="sd">    Extends: :class:`TableException`</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        message (str): Human readable error description</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">HTTP_INTERNAL_SERVER_ERROR</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

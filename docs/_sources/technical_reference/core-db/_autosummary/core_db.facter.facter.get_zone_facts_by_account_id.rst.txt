@@ -1,0 +1,6 @@
+core\_db.facter.facter.get\_zone\_facts\_by\_account\_id
+========================================================
+
+.. currentmodule:: core_db.facter.facter
+
+.. autofunction:: get_zone_facts_by_account_id

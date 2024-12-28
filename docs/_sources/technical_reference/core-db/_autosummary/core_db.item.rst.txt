@@ -1,0 +1,39 @@
+﻿core_db.item
+============
+
+.. automodule:: core_db.item
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :template: custom-module-template.rst
+   :recursive:
+   
+      actions
+      app
+      branch
+      build
+      component
+      models
+      portfolio
+
+

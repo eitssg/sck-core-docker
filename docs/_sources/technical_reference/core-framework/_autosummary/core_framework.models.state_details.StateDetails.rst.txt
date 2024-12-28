@@ -1,0 +1,68 @@
+core\_framework.models.state\_details.StateDetails
+==================================================
+
+.. currentmodule:: core_framework.models.state_details
+
+.. autoclass:: StateDetails
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~StateDetails.AppPath
+      ~StateDetails.Mode
+      ~StateDetails.TempDir
+      ~StateDetails.model_computed_fields
+      ~StateDetails.model_config
+      ~StateDetails.model_extra
+      ~StateDetails.model_fields
+      ~StateDetails.model_fields_set
+      ~StateDetails.Client
+      ~StateDetails.BucketName
+      ~StateDetails.BucketRegion
+      ~StateDetails.Key
+      ~StateDetails.VersionId
+      ~StateDetails.ContentType
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~StateDetails.__init__
+      ~StateDetails.construct
+      ~StateDetails.copy
+      ~StateDetails.dict
+      ~StateDetails.from_arguments
+      ~StateDetails.from_orm
+      ~StateDetails.json
+      ~StateDetails.model_construct
+      ~StateDetails.model_copy
+      ~StateDetails.model_dump
+      ~StateDetails.model_dump_json
+      ~StateDetails.model_json_schema
+      ~StateDetails.model_parametrized_name
+      ~StateDetails.model_post_init
+      ~StateDetails.model_rebuild
+      ~StateDetails.model_validate
+      ~StateDetails.model_validate_json
+      ~StateDetails.model_validate_strings
+      ~StateDetails.parse_file
+      ~StateDetails.parse_obj
+      ~StateDetails.parse_raw
+      ~StateDetails.schema
+      ~StateDetails.schema_json
+      ~StateDetails.set_key
+      ~StateDetails.update_forward_refs
+      ~StateDetails.validate
+      ~StateDetails.validate_artefacts_before
+   
+   

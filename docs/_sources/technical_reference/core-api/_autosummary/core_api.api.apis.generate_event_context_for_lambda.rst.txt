@@ -1,0 +1,6 @@
+core\_api.api.apis.generate\_event\_context\_for\_lambda
+========================================================
+
+.. currentmodule:: core_api.api.apis
+
+.. autofunction:: generate_event_context_for_lambda

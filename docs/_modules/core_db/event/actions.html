@@ -1,0 +1,295 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>core_db.event.actions &mdash; SCK Core Automation 1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a3c9731c" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=45d66dd6" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=29a6c3e3"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            SCK Core Automation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_guide/index.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developer_guide/index.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../technical_reference/index.html">Technical Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SCK Core Automation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">core_db.event.actions</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for core_db.event.actions</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; Defines the list, get, create, update, delete methods for the Event table core-automation-events &quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
+
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">import</span> <span class="nn">base64</span>
+<span class="kn">import</span> <span class="nn">json</span>
+
+<span class="kn">from</span> <span class="nn">pynamodb.exceptions</span> <span class="kn">import</span> <span class="n">DeleteError</span><span class="p">,</span> <span class="n">PutError</span>
+
+<span class="kn">import</span> <span class="nn">core_logging</span> <span class="k">as</span> <span class="nn">log</span>
+<span class="kn">import</span> <span class="nn">core_framework</span> <span class="k">as</span> <span class="nn">util</span>
+
+<span class="kn">from</span> <span class="nn">..actions</span> <span class="kn">import</span> <span class="n">TableActions</span>
+
+<span class="kn">from</span> <span class="nn">..constants</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">PRN</span><span class="p">,</span>
+    <span class="n">ITEM_TYPE</span><span class="p">,</span>
+    <span class="n">EVENT_TYPE</span><span class="p">,</span>
+    <span class="n">EARLIEST_TIME</span><span class="p">,</span>
+    <span class="n">LATEST_TIME</span><span class="p">,</span>
+    <span class="n">SORT</span><span class="p">,</span>
+    <span class="n">LIMIT</span><span class="p">,</span>
+    <span class="n">DATA_PAGINATOR</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">..item.actions</span> <span class="kn">import</span> <span class="n">ASCENDING</span>
+
+<span class="kn">from</span> <span class="nn">..exceptions</span> <span class="kn">import</span> <span class="n">BadRequestException</span><span class="p">,</span> <span class="n">ConflictException</span><span class="p">,</span> <span class="n">UnknownException</span>
+
+<span class="kn">from</span> <span class="nn">..response</span> <span class="kn">import</span> <span class="n">Response</span><span class="p">,</span> <span class="n">SuccessResponse</span>
+
+<span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">EventModel</span>
+
+<span class="kn">from</span> <span class="nn">core_framework.constants</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">SCOPE_PORTFOLIO</span><span class="p">,</span>
+    <span class="n">SCOPE_APP</span><span class="p">,</span>
+    <span class="n">SCOPE_BRANCH</span><span class="p">,</span>
+    <span class="n">SCOPE_BUILD</span><span class="p">,</span>
+    <span class="n">SCOPE_COMPONENT</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="EventActions">
+<a class="viewcode-back" href="../../../technical_reference/core-db/_autosummary/core_db.event.actions.EventActions.html#core_db.event.actions.EventActions">[docs]</a>
+<span class="k">class</span> <span class="nc">EventActions</span><span class="p">(</span><span class="n">TableActions</span><span class="p">):</span>
+
+    <span class="n">item_model</span> <span class="o">=</span> <span class="n">EventModel</span>
+    <span class="n">item_types</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">SCOPE_PORTFOLIO</span><span class="p">,</span>
+        <span class="n">SCOPE_APP</span><span class="p">,</span>
+        <span class="n">SCOPE_BRANCH</span><span class="p">,</span>
+        <span class="n">SCOPE_BUILD</span><span class="p">,</span>
+        <span class="n">SCOPE_COMPONENT</span><span class="p">,</span>
+    <span class="p">]</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_item_type</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">item_type</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">ITEM_TYPE</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">item_type</span><span class="p">:</span>
+            <span class="n">prn</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">PRN</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="n">num_sections</span> <span class="o">=</span> <span class="n">prn</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">num_sections</span> <span class="o">&lt;=</span> <span class="mi">4</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid prn: </span><span class="si">{</span><span class="n">prn</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">item_type</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">item_types</span><span class="p">[</span><span class="n">num_sections</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">item_type</span>
+
+<div class="viewcode-block" id="EventActions.create">
+<a class="viewcode-back" href="../../../technical_reference/core-db/_autosummary/core_db.event.actions.EventActions.html#core_db.event.actions.EventActions.create">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Response</span><span class="p">:</span>
+
+        <span class="n">prn</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">generate_build_prn</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">prn</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;prn not specified: </span><span class="si">{</span><span class="n">kwargs</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">item_type</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">get_item_type</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="c1"># Load the request data</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">PRN</span><span class="p">,</span> <span class="n">prn</span><span class="p">)</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="n">ITEM_TYPE</span><span class="p">]</span> <span class="o">=</span> <span class="n">item_type</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="n">EVENT_TYPE</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                <span class="n">EVENT_TYPE</span><span class="p">,</span> <span class="n">log</span><span class="o">.</span><span class="n">getLevelName</span><span class="p">(</span><span class="n">log</span><span class="o">.</span><span class="n">STATUS</span><span class="p">)</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+            <span class="n">event</span> <span class="o">=</span> <span class="n">EventModel</span><span class="p">(</span><span class="n">prn</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+            <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Saving event </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">event</span><span class="p">))</span>
+
+            <span class="n">event</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">BadRequestException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid Event Data- </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">PutError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ConflictException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Creation failed - </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">UnknownException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Creation failed - </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Return the new event</span>
+        <span class="k">return</span> <span class="n">SuccessResponse</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">attribute_values</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="EventActions.delete">
+<a class="viewcode-back" href="../../../technical_reference/core-db/_autosummary/core_db.event.actions.EventActions.html#core_db.event.actions.EventActions.delete">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Response</span><span class="p">:</span>
+
+        <span class="c1"># Load the requested event</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">prn</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">generate_build_prn</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="n">event</span> <span class="o">=</span> <span class="n">EventModel</span><span class="p">(</span><span class="n">prn</span><span class="p">)</span>
+            <span class="n">event</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+        <span class="k">except</span> <span class="n">DeleteError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">BadRequestException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to delete - </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">SuccessResponse</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Event deleted: </span><span class="si">{</span><span class="n">prn</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="EventActions.NoneIfEmpty">
+<a class="viewcode-back" href="../../../technical_reference/core-db/_autosummary/core_db.event.actions.EventActions.html#core_db.event.actions.EventActions.NoneIfEmpty">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">NoneIfEmpty</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        If the value is an empty string, return None, otherwise return the value</span>
+<span class="sd">        but, first check to see if it isa valid iso8601 timestamp, if not, then return None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">T%H:%M:%S&quot;</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                    <span class="k">pass</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="n">value</span></div>
+
+
+<div class="viewcode-block" id="EventActions.list">
+<a class="viewcode-back" href="../../../technical_reference/core-db/_autosummary/core_db.event.actions.EventActions.html#core_db.event.actions.EventActions.list">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">list</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Response</span><span class="p">:</span>
+
+        <span class="n">prn</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">generate_build_prn</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">prn</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">BadRequestException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;prn not specified: </span><span class="si">{</span><span class="n">kwargs</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># set earliest_time to kwargs[&#39;earliest_time&#39;] and seet to None if not present or length is 0</span>
+        <span class="n">earliest_time</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">NoneIfEmpty</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">EARLIEST_TIME</span><span class="p">))</span>
+        <span class="n">latest_time</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">NoneIfEmpty</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">LATEST_TIME</span><span class="p">))</span>
+
+        <span class="c1"># Generate our range key condition</span>
+        <span class="k">if</span> <span class="n">earliest_time</span> <span class="ow">and</span> <span class="n">latest_time</span><span class="p">:</span>
+            <span class="n">range_key_condition</span> <span class="o">=</span> <span class="n">EventModel</span><span class="o">.</span><span class="n">timestamp</span><span class="o">.</span><span class="n">between</span><span class="p">(</span>
+                <span class="n">earliest_time</span><span class="p">,</span> <span class="n">latest_time</span>
+            <span class="p">)</span>
+        <span class="k">elif</span> <span class="n">earliest_time</span><span class="p">:</span>
+            <span class="n">range_key_condition</span> <span class="o">=</span> <span class="n">EventModel</span><span class="o">.</span><span class="n">timestamp</span> <span class="o">&gt;=</span> <span class="n">earliest_time</span>
+        <span class="k">elif</span> <span class="n">latest_time</span><span class="p">:</span>
+            <span class="n">range_key_condition</span> <span class="o">=</span> <span class="n">EventModel</span><span class="o">.</span><span class="n">timestamp</span> <span class="o">&lt;=</span> <span class="n">latest_time</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">range_key_condition</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="n">date_paginator</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">DATA_PAGINATOR</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">date_paginator</span><span class="p">:</span>
+            <span class="n">last_evaluated_key</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">base64</span><span class="o">.</span><span class="n">b64decode</span><span class="p">(</span><span class="n">date_paginator</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">last_evaluated_key</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Retrieving events for prn &#39;</span><span class="si">{</span><span class="n">prn</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+
+        <span class="n">sort_forward</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">SORT</span><span class="p">,</span> <span class="n">ASCENDING</span><span class="p">)</span> <span class="o">==</span> <span class="n">ASCENDING</span>
+        <span class="n">limit</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">LIMIT</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+
+        <span class="n">results</span> <span class="o">=</span> <span class="n">EventModel</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
+            <span class="n">hash_key</span><span class="o">=</span><span class="n">prn</span><span class="p">,</span>
+            <span class="n">range_key_condition</span><span class="o">=</span><span class="n">range_key_condition</span><span class="p">,</span>
+            <span class="n">scan_index_forward</span><span class="o">=</span><span class="n">sort_forward</span><span class="p">,</span>
+            <span class="n">limit</span><span class="o">=</span><span class="n">limit</span><span class="p">,</span>
+            <span class="n">last_evaluated_key</span><span class="o">=</span><span class="n">last_evaluated_key</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">events</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">attribute_values</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">results</span><span class="p">]</span>
+        <span class="n">last_evaluated_key</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">last_evaluated_key</span>
+        <span class="k">if</span> <span class="n">last_evaluated_key</span><span class="p">:</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="n">DATA_PAGINATOR</span><span class="p">]</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span>
+                <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">last_evaluated_key</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="n">DATA_PAGINATOR</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">return</span> <span class="n">SuccessResponse</span><span class="p">(</span>
+            <span class="n">events</span><span class="p">,</span>
+            <span class="n">additional_data</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">kwargs</span><span class="p">),</span>
+        <span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

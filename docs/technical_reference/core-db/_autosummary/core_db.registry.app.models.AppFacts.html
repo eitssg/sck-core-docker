@@ -1,0 +1,789 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>core_db.registry.app.models.AppFacts &mdash; SCK Core Automation 1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a3c9731c" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=45d66dd6" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=29a6c3e3"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="core_db.registry.client" href="core_db.registry.client.html" />
+    <link rel="prev" title="core_db.registry.app.models" href="core_db.registry.app.models.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            SCK Core Automation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../user_guide/index.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developer_guide/index.html">Developer Guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Technical Reference Guide</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../modules.html">Modules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../core-logging/core-logging.html">core-logging</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-framework/core-framework.html">core-framework</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../core-db.html">core-db</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../core-db.html#base-models">Base Models</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="../core-db.html#facts-database">FACTS Database</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../core-db.html#deployments-database">Deployments Database</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../core-db.html#event-log-database">Event Log Database</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-helper/core-helper.html">core-helper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-renderer/core-renderer.html">core-renderer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-component-compiler/core-component-compiler.html">core-component-compiler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-deployspec-compiler/core-deployspec-compiler.html">core-deployspec-compiler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-execute/core-execute.html">core-execute</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-organization/core-organization.html">core-organization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-runner/core-runner.html">core-runner</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-invoker/core-invoker.html">core-invoker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-report/core-report.html">core-report</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-api-auth/core-api-auth.html">core-api-auth</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-api/core-api.html">core-api</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-codecommit-listener/core-codecommit-listener.html">core-codecommit-listener</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-automation/core-automation.html">core-automation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../db_schema.html">Database Schema</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SCK Core Automation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Technical Reference Guide</a></li>
+          <li class="breadcrumb-item"><a href="../../modules.html">Modules</a></li>
+          <li class="breadcrumb-item"><a href="../core-db.html">core-db</a></li>
+          <li class="breadcrumb-item"><a href="core_db.registry.html">core_db.registry</a></li>
+          <li class="breadcrumb-item"><a href="core_db.registry.app.html">core_db.registry.app</a></li>
+          <li class="breadcrumb-item"><a href="core_db.registry.app.models.html">core_db.registry.app.models</a></li>
+      <li class="breadcrumb-item active">core_db.registry.app.models.AppFacts</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/technical_reference/core-db/_autosummary/core_db.registry.app.models.AppFacts.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="core-db-registry-app-models-appfacts">
+<h1>core_db.registry.app.models.AppFacts<a class="headerlink" href="#core-db-registry-app-models-appfacts" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="core_db.registry.app.models.AppFacts">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">core_db.registry.app.models.</span></span><span class="sig-name descname"><span class="pre">AppFacts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/core_db/registry/app/models.html#AppFacts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core_db.registry.app.models.AppFacts" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Model</span></code></p>
+<p>Classes defining the Apps record model for the core-automation-apps table</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>**kwargs</strong> – Arbitrary keyword arguments with the attributes
+* ClientPortfolio: str: Client Portfolio (alternate key “client-portfolio”)
+* AppRegex: str: App Regex (alternate key “app-regex”)
+* Name: str: Name of the app (alternate key “name”)
+* Environment: str: Environment of the app (alternate key “environment”)
+* Account: str: Account of the app (alternate key “account”)
+* Zone: str: Zone of the app (alternate key “zone”)
+* ImgeAliases: dict: Image Aliases of the app to reduce bake time (alternate key “image-aliases”)
+* Repository: str: Git repository of the app (alternate key “repository”)
+* Region: str: Region of the app (alternate key “region”)
+* Tags: dict: Tags of the app (alternate key “tags”)
+* EnforceValidation: str: Enforce validation of the app (alternate key “enforce-validation”)
+* Metadata: dict: Metadata of the app (alternate key “metadata”)</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>AppFacts object</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#core_db.registry.app.models.AppFacts" title="core_db.registry.app.models.AppFacts">AppFacts</a></p>
+</dd>
+</dl>
+<p class="rubric">Attributes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#core_db.registry.app.models.AppFacts.Account" title="core_db.registry.app.models.AppFacts.Account"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Account</span></code></a></p></td>
+<td><p>Zone name of the app (alternate key &quot;account&quot;) (same as Zone)</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#core_db.registry.app.models.AppFacts.AppRegex" title="core_db.registry.app.models.AppFacts.AppRegex"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AppRegex</span></code></a></p></td>
+<td><p>App Regex (alternate key &quot;app-regex&quot;)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#core_db.registry.app.models.AppFacts.ClientPortfolio" title="core_db.registry.app.models.AppFacts.ClientPortfolio"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ClientPortfolio</span></code></a></p></td>
+<td><p>Client Portfolio (alternate key &quot;client-portfolio&quot;)</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#core_db.registry.app.models.AppFacts.EnforceValidation" title="core_db.registry.app.models.AppFacts.EnforceValidation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EnforceValidation</span></code></a></p></td>
+<td><p>Enforce validation of the app (alternate key &quot;enforce-validation&quot;)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#core_db.registry.app.models.AppFacts.Environment" title="core_db.registry.app.models.AppFacts.Environment"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Environment</span></code></a></p></td>
+<td><p>Environment of the app (alternate key &quot;environment&quot;)</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#core_db.registry.app.models.AppFacts.ImgeAliases" title="core_db.registry.app.models.AppFacts.ImgeAliases"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ImgeAliases</span></code></a></p></td>
+<td><p>Image Aliases of the app to reduce bake time (alternate key &quot;image-aliases&quot;)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#core_db.registry.app.models.AppFacts.Metadata" title="core_db.registry.app.models.AppFacts.Metadata"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Metadata</span></code></a></p></td>
+<td><p>Metadata of the app (alternate key &quot;metadata&quot;)</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#core_db.registry.app.models.AppFacts.Name" title="core_db.registry.app.models.AppFacts.Name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Name</span></code></a></p></td>
+<td><p>Name of the app (alternate key &quot;name&quot;)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#core_db.registry.app.models.AppFacts.Region" title="core_db.registry.app.models.AppFacts.Region"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Region</span></code></a></p></td>
+<td><p>Region alise (slug) of the app (alternate key &quot;region&quot;)</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#core_db.registry.app.models.AppFacts.Repository" title="core_db.registry.app.models.AppFacts.Repository"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Repository</span></code></a></p></td>
+<td><p>Git repository of the app (alternate key &quot;repository&quot;)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#core_db.registry.app.models.AppFacts.Tags" title="core_db.registry.app.models.AppFacts.Tags"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Tags</span></code></a></p></td>
+<td><p>Tags of the app (alternate key &quot;tags&quot;)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">UserInstantiated</span></code></p></td>
+<td><p>A unicode attribute</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#core_db.registry.app.models.AppFacts.Zone" title="core_db.registry.app.models.AppFacts.Zone"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Zone</span></code></a></p></td>
+<td><p>Zone name of the app (alternate key &quot;zone&quot;) (same as Account)</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code>(*args, **kwargs)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#core_db.registry.app.models.AppFacts.batch_get" title="core_db.registry.app.models.AppFacts.batch_get"><code class="xref py py-obj docutils literal notranslate"><span class="pre">batch_get</span></code></a>(items[, consistent_read, ...])</p></td>
+<td><p>BatchGetItem for this model</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#core_db.registry.app.models.AppFacts.batch_write" title="core_db.registry.app.models.AppFacts.batch_write"><code class="xref py py-obj docutils literal notranslate"><span class="pre">batch_write</span></code></a>([auto_commit])</p></td>
+<td><p>Returns a BatchWrite context manager for a batch operation.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#core_db.registry.app.models.AppFacts.count" title="core_db.registry.app.models.AppFacts.count"><code class="xref py py-obj docutils literal notranslate"><span class="pre">count</span></code></a>([hash_key, range_key_condition, ...])</p></td>
+<td><p>Provides a filtered count</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#core_db.registry.app.models.AppFacts.create_table" title="core_db.registry.app.models.AppFacts.create_table"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_table</span></code></a>([wait, read_capacity_units, ...])</p></td>
+<td><p>Create the table for this model</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#core_db.registry.app.models.AppFacts.delete" title="core_db.registry.app.models.AppFacts.delete"><code class="xref py py-obj docutils literal notranslate"><span class="pre">delete</span></code></a>([condition, add_version_condition])</p></td>
+<td><p>Deletes this object from DynamoDB.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#core_db.registry.app.models.AppFacts.delete_table" title="core_db.registry.app.models.AppFacts.delete_table"><code class="xref py py-obj docutils literal notranslate"><span class="pre">delete_table</span></code></a>()</p></td>
+<td><p>Delete the table for this model</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#core_db.registry.app.models.AppFacts.describe_table" title="core_db.registry.app.models.AppFacts.describe_table"><code class="xref py py-obj docutils literal notranslate"><span class="pre">describe_table</span></code></a>()</p></td>
+<td><p>Returns the result of a DescribeTable operation on this model's table</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#core_db.registry.app.models.AppFacts.deserialize" title="core_db.registry.app.models.AppFacts.deserialize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">deserialize</span></code></a>(attribute_values)</p></td>
+<td><p>Deserializes a model from botocore's DynamoDB client.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#core_db.registry.app.models.AppFacts.exists" title="core_db.registry.app.models.AppFacts.exists"><code class="xref py py-obj docutils literal notranslate"><span class="pre">exists</span></code></a>()</p></td>
+<td><p>Returns True if this table exists, False otherwise</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#core_db.registry.app.models.AppFacts.from_dynamodb_dict" title="core_db.registry.app.models.AppFacts.from_dynamodb_dict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_dynamodb_dict</span></code></a>(d)</p></td>
+<td><p>Sets attributes from a mapping previously produced by <a class="reference internal" href="#core_db.registry.app.models.AppFacts.to_dynamodb_dict" title="core_db.registry.app.models.AppFacts.to_dynamodb_dict"><code class="xref py py-func docutils literal notranslate"><span class="pre">to_dynamodb_dict()</span></code></a>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#core_db.registry.app.models.AppFacts.from_raw_data" title="core_db.registry.app.models.AppFacts.from_raw_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_raw_data</span></code></a>(data)</p></td>
+<td><p>Returns an instance of this class from the raw data</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#core_db.registry.app.models.AppFacts.from_simple_dict" title="core_db.registry.app.models.AppFacts.from_simple_dict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_simple_dict</span></code></a>(d)</p></td>
+<td><p>Sets attributes from a mapping previously produced by <a class="reference internal" href="#core_db.registry.app.models.AppFacts.to_simple_dict" title="core_db.registry.app.models.AppFacts.to_simple_dict"><code class="xref py py-func docutils literal notranslate"><span class="pre">to_simple_dict()</span></code></a>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#core_db.registry.app.models.AppFacts.get" title="core_db.registry.app.models.AppFacts.get"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get</span></code></a>(hash_key[, range_key, consistent_read, ...])</p></td>
+<td><p>Returns a single object using the provided keys</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#core_db.registry.app.models.AppFacts.get_attributes" title="core_db.registry.app.models.AppFacts.get_attributes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_attributes</span></code></a>()</p></td>
+<td><p>Returns the attributes of this class as a mapping from <cite>python_attr_name</cite> =&gt; <cite>attribute</cite>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_delete_kwargs_from_instance</span></code>([condition, ...])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_operation_kwargs_from_class</span></code>(hash_key[, ...])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_save_kwargs_from_instance</span></code>([condition, ...])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_update_kwargs_from_instance</span></code>(actions[, ...])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#core_db.registry.app.models.AppFacts.query" title="core_db.registry.app.models.AppFacts.query"><code class="xref py py-obj docutils literal notranslate"><span class="pre">query</span></code></a>(hash_key[, range_key_condition, ...])</p></td>
+<td><p>Provides a high level query API</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#core_db.registry.app.models.AppFacts.refresh" title="core_db.registry.app.models.AppFacts.refresh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">refresh</span></code></a>([consistent_read])</p></td>
+<td><p>Retrieves this object's data from dynamodb and syncs this local object</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#core_db.registry.app.models.AppFacts.save" title="core_db.registry.app.models.AppFacts.save"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save</span></code></a>([condition, add_version_condition])</p></td>
+<td><p>Save this object to dynamodb</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#core_db.registry.app.models.AppFacts.scan" title="core_db.registry.app.models.AppFacts.scan"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scan</span></code></a>([filter_condition, segment, ...])</p></td>
+<td><p>Iterates through all items in the table</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#core_db.registry.app.models.AppFacts.serialize" title="core_db.registry.app.models.AppFacts.serialize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">serialize</span></code></a>([null_check])</p></td>
+<td><p>Serializes a model for botocore's DynamoDB client.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#core_db.registry.app.models.AppFacts.to_dynamodb_dict" title="core_db.registry.app.models.AppFacts.to_dynamodb_dict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_dynamodb_dict</span></code></a>()</p></td>
+<td><p>Returns the contents of this instance as a JSON-serializable mapping, where each attribute is represented as a mapping with the attribute type as the key and the attribute value as the value, e.g.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#core_db.registry.app.models.AppFacts.to_simple_dict" title="core_db.registry.app.models.AppFacts.to_simple_dict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_simple_dict</span></code></a>(*[, force])</p></td>
+<td><p>Returns the contents of this instance as a simple JSON-serializable mapping.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#core_db.registry.app.models.AppFacts.update" title="core_db.registry.app.models.AppFacts.update"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update</span></code></a>(actions[, condition, ...])</p></td>
+<td><p>Updates an item using the UpdateItem operation.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_local_version_attribute</span></code>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#core_db.registry.app.models.AppFacts.update_ttl" title="core_db.registry.app.models.AppFacts.update_ttl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_ttl</span></code></a>(ignore_update_ttl_errors)</p></td>
+<td><p>Attempt to update the TTL on the table.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="core_db.registry.app.models.AppFacts.Account">
+<span class="sig-name descname"><span class="pre">Account</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">UnicodeAttribute</span></em><a class="headerlink" href="#core_db.registry.app.models.AppFacts.Account" title="Link to this definition"></a></dt>
+<dd><p>Zone name of the app (alternate key “account”) (same as Zone)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="core_db.registry.app.models.AppFacts.AppRegex">
+<span class="sig-name descname"><span class="pre">AppRegex</span></span><a class="headerlink" href="#core_db.registry.app.models.AppFacts.AppRegex" title="Link to this definition"></a></dt>
+<dd><p>App Regex (alternate key “app-regex”)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="core_db.registry.app.models.AppFacts.ClientPortfolio">
+<span class="sig-name descname"><span class="pre">ClientPortfolio</span></span><a class="headerlink" href="#core_db.registry.app.models.AppFacts.ClientPortfolio" title="Link to this definition"></a></dt>
+<dd><p>Client Portfolio (alternate key “client-portfolio”)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="core_db.registry.app.models.AppFacts.DoesNotExist">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DoesNotExist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cause</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Exception</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#core_db.registry.app.models.AppFacts.DoesNotExist" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">DoesNotExist</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="core_db.registry.app.models.AppFacts.DoesNotExist.add_note">
+<span class="sig-name descname"><span class="pre">add_note</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#core_db.registry.app.models.AppFacts.DoesNotExist.add_note" title="Link to this definition"></a></dt>
+<dd><p>Exception.add_note(note) –
+add a note to the exception</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="core_db.registry.app.models.AppFacts.DoesNotExist.cause_response_code">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cause_response_code</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#core_db.registry.app.models.AppFacts.DoesNotExist.cause_response_code" title="Link to this definition"></a></dt>
+<dd><p>The DynamoDB response code such as:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ConditionalCheckFailedException</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ProvisionedThroughputExceededException</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TransactionCanceledException</span></code></p></li>
+</ul>
+<p>Inspect this value to determine the cause of the error and handle it.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="core_db.registry.app.models.AppFacts.DoesNotExist.cause_response_message">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cause_response_message</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#core_db.registry.app.models.AppFacts.DoesNotExist.cause_response_message" title="Link to this definition"></a></dt>
+<dd><p>The human-readable description of the error returned by DynamoDB.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_db.registry.app.models.AppFacts.DoesNotExist.with_traceback">
+<span class="sig-name descname"><span class="pre">with_traceback</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#core_db.registry.app.models.AppFacts.DoesNotExist.with_traceback" title="Link to this definition"></a></dt>
+<dd><p>Exception.with_traceback(tb) –
+set self.__traceback__ to tb and return self.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="core_db.registry.app.models.AppFacts.EnforceValidation">
+<span class="sig-name descname"><span class="pre">EnforceValidation</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">UnicodeAttribute</span></em><a class="headerlink" href="#core_db.registry.app.models.AppFacts.EnforceValidation" title="Link to this definition"></a></dt>
+<dd><p>Enforce validation of the app (alternate key “enforce-validation”)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="core_db.registry.app.models.AppFacts.Environment">
+<span class="sig-name descname"><span class="pre">Environment</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">UnicodeAttribute</span></em><a class="headerlink" href="#core_db.registry.app.models.AppFacts.Environment" title="Link to this definition"></a></dt>
+<dd><p>Environment of the app (alternate key “environment”)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="core_db.registry.app.models.AppFacts.ImgeAliases">
+<span class="sig-name descname"><span class="pre">ImgeAliases</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">MapAttribute</span></em><a class="headerlink" href="#core_db.registry.app.models.AppFacts.ImgeAliases" title="Link to this definition"></a></dt>
+<dd><p>Image Aliases of the app to reduce bake time (alternate key “image-aliases”)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="core_db.registry.app.models.AppFacts.Metadata">
+<span class="sig-name descname"><span class="pre">Metadata</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">MapAttribute</span></em><a class="headerlink" href="#core_db.registry.app.models.AppFacts.Metadata" title="Link to this definition"></a></dt>
+<dd><p>Metadata of the app (alternate key “metadata”)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="core_db.registry.app.models.AppFacts.Name">
+<span class="sig-name descname"><span class="pre">Name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">UnicodeAttribute</span></em><a class="headerlink" href="#core_db.registry.app.models.AppFacts.Name" title="Link to this definition"></a></dt>
+<dd><p>Name of the app (alternate key “name”)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="core_db.registry.app.models.AppFacts.Region">
+<span class="sig-name descname"><span class="pre">Region</span></span><a class="headerlink" href="#core_db.registry.app.models.AppFacts.Region" title="Link to this definition"></a></dt>
+<dd><p>Region alise (slug) of the app (alternate key “region”)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="core_db.registry.app.models.AppFacts.Repository">
+<span class="sig-name descname"><span class="pre">Repository</span></span><a class="headerlink" href="#core_db.registry.app.models.AppFacts.Repository" title="Link to this definition"></a></dt>
+<dd><p>Git repository of the app (alternate key “repository”)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="core_db.registry.app.models.AppFacts.Tags">
+<span class="sig-name descname"><span class="pre">Tags</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">MapAttribute</span></em><a class="headerlink" href="#core_db.registry.app.models.AppFacts.Tags" title="Link to this definition"></a></dt>
+<dd><p>Tags of the app (alternate key “tags”)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="core_db.registry.app.models.AppFacts.Zone">
+<span class="sig-name descname"><span class="pre">Zone</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">UnicodeAttribute</span></em><a class="headerlink" href="#core_db.registry.app.models.AppFacts.Zone" title="Link to this definition"></a></dt>
+<dd><p>Zone name of the app (alternate key “zone”) (same as Account)</p>
+<p>We call this “zone” now.  a “zone” contains “apps” that are deployed together
+in an Acccount. A zone can have multiple region definitions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_db.registry.app.models.AppFacts.batch_get">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">batch_get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">items</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">consistent_read</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attributes_to_get</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterator</span><span class="p"><span class="pre">[</span></span><span class="pre">_T</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#core_db.registry.app.models.AppFacts.batch_get" title="Link to this definition"></a></dt>
+<dd><p>BatchGetItem for this model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>items</strong> – Should be a list of hash keys to retrieve, or a list of
+tuples if range keys are used.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_db.registry.app.models.AppFacts.batch_write">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">batch_write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">auto_commit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">BatchWrite</span><span class="p"><span class="pre">[</span></span><span class="pre">_T</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#core_db.registry.app.models.AppFacts.batch_write" title="Link to this definition"></a></dt>
+<dd><p>Returns a BatchWrite context manager for a batch operation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>auto_commit</strong> – If true, the context manager will commit writes incrementally
+as items are written to as necessary to honor item count limits
+in the DynamoDB API (see BatchWrite). Regardless of the value
+passed here, changes automatically commit on context exit
+(whether successful or not).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_db.registry.app.models.AppFacts.count">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">count</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hash_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">range_key_condition</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Condition</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_condition</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Condition</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">consistent_read</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rate_limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#core_db.registry.app.models.AppFacts.count" title="Link to this definition"></a></dt>
+<dd><p>Provides a filtered count</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>hash_key</strong> – The hash key to query. Can be None.</p></li>
+<li><p><strong>range_key_condition</strong> – Condition for range key</p></li>
+<li><p><strong>filter_condition</strong> – Condition used to restrict the query results</p></li>
+<li><p><strong>consistent_read</strong> – If True, a consistent read is performed</p></li>
+<li><p><strong>index_name</strong> – If set, then this index is used</p></li>
+<li><p><strong>rate_limit</strong> – If set then consumed capacity will be limited to this amount per second</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_db.registry.app.models.AppFacts.create_table">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wait</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">read_capacity_units</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_capacity_units</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">billing_mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_update_ttl_errors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="headerlink" href="#core_db.registry.app.models.AppFacts.create_table" title="Link to this definition"></a></dt>
+<dd><p>Create the table for this model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>wait</strong> – If set, then this call will block until the table is ready for use</p></li>
+<li><p><strong>read_capacity_units</strong> – Sets the read capacity units for this table</p></li>
+<li><p><strong>write_capacity_units</strong> – Sets the write capacity units for this table</p></li>
+<li><p><strong>billing_mode</strong> – Sets the billing mode ‘PROVISIONED’ (default) or ‘PAY_PER_REQUEST’ for this table</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_db.registry.app.models.AppFacts.delete">
+<span class="sig-name descname"><span class="pre">delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">condition</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Condition</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_version_condition</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="headerlink" href="#core_db.registry.app.models.AppFacts.delete" title="Link to this definition"></a></dt>
+<dd><p>Deletes this object from DynamoDB.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>add_version_condition</strong> – For models which have a <code class="xref py py-class docutils literal notranslate"><span class="pre">VersionAttribute</span></code>,
+specifies whether the item should only be deleted if its current version matches the expected one.
+Set to <cite>False</cite> for a ‘delete anyway’ strategy.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>pynamodb.exceptions.DeleteError</strong> – If the record can not be deleted</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_db.registry.app.models.AppFacts.delete_table">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">delete_table</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="headerlink" href="#core_db.registry.app.models.AppFacts.delete_table" title="Link to this definition"></a></dt>
+<dd><p>Delete the table for this model</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_db.registry.app.models.AppFacts.describe_table">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">describe_table</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="headerlink" href="#core_db.registry.app.models.AppFacts.describe_table" title="Link to this definition"></a></dt>
+<dd><p>Returns the result of a DescribeTable operation on this model’s table</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_db.registry.app.models.AppFacts.deserialize">
+<span class="sig-name descname"><span class="pre">deserialize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attribute_values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#core_db.registry.app.models.AppFacts.deserialize" title="Link to this definition"></a></dt>
+<dd><p>Deserializes a model from botocore’s DynamoDB client.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_db.registry.app.models.AppFacts.exists">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">exists</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#core_db.registry.app.models.AppFacts.exists" title="Link to this definition"></a></dt>
+<dd><p>Returns True if this table exists, False otherwise</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_db.registry.app.models.AppFacts.from_dynamodb_dict">
+<span class="sig-name descname"><span class="pre">from_dynamodb_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#core_db.registry.app.models.AppFacts.from_dynamodb_dict" title="Link to this definition"></a></dt>
+<dd><p>Sets attributes from a mapping previously produced by <a class="reference internal" href="#core_db.registry.app.models.AppFacts.to_dynamodb_dict" title="core_db.registry.app.models.AppFacts.to_dynamodb_dict"><code class="xref py py-func docutils literal notranslate"><span class="pre">to_dynamodb_dict()</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_db.registry.app.models.AppFacts.from_raw_data">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_raw_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">_T</span></span></span><a class="headerlink" href="#core_db.registry.app.models.AppFacts.from_raw_data" title="Link to this definition"></a></dt>
+<dd><p>Returns an instance of this class
+from the raw data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> – A serialized DynamoDB object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_db.registry.app.models.AppFacts.from_simple_dict">
+<span class="sig-name descname"><span class="pre">from_simple_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#core_db.registry.app.models.AppFacts.from_simple_dict" title="Link to this definition"></a></dt>
+<dd><p>Sets attributes from a mapping previously produced by <a class="reference internal" href="#core_db.registry.app.models.AppFacts.to_simple_dict" title="core_db.registry.app.models.AppFacts.to_simple_dict"><code class="xref py py-func docutils literal notranslate"><span class="pre">to_simple_dict()</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_db.registry.app.models.AppFacts.get">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hash_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">range_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">consistent_read</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attributes_to_get</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">_T</span></span></span><a class="headerlink" href="#core_db.registry.app.models.AppFacts.get" title="Link to this definition"></a></dt>
+<dd><p>Returns a single object using the provided keys</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>hash_key</strong> – The hash key of the desired item</p></li>
+<li><p><strong>range_key</strong> – The range key of the desired item, only used when appropriate.</p></li>
+<li><p><strong>consistent_read</strong></p></li>
+<li><p><strong>attributes_to_get</strong></p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ModelInstance.DoesNotExist</strong> – if the object to be updated does not exist</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_db.registry.app.models.AppFacts.get_attributes">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_attributes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Attribute</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#core_db.registry.app.models.AppFacts.get_attributes" title="Link to this definition"></a></dt>
+<dd><p>Returns the attributes of this class as a mapping from <cite>python_attr_name</cite> =&gt; <cite>attribute</cite>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_db.registry.app.models.AppFacts.query">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">query</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hash_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">range_key_condition</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Condition</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_condition</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Condition</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">consistent_read</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scan_index_forward</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">last_evaluated_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attributes_to_get</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">page_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rate_limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ResultIterator</span><span class="p"><span class="pre">[</span></span><span class="pre">_T</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#core_db.registry.app.models.AppFacts.query" title="Link to this definition"></a></dt>
+<dd><p>Provides a high level query API</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>hash_key</strong> – The hash key to query</p></li>
+<li><p><strong>range_key_condition</strong> – Condition for range key</p></li>
+<li><p><strong>filter_condition</strong> – Condition used to restrict the query results</p></li>
+<li><p><strong>consistent_read</strong> – If True, a consistent read is performed</p></li>
+<li><p><strong>index_name</strong> – If set, then this index is used</p></li>
+<li><p><strong>limit</strong> – Used to limit the number of results returned</p></li>
+<li><p><strong>scan_index_forward</strong> – If set, then used to specify the same parameter to the DynamoDB API.
+Controls descending or ascending results</p></li>
+<li><p><strong>last_evaluated_key</strong> – If set, provides the starting point for query.</p></li>
+<li><p><strong>attributes_to_get</strong> – If set, only returns these elements</p></li>
+<li><p><strong>page_size</strong> – Page size of the query to DynamoDB</p></li>
+<li><p><strong>rate_limit</strong> – If set then consumed capacity will be limited to this amount per second</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_db.registry.app.models.AppFacts.refresh">
+<span class="sig-name descname"><span class="pre">refresh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">consistent_read</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#core_db.registry.app.models.AppFacts.refresh" title="Link to this definition"></a></dt>
+<dd><p>Retrieves this object’s data from dynamodb and syncs this local object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>consistent_read</strong> – If True, then a consistent read is performed.</p></li>
+<li><p><strong>settings</strong> – per-operation settings</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ModelInstance.DoesNotExist</strong> – if the object to be updated does not exist</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_db.registry.app.models.AppFacts.save">
+<span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">condition</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Condition</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_version_condition</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#core_db.registry.app.models.AppFacts.save" title="Link to this definition"></a></dt>
+<dd><p>Save this object to dynamodb</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_db.registry.app.models.AppFacts.scan">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">scan</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filter_condition</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Condition</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">segment</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">total_segments</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">last_evaluated_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">page_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">consistent_read</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rate_limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attributes_to_get</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ResultIterator</span><span class="p"><span class="pre">[</span></span><span class="pre">_T</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#core_db.registry.app.models.AppFacts.scan" title="Link to this definition"></a></dt>
+<dd><p>Iterates through all items in the table</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filter_condition</strong> – Condition used to restrict the scan results</p></li>
+<li><p><strong>segment</strong> – If set, then scans the segment</p></li>
+<li><p><strong>total_segments</strong> – If set, then specifies total segments</p></li>
+<li><p><strong>limit</strong> – Used to limit the number of results returned</p></li>
+<li><p><strong>last_evaluated_key</strong> – If set, provides the starting point for scan.</p></li>
+<li><p><strong>page_size</strong> – Page size of the scan to DynamoDB</p></li>
+<li><p><strong>consistent_read</strong> – If True, a consistent read is performed</p></li>
+<li><p><strong>index_name</strong> – If set, then this index is used</p></li>
+<li><p><strong>rate_limit</strong> – If set then consumed capacity will be limited to this amount per second</p></li>
+<li><p><strong>attributes_to_get</strong> – If set, specifies the properties to include in the projection expression</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_db.registry.app.models.AppFacts.serialize">
+<span class="sig-name descname"><span class="pre">serialize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">null_check</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#core_db.registry.app.models.AppFacts.serialize" title="Link to this definition"></a></dt>
+<dd><p>Serializes a model for botocore’s DynamoDB client.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>BINARY and BINARY_SET attributes (whether top-level or nested) serialization would contain
+<code class="code docutils literal notranslate"><span class="pre">bytes</span></code> objects which are not JSON-serializable by the <code class="code docutils literal notranslate"><span class="pre">json</span></code> module.</p>
+<p>Use <code class="xref py py-meth docutils literal notranslate"><span class="pre">to_dynamodb_dict()</span></code>
+and <code class="xref py py-meth docutils literal notranslate"><span class="pre">to_simple_dict()</span></code> for JSON-serializable mappings.</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_db.registry.app.models.AppFacts.to_dynamodb_dict">
+<span class="sig-name descname"><span class="pre">to_dynamodb_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#core_db.registry.app.models.AppFacts.to_dynamodb_dict" title="Link to this definition"></a></dt>
+<dd><p>Returns the contents of this instance as a JSON-serializable mapping,
+where each attribute is represented as a mapping with the attribute
+type as the key and the attribute value as the value, e.g.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;N&quot;</span><span class="p">:</span> <span class="s2">&quot;12345&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;S&quot;</span><span class="p">:</span> <span class="s2">&quot;Alice&quot;</span>
+    <span class="p">},</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>This matches the structure of the “DynamoDB” JSON mapping in the AWS Console.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_db.registry.app.models.AppFacts.to_simple_dict">
+<span class="sig-name descname"><span class="pre">to_simple_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#core_db.registry.app.models.AppFacts.to_simple_dict" title="Link to this definition"></a></dt>
+<dd><p>Returns the contents of this instance as a simple JSON-serializable mapping.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">12345</span><span class="p">,</span>
+    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Alice&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>This matches the structure of the “normal” JSON mapping in the AWS Console.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This representation is limited: by default, it cannot represent binary or set attributes,
+as their encoded form is indistinguishable from a string or list attribute respectively
+(and therefore ambiguous).</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>force</strong> – If <code class="code docutils literal notranslate"><span class="pre">True</span></code>, force the conversion even if the model contains Binary or Set attributes
+If <code class="code docutils literal notranslate"><span class="pre">False</span></code>, a <code class="code docutils literal notranslate"><span class="pre">ValueError</span></code> will be raised if such attributes are set.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_db.registry.app.models.AppFacts.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">actions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Action</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Condition</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_version_condition</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="headerlink" href="#core_db.registry.app.models.AppFacts.update" title="Link to this definition"></a></dt>
+<dd><p>Updates an item using the UpdateItem operation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>actions</strong> – a list of Action updates to apply</p></li>
+<li><p><strong>condition</strong> – an optional Condition on which to update</p></li>
+<li><p><strong>settings</strong> – per-operation settings</p></li>
+<li><p><strong>add_version_condition</strong> – For models which have a <code class="xref py py-class docutils literal notranslate"><span class="pre">VersionAttribute</span></code>,
+specifies whether only to update if the version matches the model that is currently loaded.
+Set to <cite>False</cite> for a ‘last write wins’ strategy.
+Regardless, the version will always be incremented to prevent “rollbacks” by concurrent <a class="reference internal" href="#core_db.registry.app.models.AppFacts.save" title="core_db.registry.app.models.AppFacts.save"><code class="xref py py-meth docutils literal notranslate"><span class="pre">save()</span></code></a> calls.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ModelInstance.DoesNotExist</strong> – if the object to be updated does not exist</p></li>
+<li><p><strong>pynamodb.exceptions.UpdateError</strong> – if the <cite>condition</cite> is not met</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_db.registry.app.models.AppFacts.update_ttl">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">update_ttl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ignore_update_ttl_errors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#core_db.registry.app.models.AppFacts.update_ttl" title="Link to this definition"></a></dt>
+<dd><p>Attempt to update the TTL on the table.
+Certain implementations (eg: dynalite) do not support updating TTLs and will fail.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="core_db.registry.app.models.html" class="btn btn-neutral float-left" title="core_db.registry.app.models" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="core_db.registry.client.html" class="btn btn-neutral float-right" title="core_db.registry.client" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

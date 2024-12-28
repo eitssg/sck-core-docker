@@ -1,0 +1,45 @@
+core_api.api.tools
+==================
+
+.. automodule:: core_api.api.tools
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+      event_headers
+      genearte_lambda_context
+      generate_event_and_context
+      generate_proxy_event
+      generate_user_agent
+      get_identity
+      get_locale
+      get_version_info
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      SimpleContext
+   
+   
+
+   
+   
+   
+
+
+

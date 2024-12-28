@@ -1,0 +1,6 @@
+core\_api.api.fast\_api.get\_app
+================================
+
+.. currentmodule:: core_api.api.fast_api
+
+.. autofunction:: get_app

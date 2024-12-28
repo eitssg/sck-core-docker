@@ -1,0 +1,556 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>core_execute.actionlib.actions.system.set_variables.SetVariablesAction &mdash; SCK Core Automation 1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a3c9731c" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=45d66dd6" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=29a6c3e3"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            SCK Core Automation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_guide/index.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developer_guide/index.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Technical Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SCK Core Automation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">core_execute.actionlib.actions.system.set_variables.SetVariablesAction</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/technical_reference/core-execute/_autosummary/core_execute.actionlib.actions.system.set_variables.SetVariablesAction.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="core-execute-actionlib-actions-system-set-variables-setvariablesaction">
+<h1>core_execute.actionlib.actions.system.set_variables.SetVariablesAction<a class="headerlink" href="#core-execute-actionlib-actions-system-set-variables-setvariablesaction" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.system.set_variables.SetVariablesAction">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">core_execute.actionlib.actions.system.set_variables.</span></span><span class="sig-name descname"><span class="pre">SetVariablesAction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">definition</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../../core-framework/_autosummary/core_framework.models.actions.action.ActionDefinition.html#core_framework.models.actions.action.ActionDefinition" title="core_framework.models.actions.action.ActionDefinition"><span class="pre">ActionDefinition</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deployment_details</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../../core-framework/_autosummary/core_framework.models.deployment_details.DeploymentDetails.html#core_framework.models.deployment_details.DeploymentDetails" title="core_framework.models.deployment_details.DeploymentDetails"><span class="pre">DeploymentDetails</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/core_execute/actionlib/actions/system/set_variables.html#SetVariablesAction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core_execute.actionlib.actions.system.set_variables.SetVariablesAction" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="core_execute.actionlib.action.BaseAction.html#core_execute.actionlib.action.BaseAction" title="core_execute.actionlib.action.BaseAction"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseAction</span></code></a></p>
+<p>Set variables in memory and in your state</p>
+<p>This action will set variables in memory and in your state.  The action will return the variables set.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.system.set_variables.SetVariablesAction.Type">
+<span class="sig-name descname"><span class="pre">Type</span></span><a class="headerlink" href="#core_execute.actionlib.actions.system.set_variables.SetVariablesAction.Type" title="Link to this definition"></a></dt>
+<dd><p>Use the value: <code class="docutils literal notranslate"><span class="pre">SYSTEM::SetVariables</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.system.set_variables.SetVariablesAction.Params.Variables">
+<span class="sig-prename descclassname"><span class="pre">Params.</span></span><span class="sig-name descname"><span class="pre">Variables</span></span><a class="headerlink" href="#core_execute.actionlib.actions.system.set_variables.SetVariablesAction.Params.Variables" title="Link to this definition"></a></dt>
+<dd><p>The variables to set (required)</p>
+</dd></dl>
+
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>s3:/&lt;bucket&gt;/artfacts/&lt;deployment_details&gt;/{task}.actions:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Label</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">action-system-setvariables-label</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">Type</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;SYSTEM::SetVariables&quot;</span>
+<span class="w">    </span><span class="nt">Params</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">Variables</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">Name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;John</span><span class="nv"> </span><span class="s">Smith&quot;</span>
+<span class="w">            </span><span class="nt">Age</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;25&quot;</span>
+<span class="w">            </span><span class="nt">Height</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;6&#39;2&quot;</span>
+<span class="w">            </span><span class="nt">Weight</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;180&quot;</span>
+<span class="w">    </span><span class="nt">Scope</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;build&quot;</span>
+</pre></div>
+</div>
+</div>
+<p class="rubric">Attributes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">variables</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#core_execute.actionlib.actions.system.set_variables.SetVariablesAction.label" title="core_execute.actionlib.actions.system.set_variables.SetVariablesAction.label"><code class="xref py py-obj docutils literal notranslate"><span class="pre">label</span></code></a></p></td>
+<td><p>The label of the action is the unique identifier of the action.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#core_execute.actionlib.actions.system.set_variables.SetVariablesAction.context" title="core_execute.actionlib.actions.system.set_variables.SetVariablesAction.context"><code class="xref py py-obj docutils literal notranslate"><span class="pre">context</span></code></a></p></td>
+<td><p>The context of the action is the Jinja2 Rendering Context.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#core_execute.actionlib.actions.system.set_variables.SetVariablesAction.action_name" title="core_execute.actionlib.actions.system.set_variables.SetVariablesAction.action_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">action_name</span></code></a></p></td>
+<td><p>The action name is the name of the action.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#core_execute.actionlib.actions.system.set_variables.SetVariablesAction.output_namespace" title="core_execute.actionlib.actions.system.set_variables.SetVariablesAction.output_namespace"><code class="xref py py-obj docutils literal notranslate"><span class="pre">output_namespace</span></code></a></p></td>
+<td><p>The output namespace is the namespace where the output of the action is stored.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#core_execute.actionlib.actions.system.set_variables.SetVariablesAction.state_namespace" title="core_execute.actionlib.actions.system.set_variables.SetVariablesAction.state_namespace"><code class="xref py py-obj docutils literal notranslate"><span class="pre">state_namespace</span></code></a></p></td>
+<td><p>The state namespace is the namespace where the state of the action is stored.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#core_execute.actionlib.actions.system.set_variables.SetVariablesAction.type" title="core_execute.actionlib.actions.system.set_variables.SetVariablesAction.type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">type</span></code></a></p></td>
+<td><p>The type of the action.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#core_execute.actionlib.actions.system.set_variables.SetVariablesAction.condition" title="core_execute.actionlib.actions.system.set_variables.SetVariablesAction.condition"><code class="xref py py-obj docutils literal notranslate"><span class="pre">condition</span></code></a></p></td>
+<td><p>The condition of the action.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#core_execute.actionlib.actions.system.set_variables.SetVariablesAction.after" title="core_execute.actionlib.actions.system.set_variables.SetVariablesAction.after"><code class="xref py py-obj docutils literal notranslate"><span class="pre">after</span></code></a></p></td>
+<td><p>The actions that should be perfomed after this action.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#core_execute.actionlib.actions.system.set_variables.SetVariablesAction.params" title="core_execute.actionlib.actions.system.set_variables.SetVariablesAction.params"><code class="xref py py-obj docutils literal notranslate"><span class="pre">params</span></code></a></p></td>
+<td><p>The parameters of the action.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#core_execute.actionlib.actions.system.set_variables.SetVariablesAction.lifecycle_hooks" title="core_execute.actionlib.actions.system.set_variables.SetVariablesAction.lifecycle_hooks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">lifecycle_hooks</span></code></a></p></td>
+<td><p>The lifecycle hooks of the action.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#core_execute.actionlib.actions.system.set_variables.SetVariablesAction.deployment_details" title="core_execute.actionlib.actions.system.set_variables.SetVariablesAction.deployment_details"><code class="xref py py-obj docutils literal notranslate"><span class="pre">deployment_details</span></code></a></p></td>
+<td><p>The deployment details of the action.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#core_execute.actionlib.actions.system.set_variables.SetVariablesAction.renderer" title="core_execute.actionlib.actions.system.set_variables.SetVariablesAction.renderer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">renderer</span></code></a></p></td>
+<td><p>The Jinja2 Renderer for the action.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code>(definition, context, deployment_details)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#core_execute.actionlib.actions.system.set_variables.SetVariablesAction.check" title="core_execute.actionlib.actions.system.set_variables.SetVariablesAction.check"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check</span></code></a>()</p></td>
+<td><p>Check the action to determine if it is oc to run</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#core_execute.actionlib.actions.system.set_variables.SetVariablesAction.execute" title="core_execute.actionlib.actions.system.set_variables.SetVariablesAction.execute"><code class="xref py py-obj docutils literal notranslate"><span class="pre">execute</span></code></a>()</p></td>
+<td><p>Execute the action.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#core_execute.actionlib.actions.system.set_variables.SetVariablesAction.get_output" title="core_execute.actionlib.actions.system.set_variables.SetVariablesAction.get_output"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_output</span></code></a>(name)</p></td>
+<td><p>Get the output variable from the action within the output namespace</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#core_execute.actionlib.actions.system.set_variables.SetVariablesAction.get_state" title="core_execute.actionlib.actions.system.set_variables.SetVariablesAction.get_state"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_state</span></code></a>(name)</p></td>
+<td><p>Get a state variable of the action within the action state namespace</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#core_execute.actionlib.actions.system.set_variables.SetVariablesAction.is_complete" title="core_execute.actionlib.actions.system.set_variables.SetVariablesAction.is_complete"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_complete</span></code></a>()</p></td>
+<td><p>Check if the action is in the complete state.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#core_execute.actionlib.actions.system.set_variables.SetVariablesAction.is_failed" title="core_execute.actionlib.actions.system.set_variables.SetVariablesAction.is_failed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_failed</span></code></a>()</p></td>
+<td><p>Check if the action is in the failed state.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#core_execute.actionlib.actions.system.set_variables.SetVariablesAction.is_init" title="core_execute.actionlib.actions.system.set_variables.SetVariablesAction.is_init"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_init</span></code></a>()</p></td>
+<td><p>Check if the action is in the init state.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#core_execute.actionlib.actions.system.set_variables.SetVariablesAction.is_running" title="core_execute.actionlib.actions.system.set_variables.SetVariablesAction.is_running"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_running</span></code></a>()</p></td>
+<td><p>Check if the action is in the running state.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#core_execute.actionlib.actions.system.set_variables.SetVariablesAction.set_complete" title="core_execute.actionlib.actions.system.set_variables.SetVariablesAction.set_complete"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_complete</span></code></a>(reason)</p></td>
+<td><p>Set the status to complete and supply the given reason</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#core_execute.actionlib.actions.system.set_variables.SetVariablesAction.set_failed" title="core_execute.actionlib.actions.system.set_variables.SetVariablesAction.set_failed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_failed</span></code></a>(reason)</p></td>
+<td><p>Set the status to failed and supply the given reason</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#core_execute.actionlib.actions.system.set_variables.SetVariablesAction.set_output" title="core_execute.actionlib.actions.system.set_variables.SetVariablesAction.set_output"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_output</span></code></a>(name, value)</p></td>
+<td><p>Set the output of the action</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#core_execute.actionlib.actions.system.set_variables.SetVariablesAction.set_running" title="core_execute.actionlib.actions.system.set_variables.SetVariablesAction.set_running"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_running</span></code></a>(reason)</p></td>
+<td><p>Set the status to running and supply the given reason</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#core_execute.actionlib.actions.system.set_variables.SetVariablesAction.set_skipped" title="core_execute.actionlib.actions.system.set_variables.SetVariablesAction.set_skipped"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_skipped</span></code></a>(reason)</p></td>
+<td><p>Set the status to skipped and supply the given reason</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#core_execute.actionlib.actions.system.set_variables.SetVariablesAction.set_state" title="core_execute.actionlib.actions.system.set_variables.SetVariablesAction.set_state"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_state</span></code></a>(name, value)</p></td>
+<td><p>Set a state variable of the action within the action state namespace</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.system.set_variables.SetVariablesAction.action_name">
+<span class="sig-name descname"><span class="pre">action_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#core_execute.actionlib.actions.system.set_variables.SetVariablesAction.action_name" title="Link to this definition"></a></dt>
+<dd><p>The action name is the name of the action.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.system.set_variables.SetVariablesAction.after">
+<span class="sig-name descname"><span class="pre">after</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#core_execute.actionlib.actions.system.set_variables.SetVariablesAction.after" title="Link to this definition"></a></dt>
+<dd><p>The actions that should be perfomed after this action.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.system.set_variables.SetVariablesAction.check">
+<span class="sig-name descname"><span class="pre">check</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="headerlink" href="#core_execute.actionlib.actions.system.set_variables.SetVariablesAction.check" title="Link to this definition"></a></dt>
+<dd><p>Check the action to determine if it is oc to run</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>_description_</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Self</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.system.set_variables.SetVariablesAction.condition">
+<span class="sig-name descname"><span class="pre">condition</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#core_execute.actionlib.actions.system.set_variables.SetVariablesAction.condition" title="Link to this definition"></a></dt>
+<dd><p>The condition of the action.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.system.set_variables.SetVariablesAction.context">
+<span class="sig-name descname"><span class="pre">context</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#core_execute.actionlib.actions.system.set_variables.SetVariablesAction.context" title="Link to this definition"></a></dt>
+<dd><p>The context of the action is the Jinja2 Rendering Context.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict[str, Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.system.set_variables.SetVariablesAction.deployment_details">
+<span class="sig-name descname"><span class="pre">deployment_details</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../core-framework/_autosummary/core_framework.models.deployment_details.DeploymentDetails.html#core_framework.models.deployment_details.DeploymentDetails" title="core_framework.models.deployment_details.DeploymentDetails"><span class="pre">DeploymentDetails</span></a></em><a class="headerlink" href="#core_execute.actionlib.actions.system.set_variables.SetVariablesAction.deployment_details" title="Link to this definition"></a></dt>
+<dd><p>The deployment details of the action. client/portfolio/app/branch/build information.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../../core-framework/_autosummary/core_framework.models.deployment_details.DeploymentDetails.html#core_framework.models.deployment_details.DeploymentDetails" title="core_framework.models.deployment_details.DeploymentDetails">DeploymentDetails</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.system.set_variables.SetVariablesAction.execute">
+<span class="sig-name descname"><span class="pre">execute</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Self</span></span></span><a class="headerlink" href="#core_execute.actionlib.actions.system.set_variables.SetVariablesAction.execute" title="Link to this definition"></a></dt>
+<dd><p>Execute the action.  It will first check the condition, and if true, execute the action.</p>
+<p>The context is used to render action variables and paramters and the action is executed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>This action object</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Self</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.system.set_variables.SetVariablesAction.get_output">
+<span class="sig-name descname"><span class="pre">get_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#core_execute.actionlib.actions.system.set_variables.SetVariablesAction.get_output" title="Link to this definition"></a></dt>
+<dd><p>Get the output variable from the action within the output namespace</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – Name of the output variable</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Value of the output variable</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str | None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.system.set_variables.SetVariablesAction.get_state">
+<span class="sig-name descname"><span class="pre">get_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#core_execute.actionlib.actions.system.set_variables.SetVariablesAction.get_state" title="Link to this definition"></a></dt>
+<dd><p>Get a state variable of the action within the action state namespace</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – Name of the state variable</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Value of the state variable</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.system.set_variables.SetVariablesAction.is_complete">
+<span class="sig-name descname"><span class="pre">is_complete</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#core_execute.actionlib.actions.system.set_variables.SetVariablesAction.is_complete" title="Link to this definition"></a></dt>
+<dd><p>Check if the action is in the complete state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the action is in the complete state</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.system.set_variables.SetVariablesAction.is_failed">
+<span class="sig-name descname"><span class="pre">is_failed</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#core_execute.actionlib.actions.system.set_variables.SetVariablesAction.is_failed" title="Link to this definition"></a></dt>
+<dd><p>Check if the action is in the failed state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the action is in the failed state</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.system.set_variables.SetVariablesAction.is_init">
+<span class="sig-name descname"><span class="pre">is_init</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#core_execute.actionlib.actions.system.set_variables.SetVariablesAction.is_init" title="Link to this definition"></a></dt>
+<dd><p>Check if the action is in the init state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the action is in the init state</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.system.set_variables.SetVariablesAction.is_running">
+<span class="sig-name descname"><span class="pre">is_running</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#core_execute.actionlib.actions.system.set_variables.SetVariablesAction.is_running" title="Link to this definition"></a></dt>
+<dd><p>Check if the action is in the running state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the action is in the running state</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.system.set_variables.SetVariablesAction.label">
+<span class="sig-name descname"><span class="pre">label</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#core_execute.actionlib.actions.system.set_variables.SetVariablesAction.label" title="Link to this definition"></a></dt>
+<dd><p>The label of the action is the unique identifier of the action.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.system.set_variables.SetVariablesAction.lifecycle_hooks">
+<span class="sig-name descname"><span class="pre">lifecycle_hooks</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#core_execute.actionlib.actions.system.set_variables.SetVariablesAction.lifecycle_hooks" title="Link to this definition"></a></dt>
+<dd><p>The lifecycle hooks of the action.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[dict[str, Any]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.system.set_variables.SetVariablesAction.output_namespace">
+<span class="sig-name descname"><span class="pre">output_namespace</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#core_execute.actionlib.actions.system.set_variables.SetVariablesAction.output_namespace" title="Link to this definition"></a></dt>
+<dd><p>The output namespace is the namespace where the output of the action is stored.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str | None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.system.set_variables.SetVariablesAction.params">
+<span class="sig-name descname"><span class="pre">params</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../core-framework/_autosummary/core_framework.models.actions.action_params.ActionParams.html#core_framework.models.actions.action_params.ActionParams" title="core_framework.models.actions.action_params.ActionParams"><span class="pre">ActionParams</span></a></em><a class="headerlink" href="#core_execute.actionlib.actions.system.set_variables.SetVariablesAction.params" title="Link to this definition"></a></dt>
+<dd><p>The parameters of the action.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../../core-framework/_autosummary/core_framework.models.actions.action_params.ActionParams.html#core_framework.models.actions.action_params.ActionParams" title="core_framework.models.actions.action_params.ActionParams">ActionParams</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.system.set_variables.SetVariablesAction.renderer">
+<span class="sig-name descname"><span class="pre">renderer</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../core-renderer/_autosummary/core_renderer.renderer.Jinja2Renderer.html#core_renderer.renderer.Jinja2Renderer" title="core_renderer.renderer.Jinja2Renderer"><span class="pre">Jinja2Renderer</span></a></em><a class="headerlink" href="#core_execute.actionlib.actions.system.set_variables.SetVariablesAction.renderer" title="Link to this definition"></a></dt>
+<dd><p>The Jinja2 Renderer for the action.  Uses the context to render templates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../../core-renderer/_autosummary/core_renderer.renderer.Jinja2Renderer.html#core_renderer.renderer.Jinja2Renderer" title="core_renderer.renderer.Jinja2Renderer">Jinja2Renderer</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.system.set_variables.SetVariablesAction.set_complete">
+<span class="sig-name descname"><span class="pre">set_complete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reason</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#core_execute.actionlib.actions.system.set_variables.SetVariablesAction.set_complete" title="Link to this definition"></a></dt>
+<dd><p>Set the status to complete and supply the given reason</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>reason</strong> (<em>str</em>) – The reason the status is complete.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.system.set_variables.SetVariablesAction.set_failed">
+<span class="sig-name descname"><span class="pre">set_failed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reason</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#core_execute.actionlib.actions.system.set_variables.SetVariablesAction.set_failed" title="Link to this definition"></a></dt>
+<dd><p>Set the status to failed and supply the given reason</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>reason</strong> (<em>str</em>) – Reason the status failed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.system.set_variables.SetVariablesAction.set_output">
+<span class="sig-name descname"><span class="pre">set_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#core_execute.actionlib.actions.system.set_variables.SetVariablesAction.set_output" title="Link to this definition"></a></dt>
+<dd><p>Set the output of the action</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Variable name of the output within the action output namespace.</p></li>
+<li><p><strong>value</strong> (<em>Any</em>) – Value of this variable</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.system.set_variables.SetVariablesAction.set_running">
+<span class="sig-name descname"><span class="pre">set_running</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reason</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#core_execute.actionlib.actions.system.set_variables.SetVariablesAction.set_running" title="Link to this definition"></a></dt>
+<dd><p>Set the status to running and supply the given reason</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>reason</strong> (<em>str</em>) – The reason the status is running.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.system.set_variables.SetVariablesAction.set_skipped">
+<span class="sig-name descname"><span class="pre">set_skipped</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reason</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#core_execute.actionlib.actions.system.set_variables.SetVariablesAction.set_skipped" title="Link to this definition"></a></dt>
+<dd><p>Set the status to skipped and supply the given reason</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>reason</strong> (<em>str</em>) – The reason the status is skipped.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.system.set_variables.SetVariablesAction.set_state">
+<span class="sig-name descname"><span class="pre">set_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#core_execute.actionlib.actions.system.set_variables.SetVariablesAction.set_state" title="Link to this definition"></a></dt>
+<dd><p>Set a state variable of the action within the action state namespace</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Name of the state variable</p></li>
+<li><p><strong>value</strong> (<em>Any</em>) – vaue of the state variable</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.system.set_variables.SetVariablesAction.state_namespace">
+<span class="sig-name descname"><span class="pre">state_namespace</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#core_execute.actionlib.actions.system.set_variables.SetVariablesAction.state_namespace" title="Link to this definition"></a></dt>
+<dd><p>The state namespace is the namespace where the state of the action is stored.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.system.set_variables.SetVariablesAction.type">
+<span class="sig-name descname"><span class="pre">type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#core_execute.actionlib.actions.system.set_variables.SetVariablesAction.type" title="Link to this definition"></a></dt>
+<dd><p>The type of the action.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

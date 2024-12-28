@@ -1,0 +1,49 @@
+/* custom.css */
+.wy-nav-content {
+    max-width: none;
+    padding: 0 20px;
+}
+
+.wy-nav-side {
+    width: 300px;
+}
+
+.wy-nav-content-wrap {
+    margin-left: 300px;
+}
+
+.rubric {
+    font-size: 1.3em;
+    font-weight: bold;
+}
+
+.rst-content dl.field-list>dt {
+    font-size: 0.8em;
+}
+
+.rst-content dl.field-list>dd p {
+    font-size: 0.8em;
+}
+
+
+html {
+    font-size: 120%;
+}
+
+.custom-toctree ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.custom-toctree li {
+    margin: 0.5em 0;
+}
+
+.custom-toctree a {
+    text-decoration: none;
+    color: #007bff;
+}
+
+.custom-toctree a:hover {
+    text-decoration: underline;
+}

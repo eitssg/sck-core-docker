@@ -1,0 +1,6 @@
+core\_execute.actionlib.actions.aws.share\_image.generate\_template
+===================================================================
+
+.. currentmodule:: core_execute.actionlib.actions.aws.share_image
+
+.. autofunction:: generate_template

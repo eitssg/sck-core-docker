@@ -1,0 +1,542 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>core_db.facter.facter &mdash; SCK Core Automation 1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a3c9731c" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=45d66dd6" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=29a6c3e3"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            SCK Core Automation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_guide/index.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developer_guide/index.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../technical_reference/index.html">Technical Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SCK Core Automation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">core_db.facter.facter</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for core_db.facter.facter</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">The Factor object is the &quot;FACTS&quot; database.  This object is DEPRECATED and should not be used.</span>
+<span class="sd">This FACTS database should come from DynamoDB.  Not &#39;accounts.yaml&#39; and &#39;apps.yaml&#39; files.</span>
+
+<span class="sd">(In re-rewrite.  We need to use DynamoDB instead of FACTS YAML files)</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">core_framework</span> <span class="k">as</span> <span class="nn">util</span>
+<span class="kn">import</span> <span class="nn">core_logging</span> <span class="k">as</span> <span class="nn">log</span>
+
+<span class="kn">from</span> <span class="nn">core_framework.constants</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">DD_TAGS</span><span class="p">,</span>
+    <span class="n">FACTS_ACCOUNT</span><span class="p">,</span>
+    <span class="n">FACTS_REGION</span><span class="p">,</span>
+    <span class="n">FACTS_TAGS</span><span class="p">,</span>
+    <span class="n">TAG_ENVIRONMENT</span><span class="p">,</span>
+    <span class="n">TAG_OWNER</span><span class="p">,</span>
+    <span class="n">TAG_REGION</span><span class="p">,</span>
+    <span class="n">TAG_CONTACTS</span><span class="p">,</span>
+    <span class="n">V_DEFAULT_BRANCH</span><span class="p">,</span>
+    <span class="n">V_DEFAULT_ENVIRONMENT</span><span class="p">,</span>
+    <span class="n">V_DEFAULT_REGION_ALIAS</span><span class="p">,</span>
+    <span class="n">V_EMPTY</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">core_framework.models</span> <span class="kn">import</span> <span class="n">DeploymentDetails</span>
+
+<span class="kn">from</span> <span class="nn">..constants</span> <span class="kn">import</span> <span class="n">APPROVERS</span><span class="p">,</span> <span class="n">CONTACTS</span><span class="p">,</span> <span class="n">OWNER</span><span class="p">,</span> <span class="n">REGION</span><span class="p">,</span> <span class="n">ENVIRONMENT</span><span class="p">,</span> <span class="n">ZONE_KEY</span>
+
+<span class="kn">from</span> <span class="nn">..registry.client.models</span> <span class="kn">import</span> <span class="n">ClientFacts</span>
+<span class="kn">from</span> <span class="nn">..registry.portfolio.models</span> <span class="kn">import</span> <span class="n">PortfolioFacts</span>
+<span class="kn">from</span> <span class="nn">..registry.zone.models</span> <span class="kn">import</span> <span class="n">ZoneFacts</span>
+<span class="kn">from</span> <span class="nn">..registry.app.models</span> <span class="kn">import</span> <span class="n">AppFacts</span>
+
+
+<div class="viewcode-block" id="get_client_facts">
+<a class="viewcode-back" href="../../../technical_reference/core-db/_autosummary/core_db.facter.facter.get_client_facts.html#core_db.facter.facter.get_client_facts">[docs]</a>
+<span class="k">def</span> <span class="nf">get_client_facts</span><span class="p">(</span><span class="n">client</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Uses the logic within the :class:`Clientfacts` class to retrieve the Client Details.</span>
+
+<span class="sd">    This is a helper frunction and you can call ClientFacts.get(client) directly without</span>
+<span class="sd">    using this helper.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        client (str): The client name to retreive from the</span>
+
+<span class="sd">    Return:</span>
+<span class="sd">        (dict): The dictionary representing the ClientFacts database table record.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+
+        <span class="n">facts</span> <span class="o">=</span> <span class="n">ClientFacts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">client</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">facts</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="n">facts</span><span class="o">.</span><span class="n">to_simple_dict</span><span class="p">()</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error getting client facts: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="get_portfolio_facts">
+<a class="viewcode-back" href="../../../technical_reference/core-db/_autosummary/core_db.facter.facter.get_portfolio_facts.html#core_db.facter.facter.get_portfolio_facts">[docs]</a>
+<span class="k">def</span> <span class="nf">get_portfolio_facts</span><span class="p">(</span><span class="n">client</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">portfolio</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Uses the logic within the :class:`PortfolioFacts` class to retrieve the Portfolio Details.</span>
+
+<span class="sd">    This is a helper function and you can call PortfolioFacts.get(client, portfolio) directly</span>
+<span class="sd">    without using this helper.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        client (str): The client name (slug)</span>
+<span class="sd">        portfolio (str): The portfolio name (slug)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict | None: The dictionary representing PortFolioFacts database table record.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+
+        <span class="n">portfolio_facts</span> <span class="o">=</span> <span class="n">PortfolioFacts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">portfolio</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">portfolio_facts</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="n">portfolio_facts</span><span class="o">.</span><span class="n">to_simple_dict</span><span class="p">()</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error getting portfolio facts: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="get_zone_facts">
+<a class="viewcode-back" href="../../../technical_reference/core-db/_autosummary/core_db.facter.facter.get_zone_facts.html#core_db.facter.facter.get_zone_facts">[docs]</a>
+<span class="k">def</span> <span class="nf">get_zone_facts</span><span class="p">(</span><span class="n">client</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">portfolio</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">zone</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Uses the logic with the :class:`ZoneFacts` class to retrieve the Zone Details.</span>
+
+<span class="sd">    This is a helper function and you can call ZoneFacts.get(zone_key, zone_name) directly</span>
+<span class="sd">    without using this helper.</span>
+
+<span class="sd">    zone_key = client + &#39;:&#39; + portfolio</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        client (str): The client name</span>
+<span class="sd">        portfolio (str): The portfoio name</span>
+<span class="sd">        zone (str): The one label</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict | None: The dictionary represeting the ZoneFacts database table record.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+
+        <span class="n">zone_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">client</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">portfolio</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">zone_facts</span> <span class="o">=</span> <span class="n">ZoneFacts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">zone_key</span><span class="p">,</span> <span class="n">zone</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">zone_facts</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="n">zone_facts</span><span class="o">.</span><span class="n">to_simple_dict</span><span class="p">()</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error getting zone facts: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="get_zone_facts_by_account_id">
+<a class="viewcode-back" href="../../../technical_reference/core-db/_autosummary/core_db.facter.facter.get_zone_facts_by_account_id.html#core_db.facter.facter.get_zone_facts_by_account_id">[docs]</a>
+<span class="k">def</span> <span class="nf">get_zone_facts_by_account_id</span><span class="p">(</span><span class="n">account_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Uses the logic with the :class:`ZoneFacts` class to retrieve the Zone Details.</span>
+
+<span class="sd">    This is a helper function and you can call ZoneFacts.query(account_id) directly</span>
+<span class="sd">    without using this helper.</span>
+
+<span class="sd">    zone_key = client + &#39;:&#39; + portfolio</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        account_id (str): The aws account ID</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list[dict] | None: The list of Zone Facts that are registered with this AWS Account ID.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">zone_facts</span> <span class="o">=</span> <span class="n">ZoneFacts</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">account_id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">zone_facts</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">zf</span><span class="o">.</span><span class="n">to_simple_dict</span><span class="p">()</span> <span class="k">for</span> <span class="n">zf</span> <span class="ow">in</span> <span class="n">zone_facts</span><span class="p">]</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error getting zone facts by account ID: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="get_deployment_details_facts">
+<a class="viewcode-back" href="../../../technical_reference/core-db/_autosummary/core_db.facter.facter.get_deployment_details_facts.html#core_db.facter.facter.get_deployment_details_facts">[docs]</a>
+<span class="k">def</span> <span class="nf">get_deployment_details_facts</span><span class="p">(</span><span class="n">deployment_details</span><span class="p">:</span> <span class="n">DeploymentDetails</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Retreives the Facs for DeploymentDetails that can be used in the Jinja2 Renederer</span>
+<span class="sd">    to generate final Cloudformation Templates.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        deployment_details (DeploymentDetails): The deployment Details of the TaskPayload</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        _type_: _description_</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">deployment_details</span><span class="o">.</span><span class="n">Client</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Client must be valid in DeploymentDetails&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">deployment_details</span><span class="o">.</span><span class="n">App</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;App field must be popluated in DeploymentDetails&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">get_app_facts</span><span class="p">(</span>
+        <span class="n">deployment_details</span><span class="o">.</span><span class="n">Client</span><span class="p">,</span>
+        <span class="n">deployment_details</span><span class="o">.</span><span class="n">Portfolio</span><span class="p">,</span>
+        <span class="n">deployment_details</span><span class="o">.</span><span class="n">App</span><span class="p">,</span>
+        <span class="n">deployment_details</span><span class="o">.</span><span class="n">BranchShortName</span><span class="p">,</span>
+        <span class="n">deployment_details</span><span class="o">.</span><span class="n">Build</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="get_app_facts">
+<a class="viewcode-back" href="../../../technical_reference/core-db/_autosummary/core_db.facter.facter.get_app_facts.html#core_db.facter.facter.get_app_facts">[docs]</a>
+<span class="k">def</span> <span class="nf">get_app_facts</span><span class="p">(</span>
+    <span class="n">client</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">portfolio</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">app</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">branch</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">build</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Retrieves the AppFacts data stored in the registry that match the sepecified deployment details.</span>
+
+<span class="sd">    .. warning::</span>
+
+<span class="sd">        Matches are performed by searching the AppRegEx in the App Registry table core-automation-apps</span>
+<span class="sd">        to the value f&quot;prn:{portfolio}:{app}:{branch}:{build}&quot;</span>
+
+<span class="sd">        This function will return the FIRST match and order is NOT guaranteed.</span>
+
+
+<span class="sd">    Args:</span>
+<span class="sd">        client (str): The client that the facts are stored in</span>
+<span class="sd">        portfolio (str): The portfolio within the specified client</span>
+<span class="sd">        app (str): The app deployment unit within the portfolio</span>
+<span class="sd">        branch (str | None, optional): The branch name of the app repository. Defaults to None.</span>
+<span class="sd">        build (str | None, optional): The current version, build ID, or commit Id. Defaults to None.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict | None: The FACTS context ready for Jinja2 rendering.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">branch</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">branch</span> <span class="o">=</span> <span class="s2">&quot;*&quot;</span>
+
+    <span class="k">if</span> <span class="n">build</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">build</span> <span class="o">=</span> <span class="s2">&quot;*&quot;</span>
+
+    <span class="n">portfolio_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">client</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">portfolio</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">app_test_string</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;prn:</span><span class="si">{</span><span class="n">portfolio</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">app</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">branch</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">build</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="n">app_facts_list</span> <span class="o">=</span> <span class="n">AppFacts</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">portfolio_key</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">app_facts</span> <span class="ow">in</span> <span class="n">app_facts_list</span><span class="p">:</span>
+        <span class="n">arx</span> <span class="o">=</span> <span class="n">app_facts</span><span class="o">.</span><span class="n">AppRegex</span>
+        <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">arx</span><span class="p">,</span> <span class="n">app_test_string</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">app_facts</span><span class="o">.</span><span class="n">to_simple_dict</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="derrive_environment_from_branch">
+<a class="viewcode-back" href="../../../technical_reference/core-db/_autosummary/core_db.facter.facter.derrive_environment_from_branch.html#core_db.facter.facter.derrive_environment_from_branch">[docs]</a>
+<span class="k">def</span> <span class="nf">derrive_environment_from_branch</span><span class="p">(</span><span class="n">branch</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Derrive the environmet and region alias from the branch name.</span>
+
+<span class="sd">    Example of a branch name is **dev-sin** or **feature1/dev-sin**</span>
+
+<span class="sd">    Where *dev* is the environment and *sin* is the region alias.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        branch (str): The application deployment git repository branch name.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        (environmet, region_alias): The environment and region alias tuple</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">parts</span> <span class="o">=</span> <span class="n">branch</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">branch</span> <span class="o">=</span> <span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># split the branch by &#39;/&#39; and retreive the last part</span>
+        <span class="n">branch_parts</span> <span class="o">=</span> <span class="n">branch</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+        <span class="n">environment</span> <span class="o">=</span> <span class="n">branch_parts</span><span class="p">[</span>
+            <span class="o">-</span><span class="mi">1</span>
+        <span class="p">]</span>  <span class="c1"># in this format, the branch name is the environment (master, main, dev, feature1/dev, etc)</span>
+        <span class="n">region_alias</span> <span class="o">=</span> <span class="n">parts</span><span class="p">[</span>
+            <span class="mi">1</span>
+        <span class="p">]</span>  <span class="c1"># override region_alias fact with the branch region alias definition</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">environment</span> <span class="o">=</span> <span class="n">branch</span>
+        <span class="n">region_alias</span> <span class="o">=</span> <span class="n">V_DEFAULT_REGION_ALIAS</span>
+
+    <span class="c1"># If you are deploying a master branch, you are definitly PRODUCTION</span>
+    <span class="k">if</span> <span class="n">environment</span> <span class="o">==</span> <span class="s2">&quot;master&quot;</span> <span class="ow">or</span> <span class="n">environment</span> <span class="o">==</span> <span class="s2">&quot;main&quot;</span><span class="p">:</span>
+        <span class="n">environment</span> <span class="o">=</span> <span class="n">V_DEFAULT_ENVIRONMENT</span>
+
+    <span class="k">return</span> <span class="n">environment</span><span class="p">,</span> <span class="n">region_alias</span></div>
+
+
+
+<span class="c1"># Why don&#39;t we use botocore deep_merge instead of util.merge.deep_merge?  It&#39;s the same thing. Is it?</span>
+<span class="c1"># from botocore.utils import deep_merge as deep_merge</span>
+
+
+<div class="viewcode-block" id="get_facts_by_identity">
+<a class="viewcode-back" href="../../../technical_reference/core-db/_autosummary/core_db.facter.facter.get_facts_by_identity.html#core_db.facter.facter.get_facts_by_identity">[docs]</a>
+<span class="k">def</span> <span class="nf">get_facts_by_identity</span><span class="p">(</span><span class="n">client</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">identity</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Retreives Facts based on the supplied client and Pipeline Reference Number</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        client (str): The cilent where this portfilio is deployed</span>
+<span class="sd">        identity (str): The Pipeline Reference Number</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: The Facts context ready for Jinja2 rendering.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">portfolio</span><span class="p">,</span> <span class="n">app</span><span class="p">,</span> <span class="n">branch</span><span class="p">,</span> <span class="n">build</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">split_prn</span><span class="p">(</span><span class="n">identity</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">get_facts</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">portfolio</span> <span class="ow">or</span> <span class="s2">&quot;unknown&quot;</span><span class="p">,</span> <span class="n">app</span> <span class="ow">or</span> <span class="s2">&quot;unknown&quot;</span><span class="p">,</span> <span class="n">branch</span><span class="p">,</span> <span class="n">build</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="format_contact">
+<a class="viewcode-back" href="../../../technical_reference/core-db/_autosummary/core_db.facter.facter.format_contact.html#core_db.facter.facter.format_contact">[docs]</a>
+<span class="k">def</span> <span class="nf">format_contact</span><span class="p">(</span><span class="n">contact</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Format the contact details for the Jinja2 template context.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        contact (dict): The contact details</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: The formatted contact details</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">contact</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">email</span> <span class="o">=</span> <span class="n">contact</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;email&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">email</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">V_EMPTY</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">email</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">email</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">name</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> &lt;</span><span class="si">{</span><span class="n">email</span><span class="si">}</span><span class="s2">&gt;&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="get_facts">
+<a class="viewcode-back" href="../../../technical_reference/core-db/_autosummary/core_db.facter.facter.get_facts.html#core_db.facter.facter.get_facts">[docs]</a>
+<span class="k">def</span> <span class="nf">get_facts</span><span class="p">(</span>  <span class="c1"># noqa: C901</span>
+    <span class="n">client</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">portfolio</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">app</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">branch</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">build</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">zone</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the facts for a given app, portfolio, and zone.</span>
+
+<span class="sd">    TODO: This function is too long and should be refactored.  And, portfolio and app should bo optional.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        client (str): The client FACTS database to query.</span>
+<span class="sd">        portfolio (str): BizApp (Business Applicatino) slug/id</span>
+<span class="sd">        app (str): BizApp Deployment unit slug/id</span>
+<span class="sd">        branch (str | None, optional): Repository branch name of the Deployment Unit. Defaults to None.</span>
+<span class="sd">        build (str | None, optional): Repository Tag or Commit ID of the Deployment Unit. Defaults to None.</span>
+<span class="sd">        zone (str | None, optional): Landing Zone for the Deployment. Defaults to None.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: For any inconsistency</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: The Jinja2 template context dictionary. (a.k.a FACTS)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">branch</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">branch</span> <span class="o">=</span> <span class="n">V_DEFAULT_BRANCH</span>
+
+    <span class="n">app_facts</span> <span class="o">=</span> <span class="n">get_app_facts</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">portfolio</span><span class="p">,</span> <span class="n">app</span><span class="p">,</span> <span class="n">branch</span><span class="p">,</span> <span class="n">build</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">app_facts</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;App facts not found for prn:</span><span class="si">{</span><span class="n">client</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">portfolio</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">app</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">branch</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">build</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+
+    <span class="c1"># If the app facts do not contain a region, use the default region alias</span>
+    <span class="n">region_alias</span> <span class="o">=</span> <span class="n">app_facts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">REGION</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+    <span class="c1"># if environment is not set, try to derrive it from the branch.  But facts ALWAYS come first.</span>
+    <span class="n">environment</span> <span class="o">=</span> <span class="n">app_facts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">ENVIRONMENT</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">branch_region_alias</span> <span class="o">=</span> <span class="n">V_DEFAULT_REGION_ALIAS</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">environment</span><span class="p">:</span>
+        <span class="n">environment</span><span class="p">,</span> <span class="n">branch_region_alias</span> <span class="o">=</span> <span class="n">derrive_environment_from_branch</span><span class="p">(</span><span class="n">branch</span><span class="p">)</span>
+
+    <span class="c1"># FACTS always override user input.  So, don&#39;t use the user input if FACTS are present.</span>
+    <span class="k">if</span> <span class="n">region_alias</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">region_alias</span> <span class="o">=</span> <span class="n">branch_region_alias</span>
+
+    <span class="c1"># If the app doen&#39;t have an environment tag or a region tag, add it</span>
+    <span class="n">app_tags</span> <span class="o">=</span> <span class="n">app_facts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">DD_TAGS</span><span class="p">,</span> <span class="p">{})</span>
+    <span class="k">if</span> <span class="n">TAG_ENVIRONMENT</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">app_tags</span><span class="p">:</span>
+        <span class="n">app_tags</span><span class="p">[</span><span class="n">TAG_ENVIRONMENT</span><span class="p">]</span> <span class="o">=</span> <span class="n">environment</span>
+    <span class="k">if</span> <span class="n">TAG_REGION</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">app_tags</span><span class="p">:</span>
+        <span class="n">app_tags</span><span class="p">[</span><span class="n">TAG_REGION</span><span class="p">]</span> <span class="o">=</span> <span class="n">region_alias</span>
+
+    <span class="n">portfolio_facts</span> <span class="o">=</span> <span class="n">get_portfolio_facts</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">portfolio</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">portfolio_facts</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Portfolio facts not found for </span><span class="si">{</span><span class="n">client</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">portfolio</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s2">&quot;owner&quot;</span> <span class="ow">in</span> <span class="n">portfolio_facts</span> <span class="ow">and</span> <span class="n">TAG_OWNER</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">app_tags</span><span class="p">:</span>
+        <span class="n">app_tags</span><span class="p">[</span><span class="n">TAG_OWNER</span><span class="p">]</span> <span class="o">=</span> <span class="n">format_contact</span><span class="p">(</span><span class="n">portfolio_facts</span><span class="p">[</span><span class="s2">&quot;owner&quot;</span><span class="p">])</span>
+    <span class="k">if</span> <span class="s2">&quot;contacts&quot;</span> <span class="ow">in</span> <span class="n">portfolio_facts</span><span class="p">:</span>
+        <span class="n">app_tags</span><span class="p">[</span><span class="n">TAG_CONTACTS</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">format_contact</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">portfolio_facts</span><span class="p">[</span><span class="s2">&quot;contacts&quot;</span><span class="p">]]</span>
+        <span class="p">)</span>
+
+    <span class="c1"># If a zone is not explicitely provded, we will generate the zone name from the portfolio and environment</span>
+    <span class="c1"># Remember, all &quot;apps/deployments&quot; go inside the same environment of the portfololiw (a.k.a landing zone)</span>
+    <span class="n">zone</span> <span class="o">=</span> <span class="n">app_facts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">ZONE_KEY</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+    <span class="c1"># if the app facts have a zone, use it. It really must. It&#39;s required.</span>
+    <span class="k">if</span> <span class="n">zone</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">zone</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">portfolio</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">environment</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="c1"># If your zone has not been registered, contact DevOps to register it.  Retrieve the facts from the registry.</span>
+    <span class="n">zone_facts</span> <span class="o">=</span> <span class="n">get_zone_facts</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">portfolio</span><span class="p">,</span> <span class="n">zone</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">zone_facts</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">app_facts</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Account or app facts not found for </span><span class="si">{</span><span class="n">client</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">portfolio</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">app</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+
+    <span class="c1"># Merge in the zone tags into the app tags</span>
+    <span class="n">zone_tags</span> <span class="o">=</span> <span class="n">zone_facts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">FACTS_TAGS</span><span class="p">,</span> <span class="p">{})</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">zone_tags</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">app_tags</span><span class="p">:</span>
+            <span class="n">app_tags</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="k">if</span> <span class="n">FACTS_ACCOUNT</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">zone_facts</span> <span class="ow">or</span> <span class="n">FACTS_REGION</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">zone_facts</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Account or region facts not found for </span><span class="si">{</span><span class="n">zone</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Extract account facts and region-specific facts</span>
+    <span class="n">account_facts</span> <span class="o">=</span> <span class="n">zone_facts</span><span class="p">[</span><span class="n">FACTS_ACCOUNT</span><span class="p">]</span>
+    <span class="n">region_facts</span> <span class="o">=</span> <span class="n">zone_facts</span><span class="p">[</span><span class="n">FACTS_REGION</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">region_alias</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">region_facts</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Region </span><span class="si">{</span><span class="n">region_alias</span><span class="si">}</span><span class="s2"> has not been enabled for </span><span class="si">{</span><span class="n">zone</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Merge account facts and region-specific facts into facts dict</span>
+    <span class="n">facts</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">merge</span><span class="o">.</span><span class="n">deep_merge</span><span class="p">(</span><span class="n">account_facts</span><span class="p">,</span> <span class="n">region_facts</span><span class="p">,</span> <span class="n">merge_lists</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Merge app facts into facts dict</span>
+    <span class="n">facts</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">merge</span><span class="o">.</span><span class="n">deep_merge</span><span class="p">(</span><span class="n">facts</span><span class="p">,</span> <span class="n">app_facts</span><span class="p">,</span> <span class="n">merge_lists</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">APPROVERS</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">facts</span><span class="p">:</span>
+        <span class="n">facts</span><span class="p">[</span><span class="n">APPROVERS</span><span class="p">]</span> <span class="o">=</span> <span class="n">portfolio_facts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;approvers&quot;</span><span class="p">,</span> <span class="p">[])</span>
+    <span class="k">if</span> <span class="n">CONTACTS</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">facts</span><span class="p">:</span>
+        <span class="n">facts</span><span class="p">[</span><span class="n">CONTACTS</span><span class="p">]</span> <span class="o">=</span> <span class="n">portfolio_facts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;contacts&quot;</span><span class="p">,</span> <span class="p">[])</span>
+    <span class="k">if</span> <span class="n">OWNER</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">facts</span> <span class="ow">and</span> <span class="s2">&quot;owner&quot;</span> <span class="ow">in</span> <span class="n">portfolio_facts</span><span class="p">:</span>
+        <span class="n">facts</span><span class="p">[</span><span class="n">OWNER</span><span class="p">]</span> <span class="o">=</span> <span class="n">portfolio_facts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;owner&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">facts</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

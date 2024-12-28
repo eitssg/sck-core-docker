@@ -1,0 +1,25 @@
+core\_framework.magic.MagicS3Client
+===================================
+
+.. currentmodule:: core_framework.magic
+
+.. autoclass:: MagicS3Client
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~MagicS3Client.__init__
+      ~MagicS3Client.download_fileobj
+      ~MagicS3Client.put_object
+   
+   

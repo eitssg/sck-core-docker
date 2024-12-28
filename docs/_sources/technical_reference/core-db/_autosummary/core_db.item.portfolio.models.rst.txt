@@ -1,0 +1,31 @@
+core_db.item.portfolio.models
+=============================
+
+.. automodule:: core_db.item.portfolio.models
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      PortfolioModel
+   
+   
+
+   
+   
+   
+
+
+

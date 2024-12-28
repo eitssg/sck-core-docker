@@ -1,0 +1,6 @@
+core\_framework.models.models.generate\_task\_payload
+=====================================================
+
+.. currentmodule:: core_framework.models.models
+
+.. autofunction:: generate_task_payload

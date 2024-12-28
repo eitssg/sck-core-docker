@@ -1,0 +1,6 @@
+core\_api.registry.portfolio.delete\_portfolio\_action
+======================================================
+
+.. currentmodule:: core_api.registry.portfolio
+
+.. autofunction:: delete_portfolio_action

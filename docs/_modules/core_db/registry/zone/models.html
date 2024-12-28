@@ -1,0 +1,366 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>core_db.registry.zone.models &mdash; SCK Core Automation 1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=a3c9731c" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/custom.css?v=45d66dd6" />
+
+  
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=29a6c3e3"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            SCK Core Automation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../user_guide/index.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../developer_guide/index.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../technical_reference/index.html">Technical Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">SCK Core Automation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">core_db.registry.zone.models</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for core_db.registry.zone.models</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; Classes defining the ZoneFacts record model for the core-automation-zones table &quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">re</span>
+
+<span class="kn">from</span> <span class="nn">pynamodb.attributes</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">UnicodeAttribute</span><span class="p">,</span>
+    <span class="n">MapAttribute</span><span class="p">,</span>
+    <span class="n">ListAttribute</span><span class="p">,</span>
+    <span class="n">NumberAttribute</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">core_framework</span> <span class="k">as</span> <span class="nn">util</span>
+
+<span class="kn">from</span> <span class="nn">...constants</span> <span class="kn">import</span> <span class="n">CLIENT_PORTFOLIO_KEY</span><span class="p">,</span> <span class="n">ZONE_KEY</span><span class="p">,</span> <span class="n">ZONE_FACTS</span>
+
+<span class="kn">from</span> <span class="nn">...config</span> <span class="kn">import</span> <span class="n">get_table_name</span>
+
+<span class="kn">from</span> <span class="nn">..models</span> <span class="kn">import</span> <span class="n">RegistryModel</span>
+
+
+<div class="viewcode-block" id="ExtendedMapAttribute">
+<a class="viewcode-back" href="../../../../technical_reference/core-db/_autosummary/core_db.registry.zone.models.ExtendedMapAttribute.html#core_db.registry.zone.models.ExtendedMapAttribute">[docs]</a>
+<span class="k">class</span> <span class="nc">ExtendedMapAttribute</span><span class="p">(</span><span class="n">MapAttribute</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert Keys to CamelCase&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">_convert_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="c1"># Convert lowercase keys to camelCase keys</span>
+        <span class="n">words</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;[-_]&quot;</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+        <span class="n">camel_case_key</span> <span class="o">=</span> <span class="n">words</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">word</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">words</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+        <span class="k">return</span> <span class="n">camel_case_key</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="c1"># Convert lowercase keys to camelCase keys</span>
+        <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_convert_key</span><span class="p">(</span><span class="n">k</span><span class="p">):</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="SecurityAliasFacts">
+<a class="viewcode-back" href="../../../../technical_reference/core-db/_autosummary/core_db.registry.zone.models.SecurityAliasFacts.html#core_db.registry.zone.models.SecurityAliasFacts">[docs]</a>
+<span class="k">class</span> <span class="nc">SecurityAliasFacts</span><span class="p">(</span><span class="n">ExtendedMapAttribute</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Security Aliases</span>
+
+<span class="sd">    { &quot;alias_name&quot;: {&quot;Type&quot;: &quot;&quot;, &quot;Value&quot;: &quot;&quot;, &quot;Description&quot;: &quot;&quot;}}</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        Type (str): The type of alias</span>
+<span class="sd">        Value (str): The value of the alias</span>
+<span class="sd">        Description (str): A description of the alias</span>
+
+<span class="sd">    Security Aliases are created by Security Administrators.  You must have the role &quot;CoreSecurityAdmin&quot; to</span>
+<span class="sd">    be able to modify the SecurityAliasFacts.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">Type</span> <span class="o">=</span> <span class="n">UnicodeAttribute</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;str: The type of alias&quot;&quot;&quot;</span>
+    <span class="n">Value</span> <span class="o">=</span> <span class="n">UnicodeAttribute</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;str: The value of the alias&quot;&quot;&quot;</span>
+    <span class="n">Description</span> <span class="o">=</span> <span class="n">UnicodeAttribute</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;str: A description of the alias&quot;&quot;&quot;</span>
+
+    <span class="n">UserInstantiated</span> <span class="o">=</span> <span class="n">UnicodeAttribute</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="KmsFacts">
+<a class="viewcode-back" href="../../../../technical_reference/core-db/_autosummary/core_db.registry.zone.models.KmsFacts.html#core_db.registry.zone.models.KmsFacts">[docs]</a>
+<span class="k">class</span> <span class="nc">KmsFacts</span><span class="p">(</span><span class="n">ExtendedMapAttribute</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;KMS Keys details</span>
+
+<span class="sd">    A KMS Key is created for each **Zone**.  The KMS Key is used to encrypt/decrypt resources</span>
+<span class="sd">    and data at rest.</span>
+
+<span class="sd">    KmsFacts are created by Security Administrators.  You must have the role &quot;CoreSecurityAdmin&quot; to</span>
+<span class="sd">    be able to modify the KmsFacts.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">AwsAccountId</span> <span class="o">=</span> <span class="n">UnicodeAttribute</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;str: The AWS Account ID where KMS Keys are managed/centralized&quot;&quot;&quot;</span>
+    <span class="n">KmsKeyArn</span> <span class="o">=</span> <span class="n">UnicodeAttribute</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;str: The KMS Key ARN for this Zone&quot;&quot;&quot;</span>
+    <span class="n">KmsKey</span> <span class="o">=</span> <span class="n">UnicodeAttribute</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;str: The KMS Key ID for this Zone&quot;&quot;&quot;</span>
+    <span class="n">DelegateAwsAccountIds</span> <span class="o">=</span> <span class="n">ListAttribute</span><span class="p">(</span><span class="n">of</span><span class="o">=</span><span class="n">UnicodeAttribute</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;list[str]: List of AWS Account IDs that can use the KMS Key&quot;&quot;&quot;</span>
+
+    <span class="n">UserInstantiated</span> <span class="o">=</span> <span class="n">UnicodeAttribute</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="AccountFacts">
+<a class="viewcode-back" href="../../../../technical_reference/core-db/_autosummary/core_db.registry.zone.models.AccountFacts.html#core_db.registry.zone.models.AccountFacts">[docs]</a>
+<span class="k">class</span> <span class="nc">AccountFacts</span><span class="p">(</span><span class="n">ExtendedMapAttribute</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Account Details FACTS describing the AWS Account</span>
+
+<span class="sd">    AccountFacts are created by Network Administrators.  You must have the role &quot;CoreNetworkAdmin&quot; to</span>
+<span class="sd">    be able to modify the AccountFacts.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">Client</span> <span class="o">=</span> <span class="n">UnicodeAttribute</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;str: The client name (AWS Organzation slug. e.g. &quot;acme&quot;)&quot;&quot;&quot;</span>
+    <span class="n">OrganizationalUnit</span> <span class="o">=</span> <span class="n">UnicodeAttribute</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;str: The Organizational Unit&quot;&quot;&quot;</span>
+    <span class="n">AwsAccountId</span> <span class="o">=</span> <span class="n">UnicodeAttribute</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;str: The AWS Account ID&quot;&quot;&quot;</span>
+    <span class="n">AccountName</span> <span class="o">=</span> <span class="n">UnicodeAttribute</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;str: The name of the account&quot;&quot;&quot;</span>
+    <span class="n">Environment</span> <span class="o">=</span> <span class="n">UnicodeAttribute</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;str: The environment&quot;&quot;&quot;</span>
+    <span class="n">Kms</span> <span class="o">=</span> <span class="n">KmsFacts</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;KmsFacts: KMS Key details&quot;&quot;&quot;</span>
+    <span class="n">ResourceNamespace</span> <span class="o">=</span> <span class="n">UnicodeAttribute</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;str: The namespace for the resources&quot;&quot;&quot;</span>
+    <span class="n">VpcAliases</span><span class="p">:</span> <span class="n">MapAttribute</span> <span class="o">=</span> <span class="n">MapAttribute</span><span class="p">(</span><span class="n">of</span><span class="o">=</span><span class="n">UnicodeAttribute</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;dict: VPC Aliases. Aliases are created for VPCs by the Networks pipelines&quot;&quot;&quot;</span>
+    <span class="n">SubnetAliases</span><span class="p">:</span> <span class="n">MapAttribute</span> <span class="o">=</span> <span class="n">MapAttribute</span><span class="p">(</span><span class="n">of</span><span class="o">=</span><span class="n">UnicodeAttribute</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;dict: Subnet Aliases. Aliases are created for Subnets by the Networks pipelines&quot;&quot;&quot;</span>
+    <span class="n">Tags</span><span class="p">:</span> <span class="n">MapAttribute</span> <span class="o">=</span> <span class="n">MapAttribute</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;dict: Tags to merge into the facts for this deployment&quot;&quot;&quot;</span>
+
+    <span class="n">UserInstantiated</span> <span class="o">=</span> <span class="n">UnicodeAttribute</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="ProxyFacts">
+<a class="viewcode-back" href="../../../../technical_reference/core-db/_autosummary/core_db.registry.zone.models.ProxyFacts.html#core_db.registry.zone.models.ProxyFacts">[docs]</a>
+<span class="k">class</span> <span class="nc">ProxyFacts</span><span class="p">(</span><span class="n">ExtendedMapAttribute</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Proxy Details FACTS describing the Proxy information within the Zone</span>
+
+<span class="sd">    Ports are created by Network Administrators.  You must have the role &quot;CoreNetworkAdmin&quot; to</span>
+<span class="sd">    modify the ProxyFacts.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">Host</span> <span class="o">=</span> <span class="n">UnicodeAttribute</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;str: The proxy host. e.g. &quot;proxy.acme.com&quot; &quot;&quot;&quot;</span>
+    <span class="n">Port</span> <span class="o">=</span> <span class="n">UnicodeAttribute</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;str: The proxy port. e.g. 8080 &quot;&quot;&quot;</span>
+    <span class="n">Url</span> <span class="o">=</span> <span class="n">UnicodeAttribute</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;str: The proxy URL. e.g. &quot;http://proxy.acme.com:8080&quot; &quot;&quot;&quot;</span>
+    <span class="n">NoProxy</span> <span class="o">=</span> <span class="n">UnicodeAttribute</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;str: The no proxy list. e.g. &quot;\\*.acme.com,10/8,192.168/16,&quot; &quot;&quot;&quot;</span>
+
+    <span class="n">UserInstantiated</span> <span class="o">=</span> <span class="n">UnicodeAttribute</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="RegionFacts">
+<a class="viewcode-back" href="../../../../technical_reference/core-db/_autosummary/core_db.registry.zone.models.RegionFacts.html#core_db.registry.zone.models.RegionFacts">[docs]</a>
+<span class="k">class</span> <span class="nc">RegionFacts</span><span class="p">(</span><span class="n">ExtendedMapAttribute</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Region FACTS descriging the detailed information for each supported region in the Zone</span>
+
+<span class="sd">    Region FACTS are provided for each region Alias available in the zone.  THe region alias</span>
+<span class="sd">    is a slug name for the region.</span>
+
+<span class="sd">        Examples Include:</span>
+
+<span class="sd">        - us-west-1 -&gt; usw</span>
+<span class="sd">        - us-east-1 -&gt; use</span>
+<span class="sd">        - ap-southeast-1 -&gt; sin</span>
+<span class="sd">        - ap-southeast-2 -&gt; syd</span>
+
+<span class="sd">    When registering RegionFacts, you may do so under any &quot;slug&quot; name you wish as they are user</span>
+<span class="sd">    defined and scopeed to the **Zone.**</span>
+
+<span class="sd">    Regions are created by Network Administrators.  You must have the role &quot;CoreNetworkAdmin&quot; to</span>
+<span class="sd">    be able to modify the RegionFacts.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">AwsRegion</span> <span class="o">=</span> <span class="n">UnicodeAttribute</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;str: The AWS Region&quot;&quot;&quot;</span>
+    <span class="n">AzCount</span> <span class="o">=</span> <span class="n">NumberAttribute</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;int: The number of Availability Zones in the region as defined by the Network Engineer&quot;&quot;&quot;</span>
+    <span class="n">ImageAliases</span><span class="p">:</span> <span class="n">MapAttribute</span> <span class="o">=</span> <span class="n">MapAttribute</span><span class="p">(</span><span class="n">of</span><span class="o">=</span><span class="n">UnicodeAttribute</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;dict[str,str]: Image Aliases. Aliases are created for AMIs by the Images pipelines&quot;&quot;&quot;</span>
+    <span class="n">MinSuccessfulInstancesPercent</span> <span class="o">=</span> <span class="n">NumberAttribute</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;int: The minimum percentage of successful instances required for a deployment in the Zone&quot;&quot;&quot;</span>
+    <span class="n">SecurityAliases</span><span class="p">:</span> <span class="n">MapAttribute</span> <span class="o">=</span> <span class="n">MapAttribute</span><span class="p">(</span>
+        <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">of</span><span class="o">=</span><span class="n">ListAttribute</span><span class="p">(</span><span class="n">of</span><span class="o">=</span><span class="n">SecurityAliasFacts</span><span class="p">)</span>
+    <span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;dict[str,SecurityAliasFacts]: Security Aliases publised by the security team define names for CIDR values. Aliases are created for Security Groups by the Security pipelines&quot;&quot;&quot;</span>
+    <span class="n">SecurityGroupAliases</span><span class="p">:</span> <span class="n">MapAttribute</span> <span class="o">=</span> <span class="n">MapAttribute</span><span class="p">(</span><span class="n">of</span><span class="o">=</span><span class="n">UnicodeAttribute</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;dict[str,str]: Security Group Aliases. Aliases are created for Security Groups by the Security pipelines&quot;&quot;&quot;</span>
+    <span class="n">Proxy</span> <span class="o">=</span> <span class="n">ListAttribute</span><span class="p">(</span><span class="n">of</span><span class="o">=</span><span class="n">ProxyFacts</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;list[ProxyFacts]: Proxy details list of proxy endpoints. (New field - in incubation)&quot;&quot;&quot;</span>
+    <span class="n">ProxyHost</span> <span class="o">=</span> <span class="n">UnicodeAttribute</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;str: The proxy host. e.g. &quot;proxy.acme.com&quot; &quot;&quot;&quot;</span>
+    <span class="n">ProxyPort</span> <span class="o">=</span> <span class="n">NumberAttribute</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;int: The proxy port. e.g. 8080 &quot;&quot;&quot;</span>
+    <span class="n">ProxyUrl</span> <span class="o">=</span> <span class="n">UnicodeAttribute</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;str: The proxy URL. e.g. &quot;http://proxy.acme.com:8080&quot; &quot;&quot;&quot;</span>
+    <span class="n">NoProxy</span> <span class="o">=</span> <span class="n">UnicodeAttribute</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;str: The no proxy list. e.g. &quot;\\*.acme.com,10/8,192.168/16,&quot; &quot;&quot;&quot;</span>
+    <span class="n">NameServers</span> <span class="o">=</span> <span class="n">ListAttribute</span><span class="p">(</span><span class="n">of</span><span class="o">=</span><span class="n">UnicodeAttribute</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;list[str]: List of nameservers for the region&quot;&quot;&quot;</span>
+    <span class="n">Tags</span><span class="p">:</span> <span class="n">MapAttribute</span> <span class="o">=</span> <span class="n">MapAttribute</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;dict: Tags to merge into the facts for this deployment taht can be added to resources&quot;&quot;&quot;</span>
+
+    <span class="n">UserInstantiated</span> <span class="o">=</span> <span class="n">UnicodeAttribute</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="ZoneFacts">
+<a class="viewcode-back" href="../../../../technical_reference/core-db/_autosummary/core_db.registry.zone.models.ZoneFacts.html#core_db.registry.zone.models.ZoneFacts">[docs]</a>
+<span class="k">class</span> <span class="nc">ZoneFacts</span><span class="p">(</span><span class="n">RegistryModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Zone FACTS describe the AwsAccount and the Region details for the Deployment Zone</span>
+
+<span class="sd">    The zone is has a logical name defined by the zone creater and is used by App (deployments)</span>
+<span class="sd">    to define the name of the **Zone** to deploy into.</span>
+
+<span class="sd">    Zones are created by Network Administrators.  You must have the role &quot;CoreNetworkAdmin&quot; to</span>
+<span class="sd">    be able to modify the ZoneFacts.</span>
+
+<span class="sd">    Attributes:</span>
+
+<span class="sd">        ClientPortfolio (str): The client portfolio name</span>
+<span class="sd">        Zone (str): The zone name. Any name to define the one.</span>
+<span class="sd">        AccountFacts (AccountFacts): AWS Account details for this Zone</span>
+<span class="sd">        RegionFacts (dict[str, RegionFacts]): Region details indexed by region alias (slug)</span>
+
+<span class="sd">    Znes are created by Cloud Network Administrators.  You must have the role &quot;CoreNetworkAdmin&quot; to</span>
+<span class="sd">    be able to modify the ZoneFacts.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ZoneFacts.Meta">
+<a class="viewcode-back" href="../../../../technical_reference/core-db/_autosummary/core_db.registry.zone.models.ZoneFacts.html#core_db.registry.zone.models.ZoneFacts.Meta">[docs]</a>
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">table_name</span> <span class="o">=</span> <span class="n">get_table_name</span><span class="p">(</span><span class="n">ZONE_FACTS</span><span class="p">)</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;str: The table name for the ZoneFacts&quot;&quot;&quot;</span>
+        <span class="n">region</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">get_region</span><span class="p">()</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;str: The region for the ZoneFacts&quot;&quot;&quot;</span>
+        <span class="n">host</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">get_dynamodb_host</span><span class="p">()</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;str: The host for the ZoneFacts&quot;&quot;&quot;</span>
+        <span class="n">read_capacity_units</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;int: The read capacity units for the ZoneFacts&quot;&quot;&quot;</span>
+        <span class="n">write_capacity_units</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;int: The write capacity units for the ZoneFacts&quot;&quot;&quot;</span></div>
+
+
+    <span class="n">ClientPortfolio</span> <span class="o">=</span> <span class="n">UnicodeAttribute</span><span class="p">(</span><span class="n">attr_name</span><span class="o">=</span><span class="n">CLIENT_PORTFOLIO_KEY</span><span class="p">,</span> <span class="n">hash_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;str: The client portfolio name&quot;&quot;&quot;</span>
+
+    <span class="n">Zone</span> <span class="o">=</span> <span class="n">UnicodeAttribute</span><span class="p">(</span><span class="n">attr_name</span><span class="o">=</span><span class="n">ZONE_KEY</span><span class="p">,</span> <span class="n">range_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;str: The zone name. Any name to define the one.&quot;&quot;&quot;</span>
+
+    <span class="n">AccountFacts</span> <span class="o">=</span> <span class="n">AccountFacts</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;AccountFacts: AWS Account details for this Zone&quot;&quot;&quot;</span>
+
+    <span class="n">RegionFacts</span><span class="p">:</span> <span class="n">MapAttribute</span> <span class="o">=</span> <span class="n">MapAttribute</span><span class="p">(</span><span class="n">of</span><span class="o">=</span><span class="n">RegionFacts</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;dict[str, RegionFacts]: Region details indexed by region alias (slug)&quot;&quot;&quot;</span>
+
+    <span class="n">UserInstantiated</span> <span class="o">=</span> <span class="n">UnicodeAttribute</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_attribute_class</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">attribute</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_attributes</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">attribute</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">attribute</span><span class="o">.</span><span class="vm">__class__</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

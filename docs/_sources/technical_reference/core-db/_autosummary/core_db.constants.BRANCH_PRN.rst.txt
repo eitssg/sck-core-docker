@@ -1,0 +1,6 @@
+core\_db.constants.BRANCH\_PRN
+==============================
+
+.. currentmodule:: core_db.constants
+
+.. autodata:: BRANCH_PRN

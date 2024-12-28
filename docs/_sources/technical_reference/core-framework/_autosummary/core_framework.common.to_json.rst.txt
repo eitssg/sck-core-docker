@@ -1,0 +1,6 @@
+core\_framework.common.to\_json
+===============================
+
+.. currentmodule:: core_framework.common
+
+.. autofunction:: to_json

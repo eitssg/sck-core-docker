@@ -1,0 +1,6 @@
+core\_api.registry.client.patch\_client\_action
+===============================================
+
+.. currentmodule:: core_api.registry.client
+
+.. autofunction:: patch_client_action

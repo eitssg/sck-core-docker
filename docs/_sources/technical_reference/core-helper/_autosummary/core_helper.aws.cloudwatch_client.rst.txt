@@ -1,0 +1,6 @@
+core\_helper.aws.cloudwatch\_client
+===================================
+
+.. currentmodule:: core_helper.aws
+
+.. autofunction:: cloudwatch_client

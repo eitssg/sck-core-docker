@@ -1,0 +1,43 @@
+core_api.registry.app
+=====================
+
+.. automodule:: core_api.registry.app
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+      create_app_action
+      delete_app_action
+      get_app_action
+      list_app_action
+      patch_app_action
+      update_app_action
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      ApiRegAppActions
+   
+   
+
+   
+   
+   
+
+
+

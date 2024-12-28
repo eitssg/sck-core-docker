@@ -1,0 +1,62 @@
+core\_db.registry.portfolio.models.ContactFacts
+===============================================
+
+.. currentmodule:: core_db.registry.portfolio.models
+
+.. autoclass:: ContactFacts
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ContactFacts.UserInstantiated
+      ~ContactFacts.attr_name
+      ~ContactFacts.attr_type
+      ~ContactFacts.attribute_args
+      ~ContactFacts.attributes
+      ~ContactFacts.email
+      ~ContactFacts.enabled
+      ~ContactFacts.name
+      ~ContactFacts.null
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ContactFacts.__init__
+      ~ContactFacts.add
+      ~ContactFacts.append
+      ~ContactFacts.as_dict
+      ~ContactFacts.between
+      ~ContactFacts.contains
+      ~ContactFacts.delete
+      ~ContactFacts.deserialize
+      ~ContactFacts.does_not_exist
+      ~ContactFacts.exists
+      ~ContactFacts.from_dynamodb_dict
+      ~ContactFacts.from_simple_dict
+      ~ContactFacts.get_attributes
+      ~ContactFacts.get_value
+      ~ContactFacts.is_correctly_typed
+      ~ContactFacts.is_in
+      ~ContactFacts.is_raw
+      ~ContactFacts.is_type
+      ~ContactFacts.prepend
+      ~ContactFacts.remove
+      ~ContactFacts.serialize
+      ~ContactFacts.set
+      ~ContactFacts.startswith
+      ~ContactFacts.to_dynamodb_dict
+      ~ContactFacts.to_simple_dict
+      ~ContactFacts.validate
+   
+   

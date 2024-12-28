@@ -1,0 +1,38 @@
+﻿core_execute.actionlib.actions.aws.empty_bucket
+===============================================
+
+.. automodule:: core_execute.actionlib.actions.aws.empty_bucket
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+      generate_template
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      EmptyBucketAction
+   
+   
+
+   
+   
+   
+
+
+

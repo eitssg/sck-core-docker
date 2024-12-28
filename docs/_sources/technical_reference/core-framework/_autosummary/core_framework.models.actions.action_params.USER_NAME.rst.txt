@@ -1,0 +1,6 @@
+core\_framework.models.actions.action\_params.USER\_NAME
+========================================================
+
+.. currentmodule:: core_framework.models.actions.action_params
+
+.. autodata:: USER_NAME

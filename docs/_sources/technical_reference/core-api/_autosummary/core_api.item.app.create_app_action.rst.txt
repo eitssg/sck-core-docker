@@ -1,0 +1,6 @@
+core\_api.item.app.create\_app\_action
+======================================
+
+.. currentmodule:: core_api.item.app
+
+.. autofunction:: create_app_action

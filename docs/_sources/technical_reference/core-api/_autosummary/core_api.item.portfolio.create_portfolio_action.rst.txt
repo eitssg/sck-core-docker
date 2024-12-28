@@ -1,0 +1,6 @@
+core\_api.item.portfolio.create\_portfolio\_action
+==================================================
+
+.. currentmodule:: core_api.item.portfolio
+
+.. autofunction:: create_portfolio_action

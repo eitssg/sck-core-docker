@@ -1,0 +1,69 @@
+core\_framework.models.deployspec.ActionSpec
+============================================
+
+.. currentmodule:: core_framework.models.deployspec
+
+.. autoclass:: ActionSpec
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ActionSpec.model_computed_fields
+      ~ActionSpec.model_config
+      ~ActionSpec.model_extra
+      ~ActionSpec.model_fields
+      ~ActionSpec.model_fields_set
+      ~ActionSpec.label
+      ~ActionSpec.type
+      ~ActionSpec.action
+      ~ActionSpec.scope
+      ~ActionSpec.params
+      ~ActionSpec.depends_on
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ActionSpec.__init__
+      ~ActionSpec.construct
+      ~ActionSpec.copy
+      ~ActionSpec.dict
+      ~ActionSpec.from_orm
+      ~ActionSpec.get_exucutor_list
+      ~ActionSpec.get_scope_list
+      ~ActionSpec.get_type_list
+      ~ActionSpec.json
+      ~ActionSpec.model_construct
+      ~ActionSpec.model_copy
+      ~ActionSpec.model_dump
+      ~ActionSpec.model_dump_json
+      ~ActionSpec.model_json_schema
+      ~ActionSpec.model_parametrized_name
+      ~ActionSpec.model_post_init
+      ~ActionSpec.model_rebuild
+      ~ActionSpec.model_validate
+      ~ActionSpec.model_validate_json
+      ~ActionSpec.model_validate_strings
+      ~ActionSpec.parse_file
+      ~ActionSpec.parse_obj
+      ~ActionSpec.parse_raw
+      ~ActionSpec.schema
+      ~ActionSpec.schema_json
+      ~ActionSpec.update_forward_refs
+      ~ActionSpec.validate
+      ~ActionSpec.validate_action_type
+      ~ActionSpec.validate_depends_on
+      ~ActionSpec.validate_depends_on_labels
+      ~ActionSpec.validate_scope
+   
+   

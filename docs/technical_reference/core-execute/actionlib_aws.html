@@ -1,0 +1,196 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>actionlib_aws &mdash; SCK Core Automation 1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a3c9731c" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=45d66dd6" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=29a6c3e3"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="core_execute.actionlib.actions.aws.copy_image" href="_autosummary/core_execute.actionlib.actions.aws.copy_image.html" />
+    <link rel="prev" title="Actions Library" href="actions_library.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            SCK Core Automation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/index.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/index.html">Developer Guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Technical Reference Guide</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../modules.html">Modules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../core-logging/core-logging.html">core-logging</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../core-framework/core-framework.html">core-framework</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../core-db/core-db.html">core-db</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../core-helper/core-helper.html">core-helper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../core-renderer/core-renderer.html">core-renderer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../core-component-compiler/core-component-compiler.html">core-component-compiler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../core-deployspec-compiler/core-deployspec-compiler.html">core-deployspec-compiler</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="core-execute.html">core-execute</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="actions_library.html">Actions Library</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../core-organization/core-organization.html">core-organization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../core-runner/core-runner.html">core-runner</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../core-invoker/core-invoker.html">core-invoker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../core-report/core-report.html">core-report</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../core-api-auth/core-api-auth.html">core-api-auth</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../core-api/core-api.html">core-api</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../core-codecommit-listener/core-codecommit-listener.html">core-codecommit-listener</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../core-automation/core-automation.html">core-automation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../core-db/db_schema.html">Database Schema</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">SCK Core Automation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Technical Reference Guide</a></li>
+          <li class="breadcrumb-item"><a href="../modules.html">Modules</a></li>
+          <li class="breadcrumb-item"><a href="core-execute.html">core-execute</a></li>
+          <li class="breadcrumb-item"><a href="actions_library.html">Actions Library</a></li>
+      <li class="breadcrumb-item active">actionlib_aws</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/technical_reference/core-execute/actionlib_aws.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="actionlib-aws">
+<span id="id1"></span><h1>actionlib_aws<a class="headerlink" href="#actionlib-aws" title="Link to this heading"></a></h1>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="_autosummary/core_execute.actionlib.actions.aws.copy_image.html#module-core_execute.actionlib.actions.aws.copy_image" title="core_execute.actionlib.actions.aws.copy_image"><code class="xref py py-obj docutils literal notranslate"><span class="pre">core_execute.actionlib.actions.aws.copy_image</span></code></a></p></td>
+<td><p>Copy an AMI from one region to another with encryption</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="_autosummary/core_execute.actionlib.actions.aws.create_cloud_front_invalidation.html#module-core_execute.actionlib.actions.aws.create_cloud_front_invalidation" title="core_execute.actionlib.actions.aws.create_cloud_front_invalidation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">core_execute.actionlib.actions.aws.create_cloud_front_invalidation</span></code></a></p></td>
+<td><p>Create CloudFront invalidation action to clear the cache</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="_autosummary/core_execute.actionlib.actions.aws.create_image.html#module-core_execute.actionlib.actions.aws.create_image" title="core_execute.actionlib.actions.aws.create_image"><code class="xref py py-obj docutils literal notranslate"><span class="pre">core_execute.actionlib.actions.aws.create_image</span></code></a></p></td>
+<td><p>Create an Image of an EC2 instance</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="_autosummary/core_execute.actionlib.actions.aws.create_stack.html#module-core_execute.actionlib.actions.aws.create_stack" title="core_execute.actionlib.actions.aws.create_stack"><code class="xref py py-obj docutils literal notranslate"><span class="pre">core_execute.actionlib.actions.aws.create_stack</span></code></a></p></td>
+<td><p>Deploy a Cloudformation stack</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="_autosummary/core_execute.actionlib.actions.aws.delete_ecr_repository.html#module-core_execute.actionlib.actions.aws.delete_ecr_repository" title="core_execute.actionlib.actions.aws.delete_ecr_repository"><code class="xref py py-obj docutils literal notranslate"><span class="pre">core_execute.actionlib.actions.aws.delete_ecr_repository</span></code></a></p></td>
+<td><p>Delete an ECR repository</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="_autosummary/core_execute.actionlib.actions.aws.delete_image.html#module-core_execute.actionlib.actions.aws.delete_image" title="core_execute.actionlib.actions.aws.delete_image"><code class="xref py py-obj docutils literal notranslate"><span class="pre">core_execute.actionlib.actions.aws.delete_image</span></code></a></p></td>
+<td><p>Delete an image and its associated snapshots</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="_autosummary/core_execute.actionlib.actions.aws.delete_security_group_enis.html#module-core_execute.actionlib.actions.aws.delete_security_group_enis" title="core_execute.actionlib.actions.aws.delete_security_group_enis"><code class="xref py py-obj docutils literal notranslate"><span class="pre">core_execute.actionlib.actions.aws.delete_security_group_enis</span></code></a></p></td>
+<td><p>Delete ENIs attached to a security group</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="_autosummary/core_execute.actionlib.actions.aws.delete_stack.html#module-core_execute.actionlib.actions.aws.delete_stack" title="core_execute.actionlib.actions.aws.delete_stack"><code class="xref py py-obj docutils literal notranslate"><span class="pre">core_execute.actionlib.actions.aws.delete_stack</span></code></a></p></td>
+<td><p>Teardown or delete a CloudFormation stack</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="_autosummary/core_execute.actionlib.actions.aws.delete_user.html#module-core_execute.actionlib.actions.aws.delete_user" title="core_execute.actionlib.actions.aws.delete_user"><code class="xref py py-obj docutils literal notranslate"><span class="pre">core_execute.actionlib.actions.aws.delete_user</span></code></a></p></td>
+<td><p>Delete a user from an AWS IAM account</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="_autosummary/core_execute.actionlib.actions.aws.duplicate_image_to_account.html#module-core_execute.actionlib.actions.aws.duplicate_image_to_account" title="core_execute.actionlib.actions.aws.duplicate_image_to_account"><code class="xref py py-obj docutils literal notranslate"><span class="pre">core_execute.actionlib.actions.aws.duplicate_image_to_account</span></code></a></p></td>
+<td><p>Duplicate an Image and copy it to one ore more accounts</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="_autosummary/core_execute.actionlib.actions.aws.empty_bucket.html#module-core_execute.actionlib.actions.aws.empty_bucket" title="core_execute.actionlib.actions.aws.empty_bucket"><code class="xref py py-obj docutils literal notranslate"><span class="pre">core_execute.actionlib.actions.aws.empty_bucket</span></code></a></p></td>
+<td><p>Empty and S3 bucket</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="_autosummary/core_execute.actionlib.actions.aws.get_stack_outputs.html#module-core_execute.actionlib.actions.aws.get_stack_outputs" title="core_execute.actionlib.actions.aws.get_stack_outputs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">core_execute.actionlib.actions.aws.get_stack_outputs</span></code></a></p></td>
+<td><p>Get the outputs of a CloudFormation stack</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="_autosummary/core_execute.actionlib.actions.aws.get_stack_references.html#module-core_execute.actionlib.actions.aws.get_stack_references" title="core_execute.actionlib.actions.aws.get_stack_references"><code class="xref py py-obj docutils literal notranslate"><span class="pre">core_execute.actionlib.actions.aws.get_stack_references</span></code></a></p></td>
+<td><p>Gets the references to a stack output export</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="_autosummary/core_execute.actionlib.actions.aws.put_event.html#module-core_execute.actionlib.actions.aws.put_event" title="core_execute.actionlib.actions.aws.put_event"><code class="xref py py-obj docutils literal notranslate"><span class="pre">core_execute.actionlib.actions.aws.put_event</span></code></a></p></td>
+<td><p>Record an event in the database</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="_autosummary/core_execute.actionlib.actions.aws.put_metric_data.html#module-core_execute.actionlib.actions.aws.put_metric_data" title="core_execute.actionlib.actions.aws.put_metric_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">core_execute.actionlib.actions.aws.put_metric_data</span></code></a></p></td>
+<td><p>Record metric data in AWS CloudWatch</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="_autosummary/core_execute.actionlib.actions.aws.share_image.html#module-core_execute.actionlib.actions.aws.share_image" title="core_execute.actionlib.actions.aws.share_image"><code class="xref py py-obj docutils literal notranslate"><span class="pre">core_execute.actionlib.actions.aws.share_image</span></code></a></p></td>
+<td><p>Share an image with other accounts</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="_autosummary/core_execute.actionlib.actions.aws.unprotect_elb.html#module-core_execute.actionlib.actions.aws.unprotect_elb" title="core_execute.actionlib.actions.aws.unprotect_elb"><code class="xref py py-obj docutils literal notranslate"><span class="pre">core_execute.actionlib.actions.aws.unprotect_elb</span></code></a></p></td>
+<td><p>Remove ELB protection so it can be deleted</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="_autosummary/core_execute.actionlib.actions.aws.upload_context.html#module-core_execute.actionlib.actions.aws.upload_context" title="core_execute.actionlib.actions.aws.upload_context"><code class="xref py py-obj docutils literal notranslate"><span class="pre">core_execute.actionlib.actions.aws.upload_context</span></code></a></p></td>
+<td><p>Upload the Jinja2 Render context to the appropriate S3 bucket</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="actions_library.html" class="btn btn-neutral float-left" title="Actions Library" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="_autosummary/core_execute.actionlib.actions.aws.copy_image.html" class="btn btn-neutral float-right" title="core_execute.actionlib.actions.aws.copy_image" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

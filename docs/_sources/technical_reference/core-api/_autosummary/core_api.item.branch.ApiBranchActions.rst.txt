@@ -1,0 +1,31 @@
+core\_api.item.branch.ApiBranchActions
+======================================
+
+.. currentmodule:: core_api.item.branch
+
+.. autoclass:: ApiBranchActions
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ApiBranchActions.__init__
+      ~ApiBranchActions.create
+      ~ApiBranchActions.delete
+      ~ApiBranchActions.get
+      ~ApiBranchActions.list
+      ~ApiBranchActions.patch
+      ~ApiBranchActions.update
+      ~ApiBranchActions.validate_date
+      ~ApiBranchActions.validate_prn
+   
+   

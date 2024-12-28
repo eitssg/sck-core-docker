@@ -1,0 +1,65 @@
+core\_db.registry.portfolio.models.PortfolioFacts
+=================================================
+
+.. currentmodule:: core_db.registry.portfolio.models
+
+.. autoclass:: PortfolioFacts
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~PortfolioFacts.UserInstantiated
+      ~PortfolioFacts.approvers
+      ~PortfolioFacts.attributes
+      ~PortfolioFacts.bizapp
+      ~PortfolioFacts.client
+      ~PortfolioFacts.contacts
+      ~PortfolioFacts.owner
+      ~PortfolioFacts.portfolio
+      ~PortfolioFacts.project
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~PortfolioFacts.__init__
+      ~PortfolioFacts.batch_get
+      ~PortfolioFacts.batch_write
+      ~PortfolioFacts.count
+      ~PortfolioFacts.create_table
+      ~PortfolioFacts.delete
+      ~PortfolioFacts.delete_table
+      ~PortfolioFacts.describe_table
+      ~PortfolioFacts.deserialize
+      ~PortfolioFacts.exists
+      ~PortfolioFacts.from_dynamodb_dict
+      ~PortfolioFacts.from_raw_data
+      ~PortfolioFacts.from_simple_dict
+      ~PortfolioFacts.get
+      ~PortfolioFacts.get_attributes
+      ~PortfolioFacts.get_delete_kwargs_from_instance
+      ~PortfolioFacts.get_operation_kwargs_from_class
+      ~PortfolioFacts.get_save_kwargs_from_instance
+      ~PortfolioFacts.get_update_kwargs_from_instance
+      ~PortfolioFacts.query
+      ~PortfolioFacts.refresh
+      ~PortfolioFacts.save
+      ~PortfolioFacts.scan
+      ~PortfolioFacts.serialize
+      ~PortfolioFacts.to_dynamodb_dict
+      ~PortfolioFacts.to_simple_dict
+      ~PortfolioFacts.update
+      ~PortfolioFacts.update_local_version_attribute
+      ~PortfolioFacts.update_ttl
+   
+   

@@ -1,0 +1,6 @@
+core\_api.registry.app.delete\_app\_action
+==========================================
+
+.. currentmodule:: core_api.registry.app
+
+.. autofunction:: delete_app_action

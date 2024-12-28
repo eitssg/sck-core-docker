@@ -1,0 +1,6 @@
+core\_db.facter.facter.format\_contact
+======================================
+
+.. currentmodule:: core_db.facter.facter
+
+.. autofunction:: format_contact

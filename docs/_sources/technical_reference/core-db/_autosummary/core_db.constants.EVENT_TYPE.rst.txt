@@ -1,0 +1,6 @@
+core\_db.constants.EVENT\_TYPE
+==============================
+
+.. currentmodule:: core_db.constants
+
+.. autodata:: EVENT_TYPE

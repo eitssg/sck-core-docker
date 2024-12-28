@@ -1,0 +1,385 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>core_logging.log_classes.CoreLoggerHandler &mdash; SCK Core Automation 1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a3c9731c" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=45d66dd6" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=29a6c3e3"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="core_logging.log_interface" href="core_logging.log_interface.html" />
+    <link rel="prev" title="core_logging.log_classes.CoreLogger" href="core_logging.log_classes.CoreLogger.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            SCK Core Automation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../user_guide/index.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developer_guide/index.html">Developer Guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Technical Reference Guide</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../modules.html">Modules</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../core-logging.html">core-logging</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../core-logging.html#log-classes">Log Classes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../core-logging.html#log-functions">Log functions</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-framework/core-framework.html">core-framework</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-db/core-db.html">core-db</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-helper/core-helper.html">core-helper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-renderer/core-renderer.html">core-renderer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-component-compiler/core-component-compiler.html">core-component-compiler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-deployspec-compiler/core-deployspec-compiler.html">core-deployspec-compiler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-execute/core-execute.html">core-execute</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-organization/core-organization.html">core-organization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-runner/core-runner.html">core-runner</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-invoker/core-invoker.html">core-invoker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-report/core-report.html">core-report</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-api-auth/core-api-auth.html">core-api-auth</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-api/core-api.html">core-api</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-codecommit-listener/core-codecommit-listener.html">core-codecommit-listener</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-automation/core-automation.html">core-automation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../core-db/db_schema.html">Database Schema</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SCK Core Automation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Technical Reference Guide</a></li>
+          <li class="breadcrumb-item"><a href="../../modules.html">Modules</a></li>
+          <li class="breadcrumb-item"><a href="../core-logging.html">core-logging</a></li>
+          <li class="breadcrumb-item"><a href="core_logging.log_classes.html">core_logging.log_classes</a></li>
+      <li class="breadcrumb-item active">core_logging.log_classes.CoreLoggerHandler</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/technical_reference/core-logging/_autosummary/core_logging.log_classes.CoreLoggerHandler.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="core-logging-log-classes-coreloggerhandler">
+<h1>core_logging.log_classes.CoreLoggerHandler<a class="headerlink" href="#core-logging-log-classes-coreloggerhandler" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="core_logging.log_classes.CoreLoggerHandler">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">core_logging.log_classes.</span></span><span class="sig-name descname"><span class="pre">CoreLoggerHandler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/core_logging/log_classes.html#CoreLoggerHandler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core_logging.log_classes.CoreLoggerHandler" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Handler</span></code></p>
+<p>This is the core logging handler that does special things with messages and arguments.</p>
+<p>There are two types of formatters used by this handler.  The CoreLogJsonFormatter and the CoreLogTextFormatter.</p>
+<p>Which formatter is used is determined by the LOG_AS_JSON environment variable.  If it’s set to ‘true’ (case insensitive),
+then the CoreLogJsonFormatter is used.</p>
+<p class="rubric">Attributes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">name</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">formatter</span></code></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code>(name, **kwargs)</p></td>
+<td><p>Initialize a new instance of the CoreLoggerHandler class.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#core_logging.log_classes.CoreLoggerHandler.acquire" title="core_logging.log_classes.CoreLoggerHandler.acquire"><code class="xref py py-obj docutils literal notranslate"><span class="pre">acquire</span></code></a>()</p></td>
+<td><p>Acquire the I/O thread lock.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#core_logging.log_classes.CoreLoggerHandler.addFilter" title="core_logging.log_classes.CoreLoggerHandler.addFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">addFilter</span></code></a>(filter)</p></td>
+<td><p>Add the specified filter to this handler.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#core_logging.log_classes.CoreLoggerHandler.add_details" title="core_logging.log_classes.CoreLoggerHandler.add_details"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_details</span></code></a>(record, data)</p></td>
+<td><p>Add the &quot;Details&quot; property to the fields.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#core_logging.log_classes.CoreLoggerHandler.close" title="core_logging.log_classes.CoreLoggerHandler.close"><code class="xref py py-obj docutils literal notranslate"><span class="pre">close</span></code></a>()</p></td>
+<td><p>Tidy up any resources used by the handler.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#core_logging.log_classes.CoreLoggerHandler.createLock" title="core_logging.log_classes.CoreLoggerHandler.createLock"><code class="xref py py-obj docutils literal notranslate"><span class="pre">createLock</span></code></a>()</p></td>
+<td><p>Acquire a thread lock for serializing access to the underlying I/O.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#core_logging.log_classes.CoreLoggerHandler.emit" title="core_logging.log_classes.CoreLoggerHandler.emit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">emit</span></code></a>(record)</p></td>
+<td><p>Emit the log message to the console.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#core_logging.log_classes.CoreLoggerHandler.filter" title="core_logging.log_classes.CoreLoggerHandler.filter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">filter</span></code></a>(record)</p></td>
+<td><p>Determine if a record is loggable by consulting all the filters.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#core_logging.log_classes.CoreLoggerHandler.flush" title="core_logging.log_classes.CoreLoggerHandler.flush"><code class="xref py py-obj docutils literal notranslate"><span class="pre">flush</span></code></a>()</p></td>
+<td><p>Ensure all logging output has been flushed.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#core_logging.log_classes.CoreLoggerHandler.format" title="core_logging.log_classes.CoreLoggerHandler.format"><code class="xref py py-obj docutils literal notranslate"><span class="pre">format</span></code></a>(record)</p></td>
+<td><p>Format the specified record.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_name</span></code>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#core_logging.log_classes.CoreLoggerHandler.handle" title="core_logging.log_classes.CoreLoggerHandler.handle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">handle</span></code></a>(record)</p></td>
+<td><p>Conditionally emit the specified logging record.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#core_logging.log_classes.CoreLoggerHandler.handleError" title="core_logging.log_classes.CoreLoggerHandler.handleError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">handleError</span></code></a>(record)</p></td>
+<td><p>Handle errors which occur during an emit() call.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#core_logging.log_classes.CoreLoggerHandler.release" title="core_logging.log_classes.CoreLoggerHandler.release"><code class="xref py py-obj docutils literal notranslate"><span class="pre">release</span></code></a>()</p></td>
+<td><p>Release the I/O thread lock.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#core_logging.log_classes.CoreLoggerHandler.removeFilter" title="core_logging.log_classes.CoreLoggerHandler.removeFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">removeFilter</span></code></a>(filter)</p></td>
+<td><p>Remove the specified filter from this handler.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#core_logging.log_classes.CoreLoggerHandler.replace_holders" title="core_logging.log_classes.CoreLoggerHandler.replace_holders"><code class="xref py py-obj docutils literal notranslate"><span class="pre">replace_holders</span></code></a>(message, args)</p></td>
+<td><p>Replace the %s place holders in the message with the values in the args tuple.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#core_logging.log_classes.CoreLoggerHandler.setFormatter" title="core_logging.log_classes.CoreLoggerHandler.setFormatter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setFormatter</span></code></a>(fmt)</p></td>
+<td><p>Set the formatter for this handler.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#core_logging.log_classes.CoreLoggerHandler.setLevel" title="core_logging.log_classes.CoreLoggerHandler.setLevel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setLevel</span></code></a>(level)</p></td>
+<td><p>Set the logging level of this handler.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_name</span></code>(name)</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="core_logging.log_classes.CoreLoggerHandler.acquire">
+<span class="sig-name descname"><span class="pre">acquire</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#core_logging.log_classes.CoreLoggerHandler.acquire" title="Link to this definition"></a></dt>
+<dd><p>Acquire the I/O thread lock.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_logging.log_classes.CoreLoggerHandler.addFilter">
+<span class="sig-name descname"><span class="pre">addFilter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#core_logging.log_classes.CoreLoggerHandler.addFilter" title="Link to this definition"></a></dt>
+<dd><p>Add the specified filter to this handler.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_logging.log_classes.CoreLoggerHandler.add_details">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add_details</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">LogRecord</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../../_modules/core_logging/log_classes.html#CoreLoggerHandler.add_details"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core_logging.log_classes.CoreLoggerHandler.add_details" title="Link to this definition"></a></dt>
+<dd><p>Add the “Details” property to the fields.  This is called by the emit() method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>record</strong> (<em>logging.LogRecord</em>) – The log record object.</p></li>
+<li><p><strong>data</strong> (<em>dict</em>) – The dictionary of data to add to the record object.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_logging.log_classes.CoreLoggerHandler.close">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#core_logging.log_classes.CoreLoggerHandler.close" title="Link to this definition"></a></dt>
+<dd><p>Tidy up any resources used by the handler.</p>
+<p>This version removes the handler from an internal map of handlers,
+_handlers, which is used for handler lookup by name. Subclasses
+should ensure that this gets called from overridden close()
+methods.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_logging.log_classes.CoreLoggerHandler.createLock">
+<span class="sig-name descname"><span class="pre">createLock</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#core_logging.log_classes.CoreLoggerHandler.createLock" title="Link to this definition"></a></dt>
+<dd><p>Acquire a thread lock for serializing access to the underlying I/O.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_logging.log_classes.CoreLoggerHandler.emit">
+<span class="sig-name descname"><span class="pre">emit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../../_modules/core_logging/log_classes.html#CoreLoggerHandler.emit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core_logging.log_classes.CoreLoggerHandler.emit" title="Link to this definition"></a></dt>
+<dd><p>Emit the log message to the console.  This is the method that is called by the logging framework to output the log message.</p>
+<p>This is almost identicl to the standard emit() however there is some special handling for STATUS messages.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>record</strong> (<em>dict</em>) – The log record object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_logging.log_classes.CoreLoggerHandler.filter">
+<span class="sig-name descname"><span class="pre">filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#core_logging.log_classes.CoreLoggerHandler.filter" title="Link to this definition"></a></dt>
+<dd><p>Determine if a record is loggable by consulting all the filters.</p>
+<p>The default is to allow the record to be logged; any filter can veto
+this by returning a false value.
+If a filter attached to a handler returns a log record instance,
+then that instance is used in place of the original log record in
+any further processing of the event by that handler.
+If a filter returns any other true value, the original log record
+is used in any further processing of the event by that handler.</p>
+<p>If none of the filters return false values, this method returns
+a log record.
+If any of the filters return a false value, this method returns
+a false value.</p>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in version 3.2: </span>Allow filters to be just callables.</p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in version 3.12: </span>Allow filters to return a LogRecord instead of
+modifying it in place.</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_logging.log_classes.CoreLoggerHandler.flush">
+<span class="sig-name descname"><span class="pre">flush</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#core_logging.log_classes.CoreLoggerHandler.flush" title="Link to this definition"></a></dt>
+<dd><p>Ensure all logging output has been flushed.</p>
+<p>This version does nothing and is intended to be implemented by
+subclasses.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_logging.log_classes.CoreLoggerHandler.format">
+<span class="sig-name descname"><span class="pre">format</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#core_logging.log_classes.CoreLoggerHandler.format" title="Link to this definition"></a></dt>
+<dd><p>Format the specified record.</p>
+<p>If a formatter is set, use it. Otherwise, use the default formatter
+for the module.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_logging.log_classes.CoreLoggerHandler.handle">
+<span class="sig-name descname"><span class="pre">handle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#core_logging.log_classes.CoreLoggerHandler.handle" title="Link to this definition"></a></dt>
+<dd><p>Conditionally emit the specified logging record.</p>
+<p>Emission depends on filters which may have been added to the handler.
+Wrap the actual emission of the record with acquisition/release of
+the I/O thread lock.</p>
+<p>Returns an instance of the log record that was emitted
+if it passed all filters, otherwise a false value is returned.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_logging.log_classes.CoreLoggerHandler.handleError">
+<span class="sig-name descname"><span class="pre">handleError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#core_logging.log_classes.CoreLoggerHandler.handleError" title="Link to this definition"></a></dt>
+<dd><p>Handle errors which occur during an emit() call.</p>
+<p>This method should be called from handlers when an exception is
+encountered during an emit() call. If raiseExceptions is false,
+exceptions get silently ignored. This is what is mostly wanted
+for a logging system - most users will not care about errors in
+the logging system, they are more interested in application errors.
+You could, however, replace this with a custom handler if you wish.
+The record which was being processed is passed in to this method.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_logging.log_classes.CoreLoggerHandler.release">
+<span class="sig-name descname"><span class="pre">release</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#core_logging.log_classes.CoreLoggerHandler.release" title="Link to this definition"></a></dt>
+<dd><p>Release the I/O thread lock.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_logging.log_classes.CoreLoggerHandler.removeFilter">
+<span class="sig-name descname"><span class="pre">removeFilter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filter</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#core_logging.log_classes.CoreLoggerHandler.removeFilter" title="Link to this definition"></a></dt>
+<dd><p>Remove the specified filter from this handler.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_logging.log_classes.CoreLoggerHandler.replace_holders">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">replace_holders</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../../_modules/core_logging/log_classes.html#CoreLoggerHandler.replace_holders"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#core_logging.log_classes.CoreLoggerHandler.replace_holders" title="Link to this definition"></a></dt>
+<dd><p>Replace the %s place holders in the message with the values in the args tuple.  If there are more values in the args tuple
+than there are %s place holders in the message, then the remaining values are returned in a list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<em>str</em>) – The message to replace the place holders in.</p></li>
+<li><p><strong>args</strong> (<em>tuple</em>) – The values to replace the place holders with.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A tuple of the message and a list of unused values.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_logging.log_classes.CoreLoggerHandler.setFormatter">
+<span class="sig-name descname"><span class="pre">setFormatter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fmt</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#core_logging.log_classes.CoreLoggerHandler.setFormatter" title="Link to this definition"></a></dt>
+<dd><p>Set the formatter for this handler.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core_logging.log_classes.CoreLoggerHandler.setLevel">
+<span class="sig-name descname"><span class="pre">setLevel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">level</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#core_logging.log_classes.CoreLoggerHandler.setLevel" title="Link to this definition"></a></dt>
+<dd><p>Set the logging level of this handler.  level must be an int or a str.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="core_logging.log_classes.CoreLogger.html" class="btn btn-neutral float-left" title="core_logging.log_classes.CoreLogger" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="core_logging.log_interface.html" class="btn btn-neutral float-right" title="core_logging.log_interface" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

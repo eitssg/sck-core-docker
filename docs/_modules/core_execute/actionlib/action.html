@@ -1,0 +1,792 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>core_execute.actionlib.action &mdash; SCK Core Automation 1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a3c9731c" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=45d66dd6" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=29a6c3e3"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            SCK Core Automation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_guide/index.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developer_guide/index.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../technical_reference/index.html">Technical Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SCK Core Automation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">core_execute.actionlib.action</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for core_execute.actionlib.action</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Defines the BasActions abstrction for all actions.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Self</span>
+<span class="kn">import</span> <span class="nn">traceback</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">enum</span>
+<span class="kn">import</span> <span class="nn">core_logging</span> <span class="k">as</span> <span class="nn">log</span>
+
+<span class="kn">from</span> <span class="nn">core_framework.models</span> <span class="kn">import</span> <span class="n">ActionDefinition</span><span class="p">,</span> <span class="n">DeploymentDetails</span><span class="p">,</span> <span class="n">ActionParams</span>
+
+<span class="kn">from</span> <span class="nn">core_renderer</span> <span class="kn">import</span> <span class="n">Jinja2Renderer</span>
+
+<span class="kn">from</span> <span class="nn">core_framework.status</span> <span class="kn">import</span> <span class="n">RELEASE_IN_PROGRESS</span>
+
+<span class="kn">from</span> <span class="nn">core_db.dbhelper</span> <span class="kn">import</span> <span class="n">update_status</span><span class="p">,</span> <span class="n">update_item</span>
+
+
+<span class="n">ACT_LABEL</span> <span class="o">=</span> <span class="s2">&quot;Label&quot;</span>
+<span class="n">ACT_TYPE</span> <span class="o">=</span> <span class="s2">&quot;Type&quot;</span>
+<span class="n">ACT_CONDITION</span> <span class="o">=</span> <span class="s2">&quot;Condition&quot;</span>
+<span class="n">ACT_BEFORE</span> <span class="o">=</span> <span class="s2">&quot;Before&quot;</span>
+<span class="n">ACT_AFTER</span> <span class="o">=</span> <span class="s2">&quot;After&quot;</span>
+<span class="n">ACT_PARAMS</span> <span class="o">=</span> <span class="s2">&quot;Params&quot;</span>
+<span class="n">ACT_LIFECYCLE_HOOKS</span> <span class="o">=</span> <span class="s2">&quot;LifecycleHooks&quot;</span>
+<span class="n">ACT_SAVE_OUTPUTS</span> <span class="o">=</span> <span class="s2">&quot;SaveOutputs&quot;</span>
+<span class="n">ACT_DEPENDS_ON</span> <span class="o">=</span> <span class="s2">&quot;DependsOn&quot;</span>
+<span class="n">ACT_STATUS_HOOOK</span> <span class="o">=</span> <span class="s2">&quot;StatusHook&quot;</span>
+
+<span class="n">STATUS_CODE</span> <span class="o">=</span> <span class="s2">&quot;StatusCode&quot;</span>
+<span class="n">STATUS_REASON</span> <span class="o">=</span> <span class="s2">&quot;StatusReason&quot;</span>
+
+<span class="n">LC_TYPE_STATUS</span> <span class="o">=</span> <span class="s2">&quot;status&quot;</span>
+<span class="n">LC_HOOK_PENDING</span> <span class="o">=</span> <span class="s2">&quot;Pending&quot;</span>
+<span class="n">LC_HOOK_FAILED</span> <span class="o">=</span> <span class="s2">&quot;Failed&quot;</span>
+<span class="n">LC_HOOK_RUNNING</span> <span class="o">=</span> <span class="s2">&quot;Running&quot;</span>
+<span class="n">LC_HOOK_COMPLETE</span> <span class="o">=</span> <span class="s2">&quot;Complete&quot;</span>
+
+<span class="n">NO_DEFAULT_PROVIDED</span> <span class="o">=</span> <span class="s2">&quot;_!NO!DEFAULT!PROVIDED!_&quot;</span>
+
+
+<div class="viewcode-block" id="StatusCode">
+<a class="viewcode-back" href="../../../technical_reference/core-execute/_autosummary/core_execute.actionlib.action.StatusCode.html#core_execute.actionlib.action.StatusCode">[docs]</a>
+<span class="k">class</span> <span class="nc">StatusCode</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Enum for action status codes.&quot;&quot;&quot;</span>
+
+    <span class="n">PENDING</span> <span class="o">=</span> <span class="s2">&quot;pending&quot;</span>
+    <span class="n">RUNNING</span> <span class="o">=</span> <span class="s2">&quot;running&quot;</span>
+    <span class="n">COMPLETE</span> <span class="o">=</span> <span class="s2">&quot;complete&quot;</span>
+    <span class="n">FAILED</span> <span class="o">=</span> <span class="s2">&quot;failed&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="BaseAction">
+<a class="viewcode-back" href="../../../technical_reference/core-execute/_autosummary/core_execute.actionlib.action.BaseAction.html#core_execute.actionlib.action.BaseAction">[docs]</a>
+<span class="k">class</span> <span class="nc">BaseAction</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;BaseActions the class where all actions inherit from.&quot;&quot;&quot;</span>
+
+    <span class="n">label</span><span class="p">:</span> <span class="nb">str</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;str: The label of the action is the unique identifier of the action.&quot;&quot;&quot;</span>
+
+    <span class="n">context</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;dict[str, Any]: The context of the action is the Jinja2 Rendering Context.&quot;&quot;&quot;</span>
+
+    <span class="n">action_name</span><span class="p">:</span> <span class="nb">str</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;str: The action name is the name of the action.&quot;&quot;&quot;</span>
+
+    <span class="n">output_namespace</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;str | None: The output namespace is the namespace where the output of the action is stored.&quot;&quot;&quot;</span>
+
+    <span class="n">state_namespace</span><span class="p">:</span> <span class="nb">str</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;str: The state namespace is the namespace where the state of the action is stored.&quot;&quot;&quot;</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="nb">str</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;str: The type of the action.&quot;&quot;&quot;</span>
+
+    <span class="n">condition</span><span class="p">:</span> <span class="nb">str</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;str: The condition of the action.&quot;&quot;&quot;</span>
+
+    <span class="n">after</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;list[str]: The actions that should be perfomed after this action.&quot;&quot;&quot;</span>
+
+    <span class="n">params</span><span class="p">:</span> <span class="n">ActionParams</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;ActionParams: The parameters of the action.&quot;&quot;&quot;</span>
+
+    <span class="n">lifecycle_hooks</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;list[dict[str, Any]]: The lifecycle hooks of the action.&quot;&quot;&quot;</span>
+
+    <span class="n">deployment_details</span><span class="p">:</span> <span class="n">DeploymentDetails</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;DeploymentDetails: The deployment details of the action. client/portfolio/app/branch/build information.&quot;&quot;&quot;</span>
+
+    <span class="n">renderer</span><span class="p">:</span> <span class="n">Jinja2Renderer</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Jinja2Renderer: The Jinja2 Renderer for the action.  Uses the context to render templates.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">_execute</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Must implement in subclass&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Must implement in subclass&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_resolve</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Must implement in subclass&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_cancel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Must implement in subclass&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_unexecute</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Must implement in subclass&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">definition</span><span class="p">:</span> <span class="n">ActionDefinition</span><span class="p">,</span>
+        <span class="n">context</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+        <span class="n">deployment_details</span><span class="p">:</span> <span class="n">DeploymentDetails</span><span class="p">,</span>
+    <span class="p">):</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="s2">&quot;BaseAction.__init__()&quot;</span><span class="p">)</span>
+
+        <span class="c1"># All actions can use the Jinja2 renderer to parse CloudFormation.j2 templates</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span> <span class="o">=</span> <span class="n">Jinja2Renderer</span><span class="p">()</span>
+
+        <span class="c1"># Extract action details from the definition</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="n">definition</span><span class="o">.</span><span class="n">Label</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Action label is: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">context</span> <span class="o">=</span> <span class="n">context</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Action context is: &quot;</span><span class="p">,</span> <span class="n">details</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">deployment_details</span> <span class="o">=</span> <span class="n">deployment_details</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="c1"># Set output_namespace if user specified SaveOutputs = True</span>
+        <span class="k">if</span> <span class="n">definition</span><span class="o">.</span><span class="n">SaveOutputs</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">output_namespace</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+                <span class="s2">&quot;:action&quot;</span><span class="p">,</span> <span class="s2">&quot;:output&quot;</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">output_namespace</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Action output namespace is </span><span class="si">{}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_namespace</span><span class="p">)</span>
+
+        <span class="c1"># State namespace is the same as action label, except with :var/ instead of :action/</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state_namespace</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;:action/&quot;</span><span class="p">,</span> <span class="s2">&quot;:var/&quot;</span><span class="p">)</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Action state namespace is </span><span class="si">{}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">state_namespace</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">definition</span><span class="o">.</span><span class="n">Type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">condition</span> <span class="o">=</span> <span class="n">definition</span><span class="o">.</span><span class="n">Condition</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">before</span> <span class="o">=</span> <span class="n">definition</span><span class="o">.</span><span class="n">Before</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">after</span> <span class="o">=</span> <span class="n">definition</span><span class="o">.</span><span class="n">After</span> <span class="o">+</span> <span class="n">definition</span><span class="o">.</span><span class="n">DependsOn</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="n">definition</span><span class="o">.</span><span class="n">Params</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lifecycle_hooks</span> <span class="o">=</span> <span class="n">definition</span><span class="o">.</span><span class="n">LifecycleHooks</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="s2">&quot;BaseAction.__init__() - complete&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="BaseAction.is_init">
+<a class="viewcode-back" href="../../../technical_reference/core-execute/_autosummary/core_execute.actionlib.action.BaseAction.html#core_execute.actionlib.action.BaseAction.is_init">[docs]</a>
+    <span class="k">def</span> <span class="nf">is_init</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check if the action is in the init state.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if the action is in the init state</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_status_code</span><span class="p">()</span> <span class="o">==</span> <span class="n">StatusCode</span><span class="o">.</span><span class="n">PENDING</span><span class="o">.</span><span class="n">value</span></div>
+
+
+<div class="viewcode-block" id="BaseAction.is_failed">
+<a class="viewcode-back" href="../../../technical_reference/core-execute/_autosummary/core_execute.actionlib.action.BaseAction.html#core_execute.actionlib.action.BaseAction.is_failed">[docs]</a>
+    <span class="k">def</span> <span class="nf">is_failed</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check if the action is in the failed state.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if the action is in the failed state</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_status_code</span><span class="p">()</span> <span class="o">==</span> <span class="n">StatusCode</span><span class="o">.</span><span class="n">FAILED</span><span class="o">.</span><span class="n">value</span></div>
+
+
+<div class="viewcode-block" id="BaseAction.is_running">
+<a class="viewcode-back" href="../../../technical_reference/core-execute/_autosummary/core_execute.actionlib.action.BaseAction.html#core_execute.actionlib.action.BaseAction.is_running">[docs]</a>
+    <span class="k">def</span> <span class="nf">is_running</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check if the action is in the running state.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if the action is in the running state</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_status_code</span><span class="p">()</span> <span class="o">==</span> <span class="n">StatusCode</span><span class="o">.</span><span class="n">RUNNING</span><span class="o">.</span><span class="n">value</span></div>
+
+
+<div class="viewcode-block" id="BaseAction.is_complete">
+<a class="viewcode-back" href="../../../technical_reference/core-execute/_autosummary/core_execute.actionlib.action.BaseAction.html#core_execute.actionlib.action.BaseAction.is_complete">[docs]</a>
+    <span class="k">def</span> <span class="nf">is_complete</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check if the action is in the complete state.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if the action is in the complete state</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_status_code</span><span class="p">()</span> <span class="o">==</span> <span class="n">StatusCode</span><span class="o">.</span><span class="n">COMPLETE</span><span class="o">.</span><span class="n">value</span></div>
+
+
+<div class="viewcode-block" id="BaseAction.set_failed">
+<a class="viewcode-back" href="../../../technical_reference/core-execute/_autosummary/core_execute.actionlib.action.BaseAction.html#core_execute.actionlib.action.BaseAction.set_failed">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_failed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reason</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the status to failed and supply the given reason</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            reason (str): Reason the status failed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="s2">&quot;Setting action to failed - </span><span class="si">{}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">reason</span><span class="p">)</span>
+
+        <span class="c1"># Ignore duplicate state updates</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_failed</span><span class="p">()</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_status_reason</span><span class="p">()</span> <span class="o">==</span> <span class="n">reason</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="s2">&quot;Action is already failed - </span><span class="si">{}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">reason</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="c1"># Log the state change</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Action has failed - </span><span class="si">{}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">reason</span><span class="p">)</span>
+
+        <span class="c1"># Execute lifecycle hooks</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__execute_lifecycle_hooks</span><span class="p">(</span><span class="n">LC_HOOK_FAILED</span><span class="p">,</span> <span class="n">reason</span><span class="p">)</span>
+
+        <span class="c1"># Update the context with the new state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__set_context</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="n">STATUS_CODE</span><span class="p">,</span> <span class="n">StatusCode</span><span class="o">.</span><span class="n">FAILED</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__set_context</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="n">STATUS_REASON</span><span class="p">,</span> <span class="n">reason</span><span class="p">)</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="s2">&quot;Action set to failed - </span><span class="si">{}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">reason</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="BaseAction.set_running">
+<a class="viewcode-back" href="../../../technical_reference/core-execute/_autosummary/core_execute.actionlib.action.BaseAction.html#core_execute.actionlib.action.BaseAction.set_running">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_running</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reason</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the status to running and supply the given reason</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            reason (str): The reason the status is running.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="s2">&quot;Setting action to running - </span><span class="si">{}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">reason</span><span class="p">)</span>
+
+        <span class="c1"># Ignore duplicate state updates</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_running</span><span class="p">()</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_status_reason</span><span class="p">()</span> <span class="o">==</span> <span class="n">reason</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="s2">&quot;Action is already running - </span><span class="si">{}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">reason</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="c1"># Log the state change</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">reason</span> <span class="ow">or</span> <span class="s2">&quot;Action is running&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Execute lifecycle hooks</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__execute_lifecycle_hooks</span><span class="p">(</span><span class="n">LC_HOOK_RUNNING</span><span class="p">,</span> <span class="n">reason</span><span class="p">)</span>
+
+        <span class="c1"># Update the context with the new state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__set_context</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="n">STATUS_CODE</span><span class="p">,</span> <span class="n">StatusCode</span><span class="o">.</span><span class="n">RUNNING</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__set_context</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="n">STATUS_REASON</span><span class="p">,</span> <span class="n">reason</span><span class="p">)</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="s2">&quot;Action set to running - </span><span class="si">{}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">reason</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="BaseAction.set_complete">
+<a class="viewcode-back" href="../../../technical_reference/core-execute/_autosummary/core_execute.actionlib.action.BaseAction.html#core_execute.actionlib.action.BaseAction.set_complete">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_complete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reason</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the status to complete and supply the given reason</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            reason (str): The reason the status is complete.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="s2">&quot;Setting action to complete - </span><span class="si">{}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">reason</span><span class="p">)</span>
+
+        <span class="c1"># Ignore duplicate state updates</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_complete</span><span class="p">()</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_status_reason</span><span class="p">()</span> <span class="o">==</span> <span class="n">reason</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="s2">&quot;Action is already complete - </span><span class="si">{}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">reason</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="c1"># Log the state change</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Action is complete - </span><span class="si">{}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">reason</span><span class="p">)</span>
+
+        <span class="c1"># Execute lifecycle hooks</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__execute_lifecycle_hooks</span><span class="p">(</span><span class="n">LC_HOOK_COMPLETE</span><span class="p">,</span> <span class="n">reason</span><span class="p">)</span>
+
+        <span class="c1"># Update the context with the new state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__set_context</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="n">STATUS_CODE</span><span class="p">,</span> <span class="n">StatusCode</span><span class="o">.</span><span class="n">COMPLETE</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__set_context</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="n">STATUS_REASON</span><span class="p">,</span> <span class="n">reason</span><span class="p">)</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="s2">&quot;Action set to complete - </span><span class="si">{}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">reason</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="BaseAction.set_skipped">
+<a class="viewcode-back" href="../../../technical_reference/core-execute/_autosummary/core_execute.actionlib.action.BaseAction.html#core_execute.actionlib.action.BaseAction.set_skipped">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_skipped</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reason</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the status to skipped and supply the given reason</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            reason (str): The reason the status is skipped.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="s2">&quot;Setting action to skipped - </span><span class="si">{}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">reason</span><span class="p">)</span>
+
+        <span class="c1"># Ignore duplicate state updates</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_complete</span><span class="p">()</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_status_reason</span><span class="p">()</span> <span class="o">==</span> <span class="n">reason</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="s2">&quot;Action is already complete - </span><span class="si">{}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">reason</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="c1"># Log the state change</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Action has been skipped - </span><span class="si">{}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">reason</span><span class="p">)</span>
+
+        <span class="c1"># Update the context with the new state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__set_context</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="n">STATUS_CODE</span><span class="p">,</span> <span class="n">StatusCode</span><span class="o">.</span><span class="n">COMPLETE</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__set_context</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="n">STATUS_REASON</span><span class="p">,</span> <span class="n">reason</span><span class="p">)</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="s2">&quot;Action set to skipped - </span><span class="si">{}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">reason</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="BaseAction.set_output">
+<a class="viewcode-back" href="../../../technical_reference/core-execute/_autosummary/core_execute.actionlib.action.BaseAction.html#core_execute.actionlib.action.BaseAction.set_output">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the output of the action</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str): Variable name of the output within the action output namespace.</span>
+<span class="sd">            value (Any): Value of this variable</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="s2">&quot;Setting output &#39;</span><span class="si">{}</span><span class="s2">&#39; = &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+        <span class="c1"># Set output variable (if user chose to save outputs)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_namespace</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                <span class="s2">&quot;Setting output &#39;</span><span class="si">{}</span><span class="s2">/</span><span class="si">{}</span><span class="s2">&#39; = &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_namespace</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__set_context</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_namespace</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+        <span class="c1"># Set state variable</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__set_context</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state_namespace</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="s2">&quot;Output &#39;</span><span class="si">{}</span><span class="s2">&#39; set to &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="BaseAction.get_output">
+<a class="viewcode-back" href="../../../technical_reference/core-execute/_autosummary/core_execute.actionlib.action.BaseAction.html#core_execute.actionlib.action.BaseAction.get_output">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the output variable from the action within the output namespace</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str): Name of the output variable</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str | None: Value of the output variable</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="s2">&quot;Getting output &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_namespace</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_context</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_namespace</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="BaseAction.set_state">
+<a class="viewcode-back" href="../../../technical_reference/core-execute/_autosummary/core_execute.actionlib.action.BaseAction.html#core_execute.actionlib.action.BaseAction.set_state">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set a state variable of the action within the action state namespace</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str): Name of the state variable</span>
+<span class="sd">            value (Any): vaue of the state variable</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="s2">&quot;Setting state &#39;</span><span class="si">{}</span><span class="s2">&#39; = &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__set_context</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state_namespace</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="BaseAction.get_state">
+<a class="viewcode-back" href="../../../technical_reference/core-execute/_autosummary/core_execute.actionlib.action.BaseAction.html#core_execute.actionlib.action.BaseAction.get_state">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get a state variable of the action within the action state namespace</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str): Name of the state variable</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: Value of the state variable</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="s2">&quot;Getting state &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_context</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state_namespace</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="BaseAction.execute">
+<a class="viewcode-back" href="../../../technical_reference/core-execute/_autosummary/core_execute.actionlib.action.BaseAction.html#core_execute.actionlib.action.BaseAction.execute">[docs]</a>
+    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Execute the action.  It will first check the condition, and if true, execute the action.</span>
+
+<span class="sd">        The context is used to render action variables and paramters and the action is executed.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Self: This action object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Temporarily set the logger identity to this action&#39;s label</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">set_identity</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">)</span>
+
+            <span class="n">log</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="s2">&quot;Executing action for </span><span class="si">{}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">)</span>
+
+            <span class="c1"># Render the action condition, and see if it evaluates to true</span>
+            <span class="n">condition_result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">render_string</span><span class="p">(</span>
+                <span class="s2">&quot;{{{{ </span><span class="si">{}</span><span class="s2"> }}}}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">condition</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span>
+            <span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">condition_result</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;true&quot;</span><span class="p">:</span>
+                <span class="c1"># Condition is true, execute the action</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_resolve</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_execute</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Condition is false, skip the action</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">set_skipped</span><span class="p">(</span><span class="s2">&quot;Condition evaluated to &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">condition_result</span><span class="p">))</span>
+
+            <span class="n">log</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="s2">&quot;Action executed for </span><span class="si">{}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="c1"># Something went wrong (internal error)</span>
+            <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_obj</span><span class="p">,</span> <span class="n">exc_tb</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">exc_type</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">exc_type</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">exc_tb</span> <span class="ow">and</span> <span class="n">exc_tb</span><span class="o">.</span><span class="n">tb_frame</span><span class="p">:</span>
+                <span class="n">fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">exc_tb</span><span class="o">.</span><span class="n">tb_frame</span><span class="o">.</span><span class="n">f_code</span><span class="o">.</span><span class="n">co_filename</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">lineno</span> <span class="o">=</span> <span class="n">exc_tb</span><span class="o">.</span><span class="n">tb_lineno</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">fname</span> <span class="o">=</span> <span class="s2">&quot;Unknown&quot;</span>
+                <span class="n">lineno</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+            <span class="n">tb_str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exception</span><span class="p">(</span><span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_obj</span><span class="p">,</span> <span class="n">exc_tb</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_failed</span><span class="p">(</span>
+                <span class="s2">&quot;Internal error </span><span class="si">{}</span><span class="s2"> in </span><span class="si">{}</span><span class="s2"> at </span><span class="si">{}</span><span class="s2"> - </span><span class="si">{}</span><span class="se">\n</span><span class="s2">Traceback:</span><span class="se">\n</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">exc_type</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">lineno</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span> <span class="n">tb_str</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="s2">&quot;Internal error </span><span class="si">{}</span><span class="s2"> in </span><span class="si">{}</span><span class="s2"> at </span><span class="si">{}</span><span class="s2"> - </span><span class="si">{}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="n">exc_type</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                <span class="n">fname</span><span class="p">,</span>
+                <span class="n">lineno</span><span class="p">,</span>
+                <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span>
+            <span class="p">)</span>
+
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="c1"># Reset the logger identity to base value</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="s2">&quot;Resetting identity&quot;</span><span class="p">)</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">reset_identity</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+<div class="viewcode-block" id="BaseAction.check">
+<a class="viewcode-back" href="../../../technical_reference/core-execute/_autosummary/core_execute.actionlib.action.BaseAction.html#core_execute.actionlib.action.BaseAction.check">[docs]</a>
+    <span class="k">def</span> <span class="nf">check</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check the action to determine if it is oc to run</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Self: _description_</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Temporarily set the logger identity to this action&#39;s label</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">set_identity</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">)</span>
+
+            <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Checking action for </span><span class="si">{}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_resolve</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_check</span><span class="p">()</span>
+
+            <span class="n">log</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="s2">&quot;Action checked for </span><span class="si">{}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="c1"># Something went wrong (internal error)</span>
+            <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_obj</span><span class="p">,</span> <span class="n">exc_tb</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">exc_type</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">exc_type</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">exc_tb</span> <span class="ow">and</span> <span class="n">exc_tb</span><span class="o">.</span><span class="n">tb_frame</span><span class="p">:</span>
+                <span class="n">fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">exc_tb</span><span class="o">.</span><span class="n">tb_frame</span><span class="o">.</span><span class="n">f_code</span><span class="o">.</span><span class="n">co_filename</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">lineno</span> <span class="o">=</span> <span class="n">exc_tb</span><span class="o">.</span><span class="n">tb_lineno</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">fname</span> <span class="o">=</span> <span class="s2">&quot;Unknown&quot;</span>
+                <span class="n">lineno</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+            <span class="n">tb_str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_exception</span><span class="p">(</span><span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_obj</span><span class="p">,</span> <span class="n">exc_tb</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_failed</span><span class="p">(</span>
+                <span class="s2">&quot;Internal error </span><span class="si">{}</span><span class="s2"> in </span><span class="si">{}</span><span class="s2"> at </span><span class="si">{}</span><span class="s2"> - </span><span class="si">{}</span><span class="se">\n</span><span class="s2">Traceback:</span><span class="se">\n</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">exc_type</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">lineno</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span> <span class="n">tb_str</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="s2">&quot;Internal error </span><span class="si">{}</span><span class="s2"> in </span><span class="si">{}</span><span class="s2"> at </span><span class="si">{}</span><span class="s2"> - </span><span class="si">{}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="n">exc_type</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                <span class="n">fname</span><span class="p">,</span>
+                <span class="n">lineno</span><span class="p">,</span>
+                <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span>
+            <span class="p">)</span>
+
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="c1"># Reset the logger identity to base value</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">reset_identity</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+    <span class="k">def</span> <span class="nf">__get_status_code</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_context</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="n">STATUS_CODE</span><span class="p">,</span> <span class="n">StatusCode</span><span class="o">.</span><span class="n">PENDING</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__get_status_reason</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_context</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">,</span> <span class="n">STATUS_REASON</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__get_context</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">prn</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">NO_DEFAULT_PROVIDED</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">/</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prn</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span> <span class="ow">and</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">default</span> <span class="o">==</span> <span class="n">NO_DEFAULT_PROVIDED</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span>
+                    <span class="s2">&quot;Key &#39;</span><span class="si">{}</span><span class="s2">&#39; is not in the context and no default was provided&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">name</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">default</span>
+
+    <span class="k">def</span> <span class="nf">__set_context</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prn</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
+
+        <span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">/</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prn</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">context</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">value</span><span class="p">}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="k">def</span> <span class="nf">__execute_lifecycle_hooks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">reason</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="c1"># Retrieve the event hooks for this action, for this state event</span>
+        <span class="n">event_hooks</span> <span class="o">=</span> <span class="p">[</span><span class="n">h</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">lifecycle_hooks</span> <span class="k">if</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">h</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;States&quot;</span><span class="p">,</span> <span class="p">[])]</span>
+
+        <span class="c1"># Execute the event hooks</span>
+        <span class="k">for</span> <span class="n">event_hook</span> <span class="ow">in</span> <span class="n">event_hooks</span><span class="p">:</span>
+            <span class="n">hook_type</span> <span class="o">=</span> <span class="n">event_hook</span><span class="p">[</span><span class="s2">&quot;Type&quot;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__execute_lifecycle_hook</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">hook_type</span><span class="p">,</span> <span class="n">event_hook</span><span class="p">,</span> <span class="n">reason</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__execute_lifecycle_hook</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">hook_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">hook</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">reason</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="p">):</span>
+        <span class="k">if</span> <span class="n">hook_type</span> <span class="o">==</span> <span class="n">LC_TYPE_STATUS</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__execute_status_hook</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">hook</span><span class="p">,</span> <span class="n">reason</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Unsupported hook type </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">hook_type</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">__get_status_parameter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">hook</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;On</span><span class="si">{</span><span class="n">event</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">parms</span> <span class="o">=</span> <span class="n">hook</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Parameters&quot;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">parms</span><span class="p">:</span>
+            <span class="n">action</span> <span class="o">=</span> <span class="n">parms</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+            <span class="k">if</span> <span class="s2">&quot;Status&quot;</span> <span class="ow">in</span> <span class="n">action</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">action</span><span class="p">[</span><span class="s2">&quot;Status&quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">__get_message_parameter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="n">hook</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;On</span><span class="si">{</span><span class="n">event</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">parms</span> <span class="o">=</span> <span class="n">hook</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Parameters&quot;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">parms</span><span class="p">:</span>
+            <span class="n">action</span> <span class="o">=</span> <span class="n">parms</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+            <span class="k">if</span> <span class="s2">&quot;Message&quot;</span> <span class="ow">in</span> <span class="n">action</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">action</span><span class="p">[</span><span class="s2">&quot;Message&quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">__get_idenity_parameter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">hook</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">parms</span> <span class="o">=</span> <span class="n">hook</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Parameters&quot;</span><span class="p">,</span> <span class="n">hook</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">&quot;Identity&quot;</span> <span class="ow">in</span> <span class="n">parms</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">parms</span><span class="p">[</span><span class="s2">&quot;Identity&quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">__get_details_parameter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">hook</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">parms</span> <span class="o">=</span> <span class="n">hook</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;Parameters&quot;</span><span class="p">,</span> <span class="n">hook</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">&quot;Details&quot;</span> <span class="ow">in</span> <span class="n">parms</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">parms</span><span class="p">[</span><span class="s2">&quot;Details&quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">__update_item_status</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">identity</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">status</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">details</span><span class="p">:</span> <span class="n">Any</span>
+    <span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Log the status</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">set_identity</span><span class="p">(</span><span class="n">identity</span><span class="p">)</span>
+
+            <span class="n">prn_sections</span> <span class="o">=</span> <span class="n">identity</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
+
+            <span class="c1"># Build PRN</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">prn_sections</span><span class="p">)</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
+                <span class="n">build_prn</span> <span class="o">=</span> <span class="s2">&quot;:&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">prn_sections</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">])</span>
+
+                <span class="c1"># Update the build status</span>
+                <span class="n">update_status</span><span class="p">(</span>
+                    <span class="n">prn</span><span class="o">=</span><span class="n">build_prn</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">,</span> <span class="n">details</span><span class="o">=</span><span class="n">details</span>
+                <span class="p">)</span>
+
+                <span class="c1"># If a new build is being released, update the branch&#39;s released_build_prn pointer</span>
+                <span class="k">if</span> <span class="n">status</span> <span class="o">==</span> <span class="n">RELEASE_IN_PROGRESS</span><span class="p">:</span>
+                    <span class="n">branch_prn</span> <span class="o">=</span> <span class="s2">&quot;:&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">prn_sections</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="p">])</span>
+                    <span class="n">update_item</span><span class="p">(</span><span class="n">prn</span><span class="o">=</span><span class="n">branch_prn</span><span class="p">,</span> <span class="n">released_build_prn</span><span class="o">=</span><span class="n">build_prn</span><span class="p">)</span>
+
+            <span class="c1"># Component PRN</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">prn_sections</span><span class="p">)</span> <span class="o">==</span> <span class="mi">6</span><span class="p">:</span>
+                <span class="n">component_prn</span> <span class="o">=</span> <span class="s2">&quot;:&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">prn_sections</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">6</span><span class="p">])</span>
+
+                <span class="c1"># Update the component status</span>
+                <span class="n">update_status</span><span class="p">(</span>
+                    <span class="n">prn</span><span class="o">=</span><span class="n">component_prn</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">,</span> <span class="n">details</span><span class="o">=</span><span class="n">details</span>
+                <span class="p">)</span>
+
+                <span class="c1"># If component has failed, update the build status to failed</span>
+                <span class="k">if</span> <span class="s2">&quot;_FAILED&quot;</span> <span class="ow">in</span> <span class="n">status</span><span class="p">:</span>
+                    <span class="n">build_prn</span> <span class="o">=</span> <span class="s2">&quot;:&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">prn_sections</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">])</span>
+
+                    <span class="c1"># Update the build status</span>
+                    <span class="n">update_status</span><span class="p">(</span><span class="n">prn</span><span class="o">=</span><span class="n">build_prn</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Failed to update status via API - </span><span class="si">{}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">reset_identity</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__execute_status_hook</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">hook</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">reason</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span>
+    <span class="p">):</span>
+
+        <span class="c1"># Extract hook[&quot;Parameter&quot;][&quot;On&lt;event&gt;&quot;][&quot;Status&quot;], then try hook[&quot;Status&quot;]</span>
+        <span class="n">status</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_status_parameter</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">hook</span><span class="p">)</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_message_parameter</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">hook</span><span class="p">)</span>
+        <span class="n">identity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_idenity_parameter</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">hook</span><span class="p">)</span>
+        <span class="n">details</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_details_parameter</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">hook</span><span class="p">)</span>
+
+        <span class="c1"># Render templated parameters if a template has been provided</span>
+        <span class="k">if</span> <span class="n">status</span><span class="p">:</span>
+            <span class="n">status</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">render_string</span><span class="p">(</span><span class="n">status</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">identity</span><span class="p">:</span>
+            <span class="n">identity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">render_string</span><span class="p">(</span><span class="n">identity</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">message</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">render_string</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="p">)</span>
+
+        <span class="c1"># Ensure a status was provided</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">status</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="s2">&quot;Internal - status hook was executed, but no status was defined for event&quot;</span><span class="p">,</span>
+                <span class="n">details</span><span class="o">=</span><span class="p">{</span><span class="n">ACT_STATUS_HOOOK</span><span class="p">:</span> <span class="n">hook</span><span class="p">},</span>
+            <span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="c1"># Ensure the identity was provided</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">identity</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="s2">&quot;Internal - status hook was executed, but no identity was defined&quot;</span><span class="p">,</span>
+                <span class="n">details</span><span class="o">=</span><span class="p">{</span><span class="n">ACT_STATUS_HOOOK</span><span class="p">:</span> <span class="n">hook</span><span class="p">},</span>
+            <span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="c1"># Append reason to the message</span>
+        <span class="k">if</span> <span class="n">reason</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">reason</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="n">message</span> <span class="k">else</span> <span class="n">reason</span>
+
+        <span class="c1"># Still no message?  Then see if we can finally get one set.</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">message</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="n">reason</span> <span class="k">if</span> <span class="n">reason</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+
+        <span class="c1"># Update the status of the item</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__update_item_status</span><span class="p">(</span><span class="n">identity</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">details</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">(</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">(</span><span class="si">{}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

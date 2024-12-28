@@ -1,0 +1,282 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>core_runner.handler &mdash; SCK Core Automation 1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a3c9731c" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=45d66dd6" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=29a6c3e3"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            SCK Core Automation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/index.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/index.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../technical_reference/index.html">Technical Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">SCK Core Automation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">core_runner.handler</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for core_runner.handler</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Executes the action runner step function&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">core_logging</span> <span class="k">as</span> <span class="nn">log</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="kn">import</span> <span class="nn">core_helper.aws</span> <span class="k">as</span> <span class="nn">aws</span>
+
+<span class="kn">import</span> <span class="nn">core_framework</span> <span class="k">as</span> <span class="nn">util</span>
+<span class="kn">from</span> <span class="nn">core_framework.models</span> <span class="kn">import</span> <span class="n">TaskPayload</span>
+
+<span class="kn">import</span> <span class="nn">core_execute.stepfn</span> <span class="k">as</span> <span class="nn">local</span>
+
+
+<div class="viewcode-block" id="handler">
+<a class="viewcode-back" href="../../technical_reference/core-runner/_autosummary/core_runner.handler.handler.html#core_runner.handler.handler">[docs]</a>
+<span class="k">def</span> <span class="nf">handler</span><span class="p">(</span><span class="n">event</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Executes the action runner step function.</span>
+
+<span class="sd">    This lambda function expects a TaskPayload object as input and executes the action runner step function.</span>
+
+<span class="sd">    The TaskPayload is validated and a unique execution name is generated based on the TaskPayload details.</span>
+
+<span class="sd">    The return value is the following dictionary:</span>
+
+<span class="sd">    .. code-block:: json</span>
+
+<span class="sd">        {</span>
+<span class="sd">           &quot;Status&quot;: &quot;ok | error&quot;,</span>
+<span class="sd">          &quot;Message&quot;: &quot;Executed step function &#39;&lt;execution_arn&gt;&#39; | Failed to execute step function&quot;,</span>
+<span class="sd">          &quot;StepFunctionInput&quot;: { &quot;task&quot;: &quot;... the task payload ...&quot; },</span>
+<span class="sd">          &quot;ExecutionArn&quot;: &quot;&lt;execution_arn&gt;&quot;</span>
+<span class="sd">        }</span>
+
+
+<span class="sd">    Args:</span>
+<span class="sd">        event (dict): The task payload object</span>
+<span class="sd">        context (dict | None): The context of the execution</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: The result of the execution</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># event should have been created with TaskPayload.model_dump()</span>
+        <span class="n">task_payload</span> <span class="o">=</span> <span class="n">TaskPayload</span><span class="p">(</span><span class="o">**</span><span class="n">event</span><span class="p">)</span>
+
+        <span class="c1"># Setup logging</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">task_payload</span><span class="o">.</span><span class="n">Identity</span><span class="p">)</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Executing step function&quot;</span><span class="p">,</span> <span class="n">details</span><span class="o">=</span><span class="n">task_payload</span><span class="o">.</span><span class="n">model_dump</span><span class="p">())</span>
+
+        <span class="n">name</span> <span class="o">=</span> <span class="n">generate_execution_name</span><span class="p">(</span><span class="n">task_payload</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">util</span><span class="o">.</span><span class="n">is_local_mode</span><span class="p">():</span>
+            <span class="n">sfn_response</span> <span class="o">=</span> <span class="n">local_start_execution</span><span class="p">(</span><span class="n">task_payload</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">sfn_response</span> <span class="o">=</span> <span class="n">lambda_start_execution</span><span class="p">(</span><span class="n">task_payload</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+
+        <span class="n">execution_arn</span> <span class="o">=</span> <span class="n">sfn_response</span><span class="p">[</span><span class="s2">&quot;executionArn&quot;</span><span class="p">]</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="s2">&quot;Execute Engine started successfully&quot;</span><span class="p">,</span>
+            <span class="n">details</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;ExecutionArn&quot;</span><span class="p">:</span> <span class="n">execution_arn</span><span class="p">},</span>
+        <span class="p">)</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;Status&quot;</span><span class="p">:</span> <span class="s2">&quot;ok&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Message&quot;</span><span class="p">:</span> <span class="s2">&quot;Executed step function &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">execution_arn</span><span class="p">),</span>
+            <span class="s2">&quot;StepFunctionInput&quot;</span><span class="p">:</span> <span class="n">task_payload</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(),</span>
+            <span class="s2">&quot;ExecutionArn&quot;</span><span class="p">:</span> <span class="n">execution_arn</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Result&quot;</span><span class="p">,</span> <span class="n">details</span><span class="o">=</span><span class="n">result</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">result</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Failed to execute step function&quot;</span><span class="p">,</span> <span class="n">details</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Error&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)})</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;Status&quot;</span><span class="p">:</span> <span class="s2">&quot;error&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Message&quot;</span><span class="p">:</span> <span class="s2">&quot;Failed to execute step function&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Error&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span>
+        <span class="p">}</span></div>
+
+
+
+<div class="viewcode-block" id="lambda_start_execution">
+<a class="viewcode-back" href="../../technical_reference/core-runner/_autosummary/core_runner.handler.lambda_start_execution.html#core_runner.handler.lambda_start_execution">[docs]</a>
+<span class="k">def</span> <span class="nf">lambda_start_execution</span><span class="p">(</span><span class="n">task_payload</span><span class="p">:</span> <span class="n">TaskPayload</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Start the execution of a step function in AWS. This will start the step function</span>
+<span class="sd">    in the AWS Step Functions service.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        task_payload (TaskPayload): The task payload to execute</span>
+<span class="sd">        name (str): The name of the execution</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: Result of the job start request</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">region</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">get_region</span><span class="p">()</span>
+    <span class="n">arn</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">get_step_function_arn</span><span class="p">()</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">task_payload</span><span class="o">.</span><span class="n">model_dump_json</span><span class="p">()</span>
+
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+        <span class="s2">&quot;Executing step function in AWS&quot;</span><span class="p">,</span>
+        <span class="n">details</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;StepFunctionArn&quot;</span><span class="p">:</span> <span class="n">arn</span><span class="p">,</span> <span class="s2">&quot;Input&quot;</span><span class="p">:</span> <span class="n">data</span><span class="p">},</span>
+    <span class="p">)</span>
+
+    <span class="n">sfn_client</span> <span class="o">=</span> <span class="n">aws</span><span class="o">.</span><span class="n">step_functions_client</span><span class="p">(</span><span class="n">region</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">sfn_client</span><span class="o">.</span><span class="n">start_execution</span><span class="p">(</span><span class="n">stateMachineArn</span><span class="o">=</span><span class="n">arn</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="nb">input</span><span class="o">=</span><span class="n">data</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="local_start_execution">
+<a class="viewcode-back" href="../../technical_reference/core-runner/_autosummary/core_runner.handler.local_start_execution.html#core_runner.handler.local_start_execution">[docs]</a>
+<span class="k">def</span> <span class="nf">local_start_execution</span><span class="p">(</span><span class="n">task_payload</span><span class="p">:</span> <span class="n">TaskPayload</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Start the execution of a step function in local mode. This means it will</span>
+<span class="sd">    run in a shell process in the background and continue to run until it fails,</span>
+<span class="sd">    completes, or is stopped by the OS.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        task_payload (TaskPayload): The task payload to execute</span>
+<span class="sd">        name (str): the executin name</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: Result of the job start request</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">region</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">get_region</span><span class="p">()</span>
+    <span class="n">arn</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;arn:aws:states:</span><span class="si">{</span><span class="n">region</span><span class="si">}</span><span class="s2">:local:execution:stateMachineName:</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="n">data</span> <span class="o">=</span> <span class="n">task_payload</span><span class="o">.</span><span class="n">model_dump</span><span class="p">()</span>
+
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+        <span class="s2">&quot;Executing step function in local mode&quot;</span><span class="p">,</span>
+        <span class="n">details</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;StepFunctionArn&quot;</span><span class="p">:</span> <span class="n">arn</span><span class="p">,</span> <span class="s2">&quot;Input&quot;</span><span class="p">:</span> <span class="n">data</span><span class="p">},</span>
+    <span class="p">)</span>
+
+    <span class="n">sfn_client</span> <span class="o">=</span> <span class="n">local</span><span class="o">.</span><span class="n">step_function_client</span><span class="p">(</span><span class="n">region</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">sfn_client</span><span class="o">.</span><span class="n">start_execution</span><span class="p">(</span><span class="n">stateMachineArn</span><span class="o">=</span><span class="n">arn</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="nb">input</span><span class="o">=</span><span class="n">data</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="generate_execution_name">
+<a class="viewcode-back" href="../../technical_reference/core-runner/_autosummary/core_runner.handler.generate_execution_name.html#core_runner.handler.generate_execution_name">[docs]</a>
+<span class="k">def</span> <span class="nf">generate_execution_name</span><span class="p">(</span><span class="n">task_playload</span><span class="p">:</span> <span class="n">TaskPayload</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generate a unique name for the execution.</span>
+
+<span class="sd">    This will create a name based on deployment details and the current time.</span>
+
+<span class="sd">    It will concatenate the following fields:</span>
+
+<span class="sd">    - Task</span>
+<span class="sd">    - Portfolio</span>
+<span class="sd">    - App</span>
+<span class="sd">    - BranchShortName</span>
+<span class="sd">    - Build</span>
+<span class="sd">    - Current time in seconds</span>
+
+<span class="sd">    The ressult will be, for example:  ``deploy-portfolio-app-branch-build-1234567890``</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        task_playload (TaskPayload): The task paload to generate the name for</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The name of the execution</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dd</span> <span class="o">=</span> <span class="n">task_playload</span><span class="o">.</span><span class="n">DeploymentDetails</span>
+    <span class="k">return</span> <span class="s2">&quot;-&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="n">task_playload</span><span class="o">.</span><span class="n">Task</span><span class="p">,</span>
+            <span class="n">dd</span><span class="o">.</span><span class="n">Portfolio</span><span class="p">,</span>
+            <span class="n">dd</span><span class="o">.</span><span class="n">App</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="n">dd</span><span class="o">.</span><span class="n">BranchShortName</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="n">dd</span><span class="o">.</span><span class="n">Build</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())),</span>
+        <span class="p">]</span>
+    <span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

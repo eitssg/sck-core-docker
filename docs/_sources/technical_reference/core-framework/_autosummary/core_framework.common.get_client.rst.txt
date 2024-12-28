@@ -1,0 +1,6 @@
+core\_framework.common.get\_client
+==================================
+
+.. currentmodule:: core_framework.common
+
+.. autofunction:: get_client

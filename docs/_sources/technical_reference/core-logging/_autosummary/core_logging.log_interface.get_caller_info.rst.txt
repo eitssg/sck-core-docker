@@ -1,0 +1,6 @@
+core\_logging.log\_interface.get\_caller\_info
+==============================================
+
+.. currentmodule:: core_logging.log_interface
+
+.. autofunction:: get_caller_info

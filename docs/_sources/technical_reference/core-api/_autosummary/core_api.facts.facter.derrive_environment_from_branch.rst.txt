@@ -1,0 +1,6 @@
+core\_api.facts.facter.derrive\_environment\_from\_branch
+=========================================================
+
+.. currentmodule:: core_api.facts.facter
+
+.. autofunction:: derrive_environment_from_branch

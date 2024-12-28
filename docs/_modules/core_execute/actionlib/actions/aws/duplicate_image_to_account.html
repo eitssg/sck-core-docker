@@ -1,0 +1,428 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>core_execute.actionlib.actions.aws.duplicate_image_to_account &mdash; SCK Core Automation 1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=a3c9731c" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/custom.css?v=45d66dd6" />
+
+  
+      <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../_static/documentation_options.js?v=29a6c3e3"></script>
+      <script src="../../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../index.html" class="icon icon-home">
+            SCK Core Automation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../user_guide/index.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../developer_guide/index.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../technical_reference/index.html">Technical Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">SCK Core Automation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">core_execute.actionlib.actions.aws.duplicate_image_to_account</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for core_execute.actionlib.actions.aws.duplicate_image_to_account</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Duplicate an Image and copy it to one ore more accounts&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
+
+<span class="kn">import</span> <span class="nn">core_logging</span> <span class="k">as</span> <span class="nn">log</span>
+
+<span class="kn">from</span> <span class="nn">core_framework.models</span> <span class="kn">import</span> <span class="n">DeploymentDetails</span><span class="p">,</span> <span class="n">ActionDefinition</span>
+
+<span class="kn">import</span> <span class="nn">core_helper.aws</span> <span class="k">as</span> <span class="nn">aws</span>
+
+<span class="kn">import</span> <span class="nn">core_framework</span> <span class="k">as</span> <span class="nn">util</span>
+<span class="kn">from</span> <span class="nn">core_execute.actionlib.action</span> <span class="kn">import</span> <span class="n">BaseAction</span><span class="p">,</span> <span class="n">ActionParams</span>
+
+<span class="kn">import</span> <span class="nn">boto3</span>
+
+
+<div class="viewcode-block" id="generate_template">
+<a class="viewcode-back" href="../../../../../technical_reference/core-execute/_autosummary/core_execute.actionlib.actions.aws.duplicate_image_to_account.generate_template.html#core_execute.actionlib.actions.aws.duplicate_image_to_account.generate_template">[docs]</a>
+<span class="k">def</span> <span class="nf">generate_template</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">ActionDefinition</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate the action definition&quot;&quot;&quot;</span>
+
+    <span class="n">definition</span> <span class="o">=</span> <span class="n">ActionDefinition</span><span class="p">(</span>
+        <span class="n">Label</span><span class="o">=</span><span class="s2">&quot;action-definition-label&quot;</span><span class="p">,</span>
+        <span class="n">Type</span><span class="o">=</span><span class="s2">&quot;AWS::DuplicateImageToAccount&quot;</span><span class="p">,</span>
+        <span class="n">DependsOn</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;put-a-label-here&quot;</span><span class="p">],</span>
+        <span class="n">Params</span><span class="o">=</span><span class="n">ActionParams</span><span class="p">(</span>
+            <span class="n">Account</span><span class="o">=</span><span class="s2">&quot;The account to use for the action (required)&quot;</span><span class="p">,</span>
+            <span class="n">Region</span><span class="o">=</span><span class="s2">&quot;The region to create the stack in (required)&quot;</span><span class="p">,</span>
+            <span class="n">ImageName</span><span class="o">=</span><span class="s2">&quot;The name of the image to duplicate (required)&quot;</span><span class="p">,</span>
+            <span class="n">AccountsToShare</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;The accounts to share the image with (required)&quot;</span><span class="p">],</span>
+            <span class="n">KmsKeyArn</span><span class="o">=</span><span class="s2">&quot;The KMS key ARN to use for encryption (required)&quot;</span><span class="p">,</span>
+            <span class="n">Tags</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;any&quot;</span><span class="p">:</span> <span class="s2">&quot;The tags to apply to the image (optional)&quot;</span><span class="p">},</span>
+        <span class="p">),</span>
+        <span class="n">Scope</span><span class="o">=</span><span class="s2">&quot;Based on your deployment details, it one of &#39;portfolio&#39;, &#39;app&#39;, &#39;branch&#39;, or &#39;build&#39;&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">definition</span></div>
+
+
+
+<div class="viewcode-block" id="DuplicateImageToAccountAction">
+<a class="viewcode-back" href="../../../../../technical_reference/core-execute/_autosummary/core_execute.actionlib.actions.aws.duplicate_image_to_account.DuplicateImageToAccountAction.html#core_execute.actionlib.actions.aws.duplicate_image_to_account.DuplicateImageToAccountAction">[docs]</a>
+<span class="k">class</span> <span class="nc">DuplicateImageToAccountAction</span><span class="p">(</span><span class="n">BaseAction</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Duplicate an Image and copy it to one ore more accounts</span>
+
+<span class="sd">    This action will duplicate an image and copy it to one or more accounts.  The action will wait for the copy to complete before returning.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        Type: Use the value: ``AWS::DuplicateImageToAccount``</span>
+<span class="sd">        Params.Account: The account where the image is located</span>
+<span class="sd">        Params.Region: The region where the image is located</span>
+<span class="sd">        Params.ImageName: The name of the image to duplicate (required)</span>
+<span class="sd">        Params.AccountsToShare: The accounts to share the image with (required)</span>
+<span class="sd">        Params.KmsKeyArn: The KMS key ARN to use for encryption (required)</span>
+<span class="sd">        Params.Tags: The tags to apply to the image (optional)</span>
+
+<span class="sd">    .. rubric: ActionDefinition:</span>
+
+<span class="sd">    .. tip:: s3:/&lt;bucket&gt;/artfacts/&lt;deployment_details&gt;/{task}.actions:</span>
+
+<span class="sd">        .. code-block:: yaml</span>
+
+<span class="sd">            - Label: action-aws-duplicateimagetoaccount-label</span>
+<span class="sd">              Type: &quot;AWS::DuplicateImageToAccount&quot;</span>
+<span class="sd">              Params:</span>
+<span class="sd">                Account: &quot;154798051514&quot;</span>
+<span class="sd">                Region: &quot;ap-southeast-1&quot;</span>
+<span class="sd">                Tags:</span>
+<span class="sd">                    From: &quot;John Smith&quot;</span>
+<span class="sd">                ImageName: &quot;my-image-name&quot;</span>
+<span class="sd">                KmsKeyArn: &quot;arn:aws:kms:ap-southeast-1:154798051514:key/your-kms-key-id&quot;</span>
+<span class="sd">                AccountsToShare: [&quot;123456789012&quot;, &quot;123456789013&quot;]</span>
+<span class="sd">              Scope: &quot;build&quot;</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">definition</span><span class="p">:</span> <span class="n">ActionDefinition</span><span class="p">,</span>
+        <span class="n">context</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+        <span class="n">deployment_details</span><span class="p">:</span> <span class="n">DeploymentDetails</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">definition</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">deployment_details</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">Tags</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">Tags</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="n">deployment_details</span><span class="o">.</span><span class="n">DeliveredBy</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">Tags</span><span class="p">[</span><span class="s2">&quot;DeliveredBy&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">deployment_details</span><span class="o">.</span><span class="n">DeliveredBy</span>
+
+    <span class="k">def</span> <span class="nf">_execute</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="s2">&quot;DuplicateImageToAccountAction._execute()&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">AccountsToShare</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_complete</span><span class="p">(</span><span class="s2">&quot;No accounts to share image with have been specified&quot;</span><span class="p">)</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;No accounts to share image with have been specified&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="c1"># Obtain an EC2 client</span>
+        <span class="n">ec2_client</span> <span class="o">=</span> <span class="n">aws</span><span class="o">.</span><span class="n">ec2_client</span><span class="p">(</span>
+            <span class="n">region</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">Region</span><span class="p">,</span>
+            <span class="n">role</span><span class="o">=</span><span class="n">util</span><span class="o">.</span><span class="n">get_provisioning_role_arn</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">Account</span><span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Find image (provides image id and snapshot ids)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Finding image with name &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">ImageName</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">ec2_client</span><span class="o">.</span><span class="n">describe_images</span><span class="p">(</span>
+            <span class="n">Filters</span><span class="o">=</span><span class="p">[{</span><span class="s2">&quot;Name&quot;</span><span class="p">:</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;Values&quot;</span><span class="p">:</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">ImageName</span><span class="p">]}]</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s2">&quot;Images&quot;</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_complete</span><span class="p">(</span>
+                <span class="s2">&quot;Could not find image with name &#39;</span><span class="si">{}</span><span class="s2">&#39;. It may have been previously deleted.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">ImageName</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Could not find image with name &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">ImageName</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="n">image_id</span> <span class="o">=</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;Images&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;ImageId&quot;</span><span class="p">]</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Found image &#39;</span><span class="si">{}</span><span class="s2">&#39; with name &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="p">,</span> <span class="n">image_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">ImageName</span><span class="p">)</span>
+
+        <span class="c1"># Find snapshots of the encrypted image</span>
+        <span class="n">snapshot_ids</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">block_device_mapping</span> <span class="ow">in</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;Images&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;BlockDeviceMappings&quot;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="s2">&quot;Ebs&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">block_device_mapping</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">snapshot_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">block_device_mapping</span><span class="p">[</span><span class="s2">&quot;Ebs&quot;</span><span class="p">][</span><span class="s2">&quot;SnapshotId&quot;</span><span class="p">])</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Image &#39;</span><span class="si">{}</span><span class="s2">&#39; has snapshots: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">image_id</span><span class="p">,</span> <span class="n">snapshot_ids</span><span class="p">)</span>
+
+        <span class="n">snapshot_id</span> <span class="o">=</span> <span class="n">snapshot_ids</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># Share snapshot with the target account</span>
+        <span class="n">target_account</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">AccountsToShare</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_running</span><span class="p">(</span>
+            <span class="s2">&quot;Sharing snapshot with the target account </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">target_account</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+            <span class="s2">&quot;Account </span><span class="si">{}</span><span class="s2"> is getting the image shared, starting now!&quot;</span><span class="p">,</span> <span class="n">target_account</span>
+        <span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">ec2_client</span><span class="o">.</span><span class="n">modify_snapshot_attribute</span><span class="p">(</span>
+            <span class="n">Attribute</span><span class="o">=</span><span class="s2">&quot;createVolumePermission&quot;</span><span class="p">,</span>
+            <span class="n">OperationType</span><span class="o">=</span><span class="s2">&quot;add&quot;</span><span class="p">,</span>
+            <span class="n">SnapshotId</span><span class="o">=</span><span class="n">snapshot_id</span><span class="p">,</span>
+            <span class="n">UserIds</span><span class="o">=</span><span class="p">[</span>
+                <span class="n">target_account</span><span class="p">,</span>
+            <span class="p">],</span>
+        <span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Successfully shared snapshot with target account </span><span class="si">{}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">target_account</span><span class="p">)</span>
+
+        <span class="c1"># Set Target account Instance object</span>
+        <span class="n">target_ec2_session</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__ec2_session</span><span class="p">()</span>
+        <span class="n">target_ec2</span> <span class="o">=</span> <span class="n">target_ec2_session</span><span class="o">.</span><span class="n">resource</span><span class="p">(</span><span class="s2">&quot;ec2&quot;</span><span class="p">)</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Successfully set target ec2 instance object&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Create a copy of the shared snapshot on the target account</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_running</span><span class="p">(</span>
+            <span class="s2">&quot;Copying snapshot with the target account </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">target_account</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="n">shared_snapshot</span> <span class="o">=</span> <span class="n">target_ec2</span><span class="o">.</span><span class="n">Snapshot</span><span class="p">(</span><span class="n">snapshot_id</span><span class="p">)</span>
+        <span class="n">copy</span> <span class="o">=</span> <span class="n">shared_snapshot</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span>
+            <span class="n">SourceRegion</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">Region</span><span class="p">,</span>
+            <span class="n">Encrypted</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">KmsKeyId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">KmsKeyArn</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">copied_snapshot</span> <span class="o">=</span> <span class="n">target_ec2</span><span class="o">.</span><span class="n">Snapshot</span><span class="p">(</span><span class="n">copy</span><span class="p">[</span><span class="s2">&quot;SnapshotId&quot;</span><span class="p">])</span>
+        <span class="n">copied_snapshot</span><span class="o">.</span><span class="n">wait_until_completed</span><span class="p">()</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+            <span class="s2">&quot;Successfully copied from snapshot </span><span class="si">{}</span><span class="s2"> to snapshot </span><span class="si">{}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="n">snapshot_id</span><span class="p">,</span>
+            <span class="n">copied_snapshot</span><span class="o">.</span><span class="n">snapshot_id</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Create AMI from snapshot in the target account</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_running</span><span class="p">(</span><span class="s2">&quot;Creating AMI in the target account </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">target_account</span><span class="p">))</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="n">target_ec2</span><span class="o">.</span><span class="n">register_image</span><span class="p">(</span>
+            <span class="n">Architecture</span><span class="o">=</span><span class="s2">&quot;x86_64&quot;</span><span class="p">,</span>
+            <span class="n">RootDeviceName</span><span class="o">=</span><span class="s2">&quot;/dev/sda1&quot;</span><span class="p">,</span>
+            <span class="n">BlockDeviceMappings</span><span class="o">=</span><span class="p">[</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;DeviceName&quot;</span><span class="p">:</span> <span class="s2">&quot;/dev/sda1&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;Ebs&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s2">&quot;DeleteOnTermination&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                        <span class="s2">&quot;SnapshotId&quot;</span><span class="p">:</span> <span class="n">copied_snapshot</span><span class="o">.</span><span class="n">snapshot_id</span><span class="p">,</span>
+                        <span class="s2">&quot;VolumeSize&quot;</span><span class="p">:</span> <span class="n">copied_snapshot</span><span class="o">.</span><span class="n">volume_size</span><span class="p">,</span>
+                        <span class="s2">&quot;VolumeType&quot;</span><span class="p">:</span> <span class="s2">&quot;gp2&quot;</span><span class="p">,</span>
+                    <span class="p">},</span>
+                <span class="p">},</span>
+            <span class="p">],</span>
+            <span class="n">Description</span><span class="o">=</span><span class="s2">&quot;Image created from snapshot </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">copied_snapshot</span><span class="o">.</span><span class="n">snapshot_id</span>
+            <span class="p">),</span>
+            <span class="n">Name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">ImageName</span><span class="p">,</span>
+            <span class="c1"># Name=&#39;Image created from source image {} target snapshot {}&#39;.format(self.params.ImageName, copied_snapshot.snapshot_id),</span>
+            <span class="n">VirtualizationType</span><span class="o">=</span><span class="s2">&quot;hvm&quot;</span><span class="p">,</span>
+            <span class="n">EnaSupport</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">r_image_id</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">id</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+            <span class="s2">&quot;Successfully created AMI </span><span class="si">{}</span><span class="s2"> from the shared snapshot in the target account </span><span class="si">{}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="n">r_image_id</span><span class="p">,</span>
+            <span class="n">target_account</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="s2">&quot;ImageId</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">target_account</span><span class="p">),</span> <span class="n">r_image_id</span><span class="p">)</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="s2">&quot;DuplicateImageToAccountAction._execute() completed&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="s2">&quot;DuplicateImageToAccountAction._check()&quot;</span><span class="p">)</span>
+
+        <span class="n">target_account</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">AccountsToShare</span>
+        <span class="c1"># Obtain an EC2 client</span>
+        <span class="n">ec2_client</span> <span class="o">=</span> <span class="n">aws</span><span class="o">.</span><span class="n">ec2_client</span><span class="p">(</span>
+            <span class="n">region</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">Region</span><span class="p">,</span>
+            <span class="n">role</span><span class="o">=</span><span class="n">util</span><span class="o">.</span><span class="n">get_provisioning_role_arn</span><span class="p">(</span><span class="n">target_account</span><span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Wait for image creation to complete / fail</span>
+        <span class="n">image_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_state</span><span class="p">(</span><span class="s2">&quot;ImageId</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">target_account</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">image_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="s2">&quot;Internal error - state variable ImageId should have been set during action execution&quot;</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_failed</span><span class="p">(</span><span class="s2">&quot;No image previously created - cannot continue&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Checking availability of copied image </span><span class="si">{}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">image_id</span><span class="p">)</span>
+
+        <span class="n">describe_images_response</span> <span class="o">=</span> <span class="n">ec2_client</span><span class="o">.</span><span class="n">describe_images</span><span class="p">(</span><span class="n">ImageIds</span><span class="o">=</span><span class="p">[</span><span class="n">image_id</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">describe_images_response</span><span class="p">[</span><span class="s2">&quot;Images&quot;</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_failed</span><span class="p">(</span><span class="s2">&quot;No images found with id &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">image_id</span><span class="p">))</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;No images found with id &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="p">,</span> <span class="n">image_id</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="n">state</span> <span class="o">=</span> <span class="n">describe_images_response</span><span class="p">[</span><span class="s2">&quot;Images&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;State&quot;</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">state</span> <span class="o">==</span> <span class="s2">&quot;available&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_running</span><span class="p">(</span><span class="s2">&quot;Tagging image &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">image_id</span><span class="p">))</span>
+            <span class="n">ec2_client</span><span class="o">.</span><span class="n">create_tags</span><span class="p">(</span>
+                <span class="n">Resources</span><span class="o">=</span><span class="p">[</span><span class="n">image_id</span><span class="p">],</span> <span class="n">Tags</span><span class="o">=</span><span class="n">aws</span><span class="o">.</span><span class="n">transform_tag_hash</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">Tags</span><span class="p">)</span>
+            <span class="p">)</span>
+
+            <span class="n">image_snapshots</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_image_snapshots</span><span class="p">(</span><span class="n">describe_images_response</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_running</span><span class="p">(</span>
+                <span class="s2">&quot;Tagging image snapshots: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">image_snapshots</span><span class="p">))</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">image_snapshots</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">ec2_client</span><span class="o">.</span><span class="n">create_tags</span><span class="p">(</span>
+                    <span class="n">Resources</span><span class="o">=</span><span class="n">image_snapshots</span><span class="p">,</span>
+                    <span class="n">Tags</span><span class="o">=</span><span class="n">aws</span><span class="o">.</span><span class="n">transform_tag_hash</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">Tags</span><span class="p">),</span>
+                <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_complete</span><span class="p">(</span><span class="s2">&quot;Image is in state &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">state</span><span class="p">))</span>
+
+        <span class="k">elif</span> <span class="n">state</span> <span class="o">==</span> <span class="s2">&quot;pending&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_running</span><span class="p">(</span><span class="s2">&quot;Image is in state &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">state</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_failed</span><span class="p">(</span><span class="s2">&quot;Image is in state &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">state</span><span class="p">))</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="s2">&quot;Duplicate Image to Account Action check completed&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_unexecute</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">_cancel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">_resolve</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="s2">&quot;DuplicateImageToAccountAction._resolve()&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">Account</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">render_string</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">Account</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">ImageName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">render_string</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">ImageName</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">Region</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">render_string</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">Region</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span>
+        <span class="p">)</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="s2">&quot;DuplicateImageToAccountAction._resolve() completed&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__get_image_snapshots</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">describe_images_response</span><span class="p">):</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="s2">&quot;Getting image snapshots&quot;</span><span class="p">)</span>
+
+        <span class="n">snapshots</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">mapping</span> <span class="ow">in</span> <span class="n">describe_images_response</span><span class="p">[</span><span class="s2">&quot;Images&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;BlockDeviceMappings&quot;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;Ebs&quot;</span> <span class="ow">in</span> <span class="n">mapping</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="s2">&quot;SnapshotId&quot;</span> <span class="ow">in</span> <span class="n">mapping</span><span class="p">[</span><span class="s2">&quot;Ebs&quot;</span><span class="p">]):</span>
+                <span class="n">snapshots</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mapping</span><span class="p">[</span><span class="s2">&quot;Ebs&quot;</span><span class="p">][</span><span class="s2">&quot;SnapshotId&quot;</span><span class="p">])</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="s2">&quot;Got image snapshots&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">snapshots</span>
+
+    <span class="k">def</span> <span class="nf">__ec2_session</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="s2">&quot;DuplicateImageToAccountAction.__ec2_session()&quot;</span><span class="p">)</span>
+
+        <span class="n">target_account</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">AccountsToShare</span>
+
+        <span class="n">credentials</span> <span class="o">=</span> <span class="n">aws</span><span class="o">.</span><span class="n">assume_role</span><span class="p">(</span>
+            <span class="n">role</span><span class="o">=</span><span class="n">util</span><span class="o">.</span><span class="n">get_provisioning_role_arn</span><span class="p">(</span><span class="n">target_account</span><span class="p">),</span>
+            <span class="n">session_name</span><span class="o">=</span><span class="s2">&quot;temp-session-</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">target_account</span><span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Getting session on the target account </span><span class="si">{}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">target_account</span><span class="p">)</span>
+
+        <span class="n">session</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">Session</span><span class="p">(</span>
+            <span class="n">aws_access_key_id</span><span class="o">=</span><span class="n">credentials</span><span class="p">[</span><span class="s2">&quot;AccessKeyId&quot;</span><span class="p">],</span>
+            <span class="n">aws_secret_access_key</span><span class="o">=</span><span class="n">credentials</span><span class="p">[</span><span class="s2">&quot;SecretAccessKey&quot;</span><span class="p">],</span>
+            <span class="n">aws_session_token</span><span class="o">=</span><span class="n">credentials</span><span class="p">[</span><span class="s2">&quot;SessionToken&quot;</span><span class="p">],</span>
+        <span class="p">)</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="s2">&quot;Got session on the target account&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">session</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

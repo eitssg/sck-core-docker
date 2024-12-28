@@ -1,0 +1,6 @@
+core\_framework.constants.V\_DEFAULT\_ENVIRONMENT
+=================================================
+
+.. currentmodule:: core_framework.constants
+
+.. autodata:: V_DEFAULT_ENVIRONMENT

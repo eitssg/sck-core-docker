@@ -1,0 +1,6 @@
+core\_framework.constants.PKG\_S3\_KEY
+======================================
+
+.. currentmodule:: core_framework.constants
+
+.. autodata:: PKG_S3_KEY

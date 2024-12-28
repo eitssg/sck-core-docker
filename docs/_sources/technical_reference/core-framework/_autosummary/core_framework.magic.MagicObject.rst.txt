@@ -1,0 +1,24 @@
+core\_framework.magic.MagicObject
+=================================
+
+.. currentmodule:: core_framework.magic
+
+.. autoclass:: MagicObject
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~MagicObject.__init__
+      ~MagicObject.copy_from
+   
+   

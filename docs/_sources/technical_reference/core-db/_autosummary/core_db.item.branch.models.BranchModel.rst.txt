@@ -1,0 +1,68 @@
+core\_db.item.branch.models.BranchModel
+=======================================
+
+.. currentmodule:: core_db.item.branch.models
+
+.. autoclass:: BranchModel
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~BranchModel.app_prn
+      ~BranchModel.created_at
+      ~BranchModel.item_type
+      ~BranchModel.name
+      ~BranchModel.parent_created_at_index
+      ~BranchModel.parent_prn
+      ~BranchModel.portfolio_prn
+      ~BranchModel.prn
+      ~BranchModel.released_build_prn
+      ~BranchModel.short_name
+      ~BranchModel.updated_at
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~BranchModel.__init__
+      ~BranchModel.batch_get
+      ~BranchModel.batch_write
+      ~BranchModel.construct_released_build
+      ~BranchModel.count
+      ~BranchModel.create_table
+      ~BranchModel.delete
+      ~BranchModel.delete_table
+      ~BranchModel.describe_table
+      ~BranchModel.deserialize
+      ~BranchModel.exists
+      ~BranchModel.from_dynamodb_dict
+      ~BranchModel.from_raw_data
+      ~BranchModel.from_simple_dict
+      ~BranchModel.get
+      ~BranchModel.get_attributes
+      ~BranchModel.get_delete_kwargs_from_instance
+      ~BranchModel.get_operation_kwargs_from_class
+      ~BranchModel.get_save_kwargs_from_instance
+      ~BranchModel.get_update_kwargs_from_instance
+      ~BranchModel.query
+      ~BranchModel.refresh
+      ~BranchModel.save
+      ~BranchModel.scan
+      ~BranchModel.serialize
+      ~BranchModel.to_dynamodb_dict
+      ~BranchModel.to_simple_dict
+      ~BranchModel.update
+      ~BranchModel.update_local_version_attribute
+      ~BranchModel.update_ttl
+   
+   

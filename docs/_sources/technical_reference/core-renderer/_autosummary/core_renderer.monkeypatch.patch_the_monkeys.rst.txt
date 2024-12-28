@@ -1,0 +1,6 @@
+core\_renderer.monkeypatch.patch\_the\_monkeys
+==============================================
+
+.. currentmodule:: core_renderer.monkeypatch
+
+.. autofunction:: patch_the_monkeys

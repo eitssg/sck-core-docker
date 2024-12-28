@@ -1,0 +1,6 @@
+core\_framework.common.load\_deployspec
+=======================================
+
+.. currentmodule:: core_framework.common
+
+.. autofunction:: load_deployspec

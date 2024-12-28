@@ -1,0 +1,270 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>core_db.registry.portfolio.models &mdash; SCK Core Automation 1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=a3c9731c" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/custom.css?v=45d66dd6" />
+
+  
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=29a6c3e3"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            SCK Core Automation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../user_guide/index.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../developer_guide/index.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../technical_reference/index.html">Technical Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">SCK Core Automation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">core_db.registry.portfolio.models</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for core_db.registry.portfolio.models</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; Definiton of the Portfolio Facts in the core-automation-portfolios table &quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">pynamodb.models</span> <span class="kn">import</span> <span class="n">Model</span>
+<span class="kn">from</span> <span class="nn">pynamodb.attributes</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">UnicodeAttribute</span><span class="p">,</span>
+    <span class="n">BooleanAttribute</span><span class="p">,</span>
+    <span class="n">ListAttribute</span><span class="p">,</span>
+    <span class="n">MapAttribute</span><span class="p">,</span>
+    <span class="n">NumberAttribute</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">core_framework</span> <span class="k">as</span> <span class="nn">util</span>
+
+<span class="kn">from</span> <span class="nn">...config</span> <span class="kn">import</span> <span class="n">get_table_name</span><span class="p">,</span> <span class="n">PORTFOLIO_FACTS</span>
+
+
+<div class="viewcode-block" id="ContactFacts">
+<a class="viewcode-back" href="../../../../technical_reference/core-db/_autosummary/core_db.registry.portfolio.models.ContactFacts.html#core_db.registry.portfolio.models.ContactFacts">[docs]</a>
+<span class="k">class</span> <span class="nc">ContactFacts</span><span class="p">(</span><span class="n">MapAttribute</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Contact details&quot;&quot;&quot;</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="n">UnicodeAttribute</span><span class="p">()</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;str: Name of the contact&quot;&quot;&quot;</span>
+
+    <span class="n">email</span> <span class="o">=</span> <span class="n">UnicodeAttribute</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;str: Email address of the contact&quot;&quot;&quot;</span>
+
+    <span class="n">attributes</span><span class="p">:</span> <span class="n">MapAttribute</span> <span class="o">=</span> <span class="n">MapAttribute</span><span class="p">(</span><span class="n">of</span><span class="o">=</span><span class="n">UnicodeAttribute</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;dict: Additional attributes for the contact&quot;&quot;&quot;</span>
+
+    <span class="n">enabled</span> <span class="o">=</span> <span class="n">BooleanAttribute</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;bool: Is the contact enabled&quot;&quot;&quot;</span>
+
+    <span class="n">UserInstantiated</span> <span class="o">=</span> <span class="n">UnicodeAttribute</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ContactFacts.serialize">
+<a class="viewcode-back" href="../../../../technical_reference/core-db/_autosummary/core_db.registry.portfolio.models.ContactFacts.html#core_db.registry.portfolio.models.ContactFacts.serialize">[docs]</a>
+    <span class="k">def</span> <span class="nf">serialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+        <span class="c1"># Why?  Well, because the &quot;default&quot; value is for initialization, not for serialization</span>
+        <span class="k">if</span> <span class="s2">&quot;enabled&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">values</span><span class="p">:</span>
+            <span class="n">values</span><span class="p">[</span><span class="s2">&quot;enabled&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">serialize</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ApproverFacts">
+<a class="viewcode-back" href="../../../../technical_reference/core-db/_autosummary/core_db.registry.portfolio.models.ApproverFacts.html#core_db.registry.portfolio.models.ApproverFacts">[docs]</a>
+<span class="k">class</span> <span class="nc">ApproverFacts</span><span class="p">(</span><span class="n">MapAttribute</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Approver details&quot;&quot;&quot;</span>
+
+    <span class="n">sequence</span> <span class="o">=</span> <span class="n">NumberAttribute</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;int: Sequence number of the approver. Default is 1.  Can be used to order the approvers&quot;&quot;&quot;</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">UnicodeAttribute</span><span class="p">()</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;str: Name of the approver&quot;&quot;&quot;</span>
+    <span class="n">email</span> <span class="o">=</span> <span class="n">UnicodeAttribute</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;str: Email address of the approver&quot;&quot;&quot;</span>
+    <span class="n">roles</span><span class="p">:</span> <span class="n">ListAttribute</span> <span class="o">=</span> <span class="n">ListAttribute</span><span class="p">(</span><span class="n">of</span><span class="o">=</span><span class="n">UnicodeAttribute</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;list: List of roles for the approver.  This approver can approve only specified roles&quot;&quot;&quot;</span>
+    <span class="n">attributes</span><span class="p">:</span> <span class="n">MapAttribute</span> <span class="o">=</span> <span class="n">MapAttribute</span><span class="p">(</span><span class="n">of</span><span class="o">=</span><span class="n">UnicodeAttribute</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;dict: Additional attributes for the approver&quot;&quot;&quot;</span>
+    <span class="n">depends_on</span><span class="p">:</span> <span class="n">ListAttribute</span> <span class="o">=</span> <span class="n">ListAttribute</span><span class="p">(</span><span class="n">of</span><span class="o">=</span><span class="n">NumberAttribute</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;list: List of sequence numbers of approvers that this approver depends on (which approvers must approve before this approver) &quot;&quot;&quot;</span>
+    <span class="n">enabled</span> <span class="o">=</span> <span class="n">BooleanAttribute</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;bool: Is the approver enabled&quot;&quot;&quot;</span>
+
+    <span class="n">UserInstantiated</span> <span class="o">=</span> <span class="n">UnicodeAttribute</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ApproverFacts.serialize">
+<a class="viewcode-back" href="../../../../technical_reference/core-db/_autosummary/core_db.registry.portfolio.models.ApproverFacts.html#core_db.registry.portfolio.models.ApproverFacts.serialize">[docs]</a>
+    <span class="k">def</span> <span class="nf">serialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+        <span class="c1"># Why?  Well, because the &quot;default&quot; value is for initialization, not for serialization</span>
+        <span class="k">if</span> <span class="s2">&quot;sequence&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">values</span><span class="p">:</span>
+            <span class="n">values</span><span class="p">[</span><span class="s2">&quot;sequence&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="s2">&quot;enabled&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">values</span><span class="p">:</span>
+            <span class="n">values</span><span class="p">[</span><span class="s2">&quot;enabled&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">serialize</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="OwnerFacts">
+<a class="viewcode-back" href="../../../../technical_reference/core-db/_autosummary/core_db.registry.portfolio.models.OwnerFacts.html#core_db.registry.portfolio.models.OwnerFacts">[docs]</a>
+<span class="k">class</span> <span class="nc">OwnerFacts</span><span class="p">(</span><span class="n">MapAttribute</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Owner details&quot;&quot;&quot;</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="n">UnicodeAttribute</span><span class="p">()</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;str: Name of the owner&quot;&quot;&quot;</span>
+    <span class="n">email</span> <span class="o">=</span> <span class="n">UnicodeAttribute</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;str: Email address of the owner&quot;&quot;&quot;</span>
+    <span class="n">phone</span> <span class="o">=</span> <span class="n">UnicodeAttribute</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;str: Phone number of the owner&quot;&quot;&quot;</span>
+    <span class="n">attributes</span><span class="p">:</span> <span class="n">MapAttribute</span> <span class="o">=</span> <span class="n">MapAttribute</span><span class="p">(</span><span class="n">of</span><span class="o">=</span><span class="n">UnicodeAttribute</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;dict: Additional attributes for the owner&quot;&quot;&quot;</span>
+
+    <span class="n">UserInstantiated</span> <span class="o">=</span> <span class="n">UnicodeAttribute</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="ProjectFacts">
+<a class="viewcode-back" href="../../../../technical_reference/core-db/_autosummary/core_db.registry.portfolio.models.ProjectFacts.html#core_db.registry.portfolio.models.ProjectFacts">[docs]</a>
+<span class="k">class</span> <span class="nc">ProjectFacts</span><span class="p">(</span><span class="n">MapAttribute</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Project details&quot;&quot;&quot;</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="n">UnicodeAttribute</span><span class="p">()</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;str: Name of the project&quot;&quot;&quot;</span>
+    <span class="n">code</span> <span class="o">=</span> <span class="n">UnicodeAttribute</span><span class="p">()</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;str: Code of the project&quot;&quot;&quot;</span>
+    <span class="n">repository</span> <span class="o">=</span> <span class="n">UnicodeAttribute</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;str: Git repository of the project&quot;&quot;&quot;</span>
+    <span class="n">description</span> <span class="o">=</span> <span class="n">UnicodeAttribute</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;str: Description of the project&quot;&quot;&quot;</span>
+    <span class="n">attributes</span><span class="p">:</span> <span class="n">MapAttribute</span> <span class="o">=</span> <span class="n">MapAttribute</span><span class="p">(</span><span class="n">of</span><span class="o">=</span><span class="n">UnicodeAttribute</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;dict: Additional attributes for the project&quot;&quot;&quot;</span>
+
+    <span class="n">UserInstantiated</span> <span class="o">=</span> <span class="n">UnicodeAttribute</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="PortfolioFacts">
+<a class="viewcode-back" href="../../../../technical_reference/core-db/_autosummary/core_db.registry.portfolio.models.PortfolioFacts.html#core_db.registry.portfolio.models.PortfolioFacts">[docs]</a>
+<span class="k">class</span> <span class="nc">PortfolioFacts</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Portfolio Facts database table record model&quot;&quot;&quot;</span>
+
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">table_name</span> <span class="o">=</span> <span class="n">get_table_name</span><span class="p">(</span><span class="n">PORTFOLIO_FACTS</span><span class="p">)</span>
+        <span class="n">region</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">get_region</span><span class="p">()</span>
+        <span class="n">host</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">get_dynamodb_host</span><span class="p">()</span>
+        <span class="n">read_capacity_units</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">write_capacity_units</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="n">client</span> <span class="o">=</span> <span class="n">UnicodeAttribute</span><span class="p">(</span><span class="n">hash_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;str: Client name is the Organization name &quot;slug&quot; representing the client organization. Example: &quot;myorg&quot; &quot;&quot;&quot;</span>
+
+    <span class="n">portfolio</span> <span class="o">=</span> <span class="n">UnicodeAttribute</span><span class="p">(</span><span class="n">range_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;str: Portfolio name is the name of the portfolio. Example: &quot;myportfolio&quot; &quot;&quot;&quot;</span>
+
+    <span class="n">contacts</span> <span class="o">=</span> <span class="n">ListAttribute</span><span class="p">(</span><span class="n">of</span><span class="o">=</span><span class="n">ContactFacts</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;list[ContactFacts]: List of contacts for the portfolio&quot;&quot;&quot;</span>
+
+    <span class="n">approvers</span> <span class="o">=</span> <span class="n">ListAttribute</span><span class="p">(</span><span class="n">of</span><span class="o">=</span><span class="n">ApproverFacts</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;list[ApproverFacts]: List of approvers for the portfolio&quot;&quot;&quot;</span>
+
+    <span class="n">project</span> <span class="o">=</span> <span class="n">ProjectFacts</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;ProjectFacts: Project details such as Jira Project, Confluence Workspace, Bitbucket Project, Jira Align Key&quot;&quot;&quot;</span>
+
+    <span class="n">bizapp</span> <span class="o">=</span> <span class="n">ProjectFacts</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;ProjectFacts: Business Application details</span>
+
+<span class="sd">        BizApp Code may be a Gitlab Group, GitHub org or GitHub group or team</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">owner</span> <span class="o">=</span> <span class="n">OwnerFacts</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;OwnerFacts: Owner details&quot;&quot;&quot;</span>
+
+    <span class="n">attributes</span><span class="p">:</span> <span class="n">MapAttribute</span> <span class="o">=</span> <span class="n">MapAttribute</span><span class="p">(</span><span class="n">of</span><span class="o">=</span><span class="n">UnicodeAttribute</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;dict: Additional attributes for the portfolio</span>
+
+<span class="sd">        Allow an option number of attributes to be added to the portfolio as UnicodeAttributes</span>
+<span class="sd">        These will be used to store additional information about the portfolio</span>
+<span class="sd">        that is not covered by the standard attributes</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">UserInstantiated</span> <span class="o">=</span> <span class="n">UnicodeAttribute</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

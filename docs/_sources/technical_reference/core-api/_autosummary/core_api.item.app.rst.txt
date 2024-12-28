@@ -1,0 +1,42 @@
+core_api.item.app
+=================
+
+.. automodule:: core_api.item.app
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+      create_app_action
+      delete_app_action
+      get_app_action
+      get_app_list_action
+      update_app_action
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      ApiAppActions
+   
+   
+
+   
+   
+   
+
+
+

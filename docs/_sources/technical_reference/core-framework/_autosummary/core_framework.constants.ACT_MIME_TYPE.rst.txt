@@ -1,0 +1,6 @@
+core\_framework.constants.ACT\_MIME\_TYPE
+=========================================
+
+.. currentmodule:: core_framework.constants
+
+.. autodata:: ACT_MIME_TYPE

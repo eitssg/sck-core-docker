@@ -1,0 +1,257 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Using Core Automation &mdash; SCK Core Automation 1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a3c9731c" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=45d66dd6" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=29a6c3e3"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="FAQ" href="faq.html" />
+    <link rel="prev" title="Organizations" href="organizations.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            SCK Core Automation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">User Guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="features.html">Features</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="using.html">Using Core Automation</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="organizations.html">Organizations</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Using Core Automation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#deploying-core-templates">Deploying Core Templates</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#container-mode">Container Mode</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="faq.html">FAQ</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/index.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../technical_reference/index.html">Technical Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SCK Core Automation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">User Guide</a></li>
+          <li class="breadcrumb-item"><a href="using.html">Using Core Automation</a></li>
+      <li class="breadcrumb-item active">Using Core Automation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/user_guide/commandline.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="using-core-automation">
+<h1>Using Core Automation<a class="headerlink" href="#using-core-automation" title="Link to this heading"></a></h1>
+<p>Core Automation provides a command line interface (CLI) to package, upload, compile, deploy, release, and teardown application infrastructure.</p>
+<p>The CLI can be used by CI/CD pipelines to automate the deployment of application infrastructure in the cloud along with application
+installers on SOE images.  This provides developers and operators with a standardised, repeatable, and secure way to deploy applications.</p>
+<p>The command line also provides the tools you need to deploy your own CloudFromtion templates in an organized way.</p>
+<p><strong>Getting help</strong></p>
+<p>The CLI is hierarchy of commands:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Running core</span>
+
+core<span class="w"> </span><span class="o">[</span>configure<span class="p">|</span>run<span class="p">|</span>deploy<span class="p">|</span>engine<span class="p">|</span>domain<span class="p">|</span>organization<span class="p">|</span>portfolio<span class="p">|</span>app<span class="p">|</span>zone<span class="o">]</span>
+
+<span class="c1"># Configuring core CLI</span>
+core<span class="w"> </span>configure
+
+<span class="c1"># Build and Deploy application infrastructure from Core-Automation Templates</span>
+core<span class="w"> </span>run<span class="w"> </span><span class="o">[</span>package<span class="p">|</span>upload<span class="p">|</span>compile<span class="p">|</span>deploy<span class="p">|</span>release<span class="p">|</span>teardown<span class="o">]</span>
+core<span class="w"> </span>run<span class="w"> </span>package
+core<span class="w"> </span>run<span class="w"> </span>upload
+core<span class="w"> </span>run<span class="w"> </span>compile
+core<span class="w"> </span>run<span class="w"> </span>deploy
+core<span class="w"> </span>run<span class="w"> </span>release
+core<span class="w"> </span>run<span class="w"> </span>teardown
+
+<span class="c1"># Deploy Cloudformation Templates</span>
+core<span class="w"> </span>deploy
+
+<span class="c1"># Examine Core internals and install/deploy updates on AWS</span>
+core<span class="w"> </span>engine<span class="w"> </span><span class="o">[</span>init<span class="p">|</span>info<span class="p">|</span>deploy<span class="p">|</span>net<span class="p">|</span>teardown<span class="o">]</span>
+core<span class="w"> </span>engine<span class="w"> </span>init
+core<span class="w"> </span>engine<span class="w"> </span>info
+core<span class="w"> </span>engine<span class="w"> </span>deploy
+core<span class="w"> </span>engine<span class="w"> </span>net
+core<span class="w"> </span>engine<span class="w"> </span>teardown
+
+<span class="c1"># Manage Domain servers and Route53</span>
+core<span class="w"> </span>domain
+
+<span class="c1"># Manage AWS Organizations and SCP and setup new Clients</span>
+core<span class="w"> </span>organization
+
+<span class="c1"># Register and Modify Business Apps</span>
+core<span class="w"> </span>portfolio
+
+<span class="c1"># Register and Modify Deployment Units for Business Apps</span>
+core<span class="w"> </span>app
+
+<span class="c1"># Register and Modify Landing Zones Zones for Business Apps</span>
+core<span class="w"> </span>zone
+</pre></div>
+</div>
+<p>You can getdetailed help on any command by running:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>core<span class="w"> </span>--help
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The CLI requires that you have AWS CLI installed and at least 1 AWS account which will be
+used as the <em>Root Organization Account</em>.</p>
+</div>
+<section id="deploying-core-templates">
+<h2>Deploying Core Templates<a class="headerlink" href="#deploying-core-templates" title="Link to this heading"></a></h2>
+<p>Assuming the following conditions:</p>
+<ol class="arabic simple">
+<li><p>We have a Business Application <em>portfolio</em> that is registered in our CMDB called <strong>demo</strong>.</p></li>
+<li><p>The <strong>demo</strong> business applcation has an <em>app</em> deployment unit called <strong>canary</strong> that been configured
+to be deployed in a specific Landing Zone.</p></li>
+<li><p>The <strong>canary</strong> app (a git repository) has a <em>branch</em> called <strong>mybranch</strong> that is ready to be deployed.</p></li>
+<li><p>The <strong>canary</strong> app has a <em>build</em> version, git tag or commit ID of <strong>v0.0.6-pre.204+32f57bd1</strong>.</p></li>
+</ol>
+<p>Run from the demo-canary repository directory as the core application expects the current folder
+to be your project and there is a <strong>platform</strong> folder in the root of the project.  Also, your program
+installation files (e.g. install.exe or install.msi) should be in a place that the <em>package</em> process
+can find them.</p>
+<div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="nb">cd </span><span class="n">C</span><span class="p">:\</span><span class="n">Users</span><span class="p">\</span><span class="n">myuser</span><span class="p">\</span><span class="n">Development</span><span class="p">\</span><span class="n">demo-canary</span>
+<span class="n">core</span> <span class="p">-</span><span class="n">-client</span> <span class="n">abc</span> <span class="n">run</span> <span class="n">package</span> <span class="n">upload</span> <span class="n">compile</span> <span class="n">deploy</span> <span class="n">-p</span> <span class="n">demo</span> <span class="n">-a</span> <span class="n">canary</span> <span class="n">-b</span> <span class="n">mybranch</span> <span class="n">-n</span> <span class="s2">&quot;v0.0.6-pre.204+32f57bd1&quot;</span>
+</pre></div>
+</div>
+<p>This command will do the following:</p>
+<ol class="arabic simple">
+<li><p><em>package</em> the folder “&lt;project folder&gt;/platform/**” into a zip file</p></li>
+<li><p><em>upload</em> the package.zip to the Core Automation S3 packages bucket s3://*/core-automation/packages/*</p></li>
+<li><p><em>compile</em> the Core Automation templates in the package.zip into CloudFormation templates.  This is done in Lambda.
+* Cloudformation templates are generated and uploaded to the artefacts folder s3://*/core-automation/artefacts/*
+* Your installaion programs “install.exe” or other files are uploaded to the files fileder s://*/core-automation/files/*</p></li>
+<li><p><em>deploy</em> the compiled CloudFormation templates to the AWS account specified in the Registry for the <strong>canary</strong> app.</p></li>
+</ol>
+<p>For more information about how to build your CI/CD pipelines, see the <a class="reference internal" href="../developer_guide/index.html#developer-guide"><span class="std std-ref">Developer Guide</span></a>.</p>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>When your “CLIENT” and your “AWS_PROFILE” are the same, you only need to specify one option
+in the command line parameter.  Optionally, you can set the AWS_PROFILE environment variable.
+and you will not need to specify the –client abc parameter.</p>
+</div>
+</section>
+<section id="container-mode">
+<h2>Container Mode<a class="headerlink" href="#container-mode" title="Link to this heading"></a></h2>
+<p>If you would like to run core-automation completely inside a docker container, you can do so by adding the “–local” option
+to the <em>core</em> command.</p>
+<p>Example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Deploy Core Templates from a container</span>
+core<span class="w"> </span>--local<span class="w"> </span>run<span class="w"> </span>--help
+
+<span class="c1"># Deploy CloudFormation Templates from a container</span>
+core<span class="w"> </span>--local<span class="w"> </span>deploy<span class="w"> </span>--help
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Everything will run locally within a container except DynamoDB.  Even if you
+specify <strong>–local</strong> parameter, the DynamoDB will still be accessed remotely on
+the <strong>DYNAMODB_URL</strong> endpoint sepcified in the environment variables.  You may also
+use the enviornment variable <strong>LOCAL_MODE=True</strong> to specify that you are running locally
+or inside a container.</p>
+</div>
+<p>Pacakges, Files, and Artefacts will be stored locally within the contianer volume in the repository <strong>local</strong> folder.
+Of courese you can mount a shared volume to the container:</p>
+<blockquote>
+<div><p>/core-automation/local/packages/&lt;client&gt;/&lt;portfolio&gt;/&lt;app&gt;/&lt;branch&gt;/&lt;build&gt;/packages.zip
+/core-automation/local/artefacts/&lt;client&gt;/&lt;portfolio&gt;/&lt;app&gt;/&lt;branch&gt;/&lt;build&gt;/*.yaml
+/core-automation/local/files/&lt;client&gt;/&lt;portfolio&gt;/&lt;app&gt;/&lt;branch&gt;/&lt;build&gt;/install.exe</p>
+</div></blockquote>
+<p>If you wish to specify a different location for the shared files, use the <strong>LOCAL_ROOT</strong> environment variable.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">LOCAL_MODE</span><span class="o">=</span><span class="nb">true</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">LOCAL_ROOT</span><span class="o">=</span>/mnt/core-automation/local
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This option will prevent Core from uploading artefacts to S3 and will NOT use lambda.
+However, the container <strong>must</strong> have access to the DynamoDB database.</p>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="organizations.html" class="btn btn-neutral float-left" title="Organizations" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="faq.html" class="btn btn-neutral float-right" title="FAQ" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

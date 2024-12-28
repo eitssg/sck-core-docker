@@ -1,0 +1,46 @@
+core_api.facts.facter
+=====================
+
+.. automodule:: core_api.facts.facter
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+      derrive_environment_from_branch
+      get_app_facts
+      get_client_facts
+      get_facts
+      get_facts_action
+      get_facts_by_identity
+      get_portfolio_facts
+      get_zone_facts
+      get_zone_facts_by_account_id
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      ApiFactsActions
+   
+   
+
+   
+   
+   
+
+
+

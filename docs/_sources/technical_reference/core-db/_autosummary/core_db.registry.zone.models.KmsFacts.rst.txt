@@ -1,0 +1,62 @@
+core\_db.registry.zone.models.KmsFacts
+======================================
+
+.. currentmodule:: core_db.registry.zone.models
+
+.. autoclass:: KmsFacts
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~KmsFacts.AwsAccountId
+      ~KmsFacts.DelegateAwsAccountIds
+      ~KmsFacts.KmsKey
+      ~KmsFacts.KmsKeyArn
+      ~KmsFacts.UserInstantiated
+      ~KmsFacts.attr_name
+      ~KmsFacts.attr_type
+      ~KmsFacts.attribute_args
+      ~KmsFacts.null
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~KmsFacts.__init__
+      ~KmsFacts.add
+      ~KmsFacts.append
+      ~KmsFacts.as_dict
+      ~KmsFacts.between
+      ~KmsFacts.contains
+      ~KmsFacts.delete
+      ~KmsFacts.deserialize
+      ~KmsFacts.does_not_exist
+      ~KmsFacts.exists
+      ~KmsFacts.from_dynamodb_dict
+      ~KmsFacts.from_simple_dict
+      ~KmsFacts.get_attributes
+      ~KmsFacts.get_value
+      ~KmsFacts.is_correctly_typed
+      ~KmsFacts.is_in
+      ~KmsFacts.is_raw
+      ~KmsFacts.is_type
+      ~KmsFacts.prepend
+      ~KmsFacts.remove
+      ~KmsFacts.serialize
+      ~KmsFacts.set
+      ~KmsFacts.startswith
+      ~KmsFacts.to_dynamodb_dict
+      ~KmsFacts.to_simple_dict
+      ~KmsFacts.validate
+   
+   

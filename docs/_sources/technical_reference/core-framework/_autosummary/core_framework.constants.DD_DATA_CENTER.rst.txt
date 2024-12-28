@@ -1,0 +1,6 @@
+core\_framework.constants.DD\_DATA\_CENTER
+==========================================
+
+.. currentmodule:: core_framework.constants
+
+.. autodata:: DD_DATA_CENTER

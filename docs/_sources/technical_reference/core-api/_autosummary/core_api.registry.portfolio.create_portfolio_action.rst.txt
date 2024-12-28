@@ -1,0 +1,6 @@
+core\_api.registry.portfolio.create\_portfolio\_action
+======================================================
+
+.. currentmodule:: core_api.registry.portfolio
+
+.. autofunction:: create_portfolio_action

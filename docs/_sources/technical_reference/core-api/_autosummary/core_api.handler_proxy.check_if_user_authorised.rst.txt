@@ -1,0 +1,6 @@
+core\_api.handler\_proxy.check\_if\_user\_authorised
+====================================================
+
+.. currentmodule:: core_api.handler_proxy
+
+.. autofunction:: check_if_user_authorised

@@ -1,0 +1,251 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>core_db.actions &mdash; SCK Core Automation 1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a3c9731c" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=45d66dd6" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=29a6c3e3"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            SCK Core Automation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/index.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/index.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../technical_reference/index.html">Technical Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">SCK Core Automation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">core_db.actions</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for core_db.actions</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; All table Actions share a CRUD interface and this Model class defines the functions for Create, Read, Update, Delete functions. &quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">.response</span> <span class="kn">import</span> <span class="n">Response</span>
+<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="n">NotFoundException</span>
+
+
+<div class="viewcode-block" id="TableActions">
+<a class="viewcode-back" href="../../technical_reference/core-db/_autosummary/core_db.actions.TableActions.html#core_db.actions.TableActions">[docs]</a>
+<span class="k">class</span> <span class="nc">TableActions</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Base Interface Class API for all table actions for list, get, update, create, delete, and patch</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Base API for all table actions</span>
+
+<span class="sd">        This abstraction defining the base API for all table actions.  This allows</span>
+<span class="sd">        function routers to handle all types of actions for each table</span>
+<span class="sd">        implementation.</span>
+
+<span class="sd">        Lambda Handler event will issue a command to the DB and will route the</span>
+<span class="sd">        command to the specific table implementation.</span>
+
+<span class="sd">        Commands are similar to:</span>
+
+<span class="sd">            - item:get</span>
+<span class="sd">            - item:list</span>
+<span class="sd">            - item:create</span>
+<span class="sd">            - item:update</span>
+
+<span class="sd">            or</span>
+
+<span class="sd">            - event:create</span>
+<span class="sd">            - event:get</span>
+<span class="sd">            - event:list</span>
+
+<span class="sd">        Where the lambda event.action split(&quot;:&quot;)[0] is the table short name and the item after</span>
+<span class="sd">        the colon is the action to perform. (Class method)</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+
+<div class="viewcode-block" id="TableActions.list">
+<a class="viewcode-back" href="../../technical_reference/core-db/_autosummary/core_db.actions.TableActions.html#core_db.actions.TableActions.list">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">list</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        List all items in the table.  Various implmenentations in subclasses</span>
+<span class="sd">        may behave differently.  Some pay return a list of objects, some may return</span>
+<span class="sd">        a list of keys.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            NotFoundException: If your subclass has not implmeneted the list method</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Response: :class:`Response` object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="n">NotFoundException</span><span class="p">(</span><span class="s2">&quot;GET list not implemented&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TableActions.get">
+<a class="viewcode-back" href="../../technical_reference/core-db/_autosummary/core_db.actions.TableActions.html#core_db.actions.TableActions.get">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a record from the table by primary hash_key and range_key. The intent</span>
+<span class="sd">        is to return one and only one unique record.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            NotFoundException: If your subclass has not implmeneted the get method</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Response: :class:`Response` object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="n">NotFoundException</span><span class="p">(</span><span class="s2">&quot;GET not implemented&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TableActions.create">
+<a class="viewcode-back" href="../../technical_reference/core-db/_autosummary/core_db.actions.TableActions.html#core_db.actions.TableActions.create">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a new record in the table.  The primary hash_key and range_key must be provided.</span>
+
+<span class="sd">        Other fields may be provided as requred by the table model schema.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            NotFoundException: if your subclass has not implemented the create method</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Response: :class:`Response` object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="n">NotFoundException</span><span class="p">(</span><span class="s2">&quot;POST create not implemented&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TableActions.update">
+<a class="viewcode-back" href="../../technical_reference/core-db/_autosummary/core_db.actions.TableActions.html#core_db.actions.TableActions.update">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Updates a record in the table.  The primary hash_key and range_key must be provided.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            NotFoundException: If your subclass has not implemented the update method</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Response: :class:`Response` object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="n">NotFoundException</span><span class="p">(</span><span class="s2">&quot;PUT update not implemented&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TableActions.delete">
+<a class="viewcode-back" href="../../technical_reference/core-db/_autosummary/core_db.actions.TableActions.html#core_db.actions.TableActions.delete">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Deletes a record from the table.  The primary hash_key and range_key must be provided.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            NotFoundException: If your subclass has not implemented the delete method</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Response: :class:`Response` object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="n">NotFoundException</span><span class="p">(</span><span class="s2">&quot;DELETE not implemented&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TableActions.patch">
+<a class="viewcode-back" href="../../technical_reference/core-db/_autosummary/core_db.actions.TableActions.html#core_db.actions.TableActions.patch">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">patch</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Allows you to specify only a partial set of fields to update in a record.</span>
+
+<span class="sd">        The effect will be that the full record will be fetched, the fields specified</span>
+<span class="sd">        will be updated, and the full record will be saved back to the table.</span>
+
+<span class="sd">        Some implementations may use the dynamodb PATCH operation to update a field.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            NotFoundException: If your subclass has not implemented the patch method</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Response: :class:`Response` object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">raise</span> <span class="n">NotFoundException</span><span class="p">(</span><span class="s2">&quot;PATCH update not implemented&quot;</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

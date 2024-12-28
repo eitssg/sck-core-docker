@@ -1,0 +1,6 @@
+core\_api.event.event.action\_get\_event\_list
+==============================================
+
+.. currentmodule:: core_api.event.event
+
+.. autofunction:: action_get_event_list

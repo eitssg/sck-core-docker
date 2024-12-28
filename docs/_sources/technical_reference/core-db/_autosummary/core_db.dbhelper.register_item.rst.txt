@@ -1,0 +1,6 @@
+core\_db.dbhelper.register\_item
+================================
+
+.. currentmodule:: core_db.dbhelper
+
+.. autofunction:: register_item

@@ -1,0 +1,70 @@
+core\_api.request.EventRequestContext
+=====================================
+
+.. currentmodule:: core_api.request
+
+.. autoclass:: EventRequestContext
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~EventRequestContext.model_computed_fields
+      ~EventRequestContext.model_config
+      ~EventRequestContext.model_extra
+      ~EventRequestContext.model_fields
+      ~EventRequestContext.model_fields_set
+      ~EventRequestContext.resourceId
+      ~EventRequestContext.resourcePath
+      ~EventRequestContext.httpMethod
+      ~EventRequestContext.extendedRequestId
+      ~EventRequestContext.requestTime
+      ~EventRequestContext.path
+      ~EventRequestContext.accountId
+      ~EventRequestContext.protocol
+      ~EventRequestContext.stage
+      ~EventRequestContext.domainPrefix
+      ~EventRequestContext.requestTimeEpoch
+      ~EventRequestContext.requestId
+      ~EventRequestContext.domainName
+      ~EventRequestContext.identity
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~EventRequestContext.__init__
+      ~EventRequestContext.construct
+      ~EventRequestContext.copy
+      ~EventRequestContext.dict
+      ~EventRequestContext.from_orm
+      ~EventRequestContext.json
+      ~EventRequestContext.model_construct
+      ~EventRequestContext.model_copy
+      ~EventRequestContext.model_dump
+      ~EventRequestContext.model_dump_json
+      ~EventRequestContext.model_json_schema
+      ~EventRequestContext.model_parametrized_name
+      ~EventRequestContext.model_post_init
+      ~EventRequestContext.model_rebuild
+      ~EventRequestContext.model_validate
+      ~EventRequestContext.model_validate_json
+      ~EventRequestContext.model_validate_strings
+      ~EventRequestContext.parse_file
+      ~EventRequestContext.parse_obj
+      ~EventRequestContext.parse_raw
+      ~EventRequestContext.schema
+      ~EventRequestContext.schema_json
+      ~EventRequestContext.update_forward_refs
+      ~EventRequestContext.validate
+   
+   

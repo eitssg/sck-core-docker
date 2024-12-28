@@ -1,0 +1,71 @@
+core\_db.registry.client.models.ClientFacts
+===========================================
+
+.. currentmodule:: core_db.registry.client.models
+
+.. autoclass:: ClientFacts
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ClientFacts.UserInstantiated
+      ~ClientFacts.audit_account
+      ~ClientFacts.automation_account
+      ~ClientFacts.automation_bucket
+      ~ClientFacts.bucket_region
+      ~ClientFacts.client
+      ~ClientFacts.client_region
+      ~ClientFacts.docs_bucket
+      ~ClientFacts.master_region
+      ~ClientFacts.organization_account
+      ~ClientFacts.organization_id
+      ~ClientFacts.organization_name
+      ~ClientFacts.scope_prefix
+      ~ClientFacts.security_account
+      ~ClientFacts.ui_bucket
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ClientFacts.__init__
+      ~ClientFacts.batch_get
+      ~ClientFacts.batch_write
+      ~ClientFacts.count
+      ~ClientFacts.create_table
+      ~ClientFacts.delete
+      ~ClientFacts.delete_table
+      ~ClientFacts.describe_table
+      ~ClientFacts.deserialize
+      ~ClientFacts.exists
+      ~ClientFacts.from_dynamodb_dict
+      ~ClientFacts.from_raw_data
+      ~ClientFacts.from_simple_dict
+      ~ClientFacts.get
+      ~ClientFacts.get_attributes
+      ~ClientFacts.get_delete_kwargs_from_instance
+      ~ClientFacts.get_operation_kwargs_from_class
+      ~ClientFacts.get_save_kwargs_from_instance
+      ~ClientFacts.get_update_kwargs_from_instance
+      ~ClientFacts.query
+      ~ClientFacts.refresh
+      ~ClientFacts.save
+      ~ClientFacts.scan
+      ~ClientFacts.serialize
+      ~ClientFacts.to_dynamodb_dict
+      ~ClientFacts.to_simple_dict
+      ~ClientFacts.update
+      ~ClientFacts.update_local_version_attribute
+      ~ClientFacts.update_ttl
+   
+   

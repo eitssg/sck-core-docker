@@ -1,0 +1,6 @@
+core\_api.registry.zone.update\_zones\_action
+=============================================
+
+.. currentmodule:: core_api.registry.zone
+
+.. autofunction:: update_zones_action

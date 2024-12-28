@@ -1,0 +1,33 @@
+core\_db.item.models.ParentCreatedAtIndex
+=========================================
+
+.. currentmodule:: core_db.item.models
+
+.. autoclass:: ParentCreatedAtIndex
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ParentCreatedAtIndex.created_at
+      ~ParentCreatedAtIndex.parent_prn
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ParentCreatedAtIndex.__init__
+      ~ParentCreatedAtIndex.count
+      ~ParentCreatedAtIndex.query
+      ~ParentCreatedAtIndex.scan
+   
+   

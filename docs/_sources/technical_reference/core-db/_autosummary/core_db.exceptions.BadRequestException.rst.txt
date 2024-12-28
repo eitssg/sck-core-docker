@@ -1,0 +1,6 @@
+core\_db.exceptions.BadRequestException
+=======================================
+
+.. currentmodule:: core_db.exceptions
+
+.. autoexception:: BadRequestException

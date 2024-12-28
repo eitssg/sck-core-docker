@@ -1,0 +1,6 @@
+core\_execute.actionlib.actions.aws.rds.modify\_db\_instance.generate\_template
+===============================================================================
+
+.. currentmodule:: core_execute.actionlib.actions.aws.rds.modify_db_instance
+
+.. autofunction:: generate_template

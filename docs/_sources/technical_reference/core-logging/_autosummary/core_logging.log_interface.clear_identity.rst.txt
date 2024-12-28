@@ -1,0 +1,6 @@
+core\_logging.log\_interface.clear\_identity
+============================================
+
+.. currentmodule:: core_logging.log_interface
+
+.. autofunction:: clear_identity

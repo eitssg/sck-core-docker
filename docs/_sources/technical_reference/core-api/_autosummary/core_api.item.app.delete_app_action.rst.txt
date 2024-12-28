@@ -1,0 +1,6 @@
+core\_api.item.app.delete\_app\_action
+======================================
+
+.. currentmodule:: core_api.item.app
+
+.. autofunction:: delete_app_action

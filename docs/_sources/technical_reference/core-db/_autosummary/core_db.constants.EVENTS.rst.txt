@@ -1,0 +1,6 @@
+core\_db.constants.EVENTS
+=========================
+
+.. currentmodule:: core_db.constants
+
+.. autodata:: EVENTS

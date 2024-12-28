@@ -1,0 +1,62 @@
+core\_db.event.models.EventModel
+================================
+
+.. currentmodule:: core_db.event.models
+
+.. autoclass:: EventModel
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~EventModel.event_type
+      ~EventModel.item_type
+      ~EventModel.message
+      ~EventModel.prn
+      ~EventModel.status
+      ~EventModel.timestamp
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~EventModel.__init__
+      ~EventModel.batch_get
+      ~EventModel.batch_write
+      ~EventModel.count
+      ~EventModel.create_table
+      ~EventModel.delete
+      ~EventModel.delete_table
+      ~EventModel.describe_table
+      ~EventModel.deserialize
+      ~EventModel.exists
+      ~EventModel.from_dynamodb_dict
+      ~EventModel.from_raw_data
+      ~EventModel.from_simple_dict
+      ~EventModel.get
+      ~EventModel.get_attributes
+      ~EventModel.get_delete_kwargs_from_instance
+      ~EventModel.get_operation_kwargs_from_class
+      ~EventModel.get_save_kwargs_from_instance
+      ~EventModel.get_update_kwargs_from_instance
+      ~EventModel.query
+      ~EventModel.refresh
+      ~EventModel.save
+      ~EventModel.scan
+      ~EventModel.serialize
+      ~EventModel.to_dynamodb_dict
+      ~EventModel.to_simple_dict
+      ~EventModel.update
+      ~EventModel.update_local_version_attribute
+      ~EventModel.update_ttl
+   
+   

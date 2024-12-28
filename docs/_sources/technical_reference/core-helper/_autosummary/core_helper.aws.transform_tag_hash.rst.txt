@@ -1,0 +1,6 @@
+core\_helper.aws.transform\_tag\_hash
+=====================================
+
+.. currentmodule:: core_helper.aws
+
+.. autofunction:: transform_tag_hash

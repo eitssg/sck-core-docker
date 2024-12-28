@@ -1,0 +1,6 @@
+core\_helper.aws.elb\_client
+============================
+
+.. currentmodule:: core_helper.aws
+
+.. autofunction:: elb_client

@@ -1,0 +1,6 @@
+core\_db.dbhelper.update\_item
+==============================
+
+.. currentmodule:: core_db.dbhelper
+
+.. autofunction:: update_item

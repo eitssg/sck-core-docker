@@ -1,0 +1,6 @@
+core\_framework.constants.ST\_CIDR
+==================================
+
+.. currentmodule:: core_framework.constants
+
+.. autodata:: ST_CIDR

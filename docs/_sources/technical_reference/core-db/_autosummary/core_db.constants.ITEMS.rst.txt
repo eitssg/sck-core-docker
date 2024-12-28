@@ -1,0 +1,6 @@
+core\_db.constants.ITEMS
+========================
+
+.. currentmodule:: core_db.constants
+
+.. autodata:: ITEMS

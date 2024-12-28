@@ -1,0 +1,6 @@
+core\_framework.constants.TP\_DEPLOY\_ACTIONS
+=============================================
+
+.. currentmodule:: core_framework.constants
+
+.. autodata:: TP_DEPLOY_ACTIONS

@@ -1,0 +1,6 @@
+core\_db.constants.PARENT\_PRN
+==============================
+
+.. currentmodule:: core_db.constants
+
+.. autodata:: PARENT_PRN

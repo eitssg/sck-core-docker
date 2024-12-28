@@ -1,0 +1,6 @@
+core\_api.item.build.release\_build
+===================================
+
+.. currentmodule:: core_api.item.build
+
+.. autofunction:: release_build

@@ -1,0 +1,838 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>core_framework.constants &mdash; SCK Core Automation 1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a3c9731c" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=45d66dd6" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=29a6c3e3"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="core_framework.constants.HTTP_OK" href="core_framework.constants.HTTP_OK.html" />
+    <link rel="prev" title="core-framework" href="../core-framework.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            SCK Core Automation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../user_guide/index.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developer_guide/index.html">Developer Guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Technical Reference Guide</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../modules.html">Modules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../core-logging/core-logging.html">core-logging</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../core-framework.html">core-framework</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="../core-framework.html#constants">Constants</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../core-framework.html#object-models">Object Models</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../core-framework.html#common-functions">Common Functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../core-framework.html#local-execution-magic">Local Execution Magic</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-db/core-db.html">core-db</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-helper/core-helper.html">core-helper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-renderer/core-renderer.html">core-renderer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-component-compiler/core-component-compiler.html">core-component-compiler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-deployspec-compiler/core-deployspec-compiler.html">core-deployspec-compiler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-execute/core-execute.html">core-execute</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-organization/core-organization.html">core-organization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-runner/core-runner.html">core-runner</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-invoker/core-invoker.html">core-invoker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-report/core-report.html">core-report</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-api-auth/core-api-auth.html">core-api-auth</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-api/core-api.html">core-api</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-codecommit-listener/core-codecommit-listener.html">core-codecommit-listener</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-automation/core-automation.html">core-automation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../core-db/db_schema.html">Database Schema</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SCK Core Automation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Technical Reference Guide</a></li>
+          <li class="breadcrumb-item"><a href="../../modules.html">Modules</a></li>
+          <li class="breadcrumb-item"><a href="../core-framework.html">core-framework</a></li>
+      <li class="breadcrumb-item active">core_framework.constants</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/technical_reference/core-framework/_autosummary/core_framework.constants.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-core_framework.constants">
+<span id="core-framework-constants"></span><h1>core_framework.constants<a class="headerlink" href="#module-core_framework.constants" title="Link to this heading"></a></h1>
+<p>This module provides a list of constants that are used throughout the Core-Automation framework.</p>
+<p>The constants prevent mistyping and provide a single source of truth for the values used in the framework.</p>
+<p>This includes values for the Task Payload, Task Results, Task Result, and other objects used in the framework.</p>
+<p class="rubric">Module Attributes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.HTTP_OK.html#core_framework.constants.HTTP_OK" title="core_framework.constants.HTTP_OK"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HTTP_OK</span></code></a></p></td>
+<td><p>- &quot;200 OK&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.HTTP_CREATED.html#core_framework.constants.HTTP_CREATED" title="core_framework.constants.HTTP_CREATED"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HTTP_CREATED</span></code></a></p></td>
+<td><p>- &quot;201 Created&quot; &quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.HTTP_ACCEPTED.html#core_framework.constants.HTTP_ACCEPTED" title="core_framework.constants.HTTP_ACCEPTED"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HTTP_ACCEPTED</span></code></a></p></td>
+<td><p>- &quot;202 Accepted&quot; &quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.HTTP_NO_CONTENT.html#core_framework.constants.HTTP_NO_CONTENT" title="core_framework.constants.HTTP_NO_CONTENT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HTTP_NO_CONTENT</span></code></a></p></td>
+<td><p>- &quot;204 No Content&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.HTTP_BAD_REQUEST.html#core_framework.constants.HTTP_BAD_REQUEST" title="core_framework.constants.HTTP_BAD_REQUEST"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HTTP_BAD_REQUEST</span></code></a></p></td>
+<td><p>- &quot;400 Bad Request&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.HTTP_UNAUTHORIZED.html#core_framework.constants.HTTP_UNAUTHORIZED" title="core_framework.constants.HTTP_UNAUTHORIZED"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HTTP_UNAUTHORIZED</span></code></a></p></td>
+<td><p>- &quot;401 Unauthorized&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.HTTP_PAYMENT_REQUIRED.html#core_framework.constants.HTTP_PAYMENT_REQUIRED" title="core_framework.constants.HTTP_PAYMENT_REQUIRED"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HTTP_PAYMENT_REQUIRED</span></code></a></p></td>
+<td><p>- &quot;402 Payment Required&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.HTTP_FORBIDDEN.html#core_framework.constants.HTTP_FORBIDDEN" title="core_framework.constants.HTTP_FORBIDDEN"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HTTP_FORBIDDEN</span></code></a></p></td>
+<td><p>- &quot;403 Forbidden&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.HTTP_NOT_FOUND.html#core_framework.constants.HTTP_NOT_FOUND" title="core_framework.constants.HTTP_NOT_FOUND"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HTTP_NOT_FOUND</span></code></a></p></td>
+<td><p>- &quot;404 Not Found&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.HTTP_METHOD_NOT_ALLOWED.html#core_framework.constants.HTTP_METHOD_NOT_ALLOWED" title="core_framework.constants.HTTP_METHOD_NOT_ALLOWED"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HTTP_METHOD_NOT_ALLOWED</span></code></a></p></td>
+<td><p>- &quot;405 Method Not Allowed&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.HTTP_NOT_ACCEPTABLE.html#core_framework.constants.HTTP_NOT_ACCEPTABLE" title="core_framework.constants.HTTP_NOT_ACCEPTABLE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HTTP_NOT_ACCEPTABLE</span></code></a></p></td>
+<td><p>- &quot;406 Not Acceptable&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.HTTP_PROXY_AUTHENTICATION_REQUIRED.html#core_framework.constants.HTTP_PROXY_AUTHENTICATION_REQUIRED" title="core_framework.constants.HTTP_PROXY_AUTHENTICATION_REQUIRED"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HTTP_PROXY_AUTHENTICATION_REQUIRED</span></code></a></p></td>
+<td><p>- &quot;407 Proxy Authentication Required&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.HTTP_REQUEST_TIMEOUT.html#core_framework.constants.HTTP_REQUEST_TIMEOUT" title="core_framework.constants.HTTP_REQUEST_TIMEOUT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HTTP_REQUEST_TIMEOUT</span></code></a></p></td>
+<td><p>- &quot;408 Request Timeout&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.HTTP_CONFLICT.html#core_framework.constants.HTTP_CONFLICT" title="core_framework.constants.HTTP_CONFLICT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HTTP_CONFLICT</span></code></a></p></td>
+<td><p>- &quot;409 Conflict&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.HTTP_UNPROCESSABLE_ENTITY.html#core_framework.constants.HTTP_UNPROCESSABLE_ENTITY" title="core_framework.constants.HTTP_UNPROCESSABLE_ENTITY"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HTTP_UNPROCESSABLE_ENTITY</span></code></a></p></td>
+<td><p>- &quot;422 Unprocessable Entity&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.HTTP_INTERNAL_SERVER_ERROR.html#core_framework.constants.HTTP_INTERNAL_SERVER_ERROR" title="core_framework.constants.HTTP_INTERNAL_SERVER_ERROR"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HTTP_INTERNAL_SERVER_ERROR</span></code></a></p></td>
+<td><p>- &quot;500 Internal Server Error&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.HTTP_NOT_IMPLEMENTED.html#core_framework.constants.HTTP_NOT_IMPLEMENTED" title="core_framework.constants.HTTP_NOT_IMPLEMENTED"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HTTP_NOT_IMPLEMENTED</span></code></a></p></td>
+<td><p>- &quot;501 Not Implemented&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.TASK_PACKAGE.html#core_framework.constants.TASK_PACKAGE" title="core_framework.constants.TASK_PACKAGE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TASK_PACKAGE</span></code></a></p></td>
+<td><p>- &quot;package&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.TASK_UPLOAD.html#core_framework.constants.TASK_UPLOAD" title="core_framework.constants.TASK_UPLOAD"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TASK_UPLOAD</span></code></a></p></td>
+<td><p>- &quot;upload&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.TASK_COMPILE.html#core_framework.constants.TASK_COMPILE" title="core_framework.constants.TASK_COMPILE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TASK_COMPILE</span></code></a></p></td>
+<td><p>- &quot;compile&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.TASK_DEPLOY.html#core_framework.constants.TASK_DEPLOY" title="core_framework.constants.TASK_DEPLOY"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TASK_DEPLOY</span></code></a></p></td>
+<td><p>- &quot;deploy&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.TASK_PLAN.html#core_framework.constants.TASK_PLAN" title="core_framework.constants.TASK_PLAN"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TASK_PLAN</span></code></a></p></td>
+<td><p>- &quot;plan&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.TASK_APPLY.html#core_framework.constants.TASK_APPLY" title="core_framework.constants.TASK_APPLY"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TASK_APPLY</span></code></a></p></td>
+<td><p>- &quot;apply&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.TASK_RELEASE.html#core_framework.constants.TASK_RELEASE" title="core_framework.constants.TASK_RELEASE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TASK_RELEASE</span></code></a></p></td>
+<td><p>- &quot;release&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.TASK_TEARDOWN.html#core_framework.constants.TASK_TEARDOWN" title="core_framework.constants.TASK_TEARDOWN"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TASK_TEARDOWN</span></code></a></p></td>
+<td><p>- &quot;teardown&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.TASK_COMPILE_PIPELINE.html#core_framework.constants.TASK_COMPILE_PIPELINE" title="core_framework.constants.TASK_COMPILE_PIPELINE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TASK_COMPILE_PIPELINE</span></code></a></p></td>
+<td><p>- &quot;compile-pipeline&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.TASK_COMPILE_DEPLOYSPEC.html#core_framework.constants.TASK_COMPILE_DEPLOYSPEC" title="core_framework.constants.TASK_COMPILE_DEPLOYSPEC"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TASK_COMPILE_DEPLOYSPEC</span></code></a></p></td>
+<td><p>- &quot;compile-deployspec&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.V_CORE_AUTOMATION.html#core_framework.constants.V_CORE_AUTOMATION" title="core_framework.constants.V_CORE_AUTOMATION"><code class="xref py py-obj docutils literal notranslate"><span class="pre">V_CORE_AUTOMATION</span></code></a></p></td>
+<td><p>- &quot;core-automation&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.V_PACKAGE_ZIP.html#core_framework.constants.V_PACKAGE_ZIP" title="core_framework.constants.V_PACKAGE_ZIP"><code class="xref py py-obj docutils literal notranslate"><span class="pre">V_PACKAGE_ZIP</span></code></a></p></td>
+<td><p>- &quot;package.zip&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.V_PACKAGE_TAR.html#core_framework.constants.V_PACKAGE_TAR" title="core_framework.constants.V_PACKAGE_TAR"><code class="xref py py-obj docutils literal notranslate"><span class="pre">V_PACKAGE_TAR</span></code></a></p></td>
+<td><p>- &quot;package.tar&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.V_PIPELINE.html#core_framework.constants.V_PIPELINE" title="core_framework.constants.V_PIPELINE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">V_PIPELINE</span></code></a></p></td>
+<td><p>- &quot;pipeline&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.V_DEPLOYSPEC.html#core_framework.constants.V_DEPLOYSPEC" title="core_framework.constants.V_DEPLOYSPEC"><code class="xref py py-obj docutils literal notranslate"><span class="pre">V_DEPLOYSPEC</span></code></a></p></td>
+<td><p>- &quot;deployspec&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.V_DEPLOYSPEC_FILE_YAML.html#core_framework.constants.V_DEPLOYSPEC_FILE_YAML" title="core_framework.constants.V_DEPLOYSPEC_FILE_YAML"><code class="xref py py-obj docutils literal notranslate"><span class="pre">V_DEPLOYSPEC_FILE_YAML</span></code></a></p></td>
+<td><p>- &quot;deployspec.yaml&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.V_DEPLOYSPEC_FILE_YML.html#core_framework.constants.V_DEPLOYSPEC_FILE_YML" title="core_framework.constants.V_DEPLOYSPEC_FILE_YML"><code class="xref py py-obj docutils literal notranslate"><span class="pre">V_DEPLOYSPEC_FILE_YML</span></code></a></p></td>
+<td><p>- &quot;deployspec.yml&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.V_DEPLOYSPEC_FILE_JSON.html#core_framework.constants.V_DEPLOYSPEC_FILE_JSON" title="core_framework.constants.V_DEPLOYSPEC_FILE_JSON"><code class="xref py py-obj docutils literal notranslate"><span class="pre">V_DEPLOYSPEC_FILE_JSON</span></code></a></p></td>
+<td><p>- &quot;deployspec.json&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.V_LAMBDA_MODULES_FILE.html#core_framework.constants.V_LAMBDA_MODULES_FILE" title="core_framework.constants.V_LAMBDA_MODULES_FILE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">V_LAMBDA_MODULES_FILE</span></code></a></p></td>
+<td><p>- &quot;lambda_modules.txt&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.V_SERVICE.html#core_framework.constants.V_SERVICE" title="core_framework.constants.V_SERVICE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">V_SERVICE</span></code></a></p></td>
+<td><p>- &quot;service&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.V_LOCAL.html#core_framework.constants.V_LOCAL" title="core_framework.constants.V_LOCAL"><code class="xref py py-obj docutils literal notranslate"><span class="pre">V_LOCAL</span></code></a></p></td>
+<td><p>- &quot;local&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.V_FULL.html#core_framework.constants.V_FULL" title="core_framework.constants.V_FULL"><code class="xref py py-obj docutils literal notranslate"><span class="pre">V_FULL</span></code></a></p></td>
+<td><p>- &quot;full&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.V_PLATFORM.html#core_framework.constants.V_PLATFORM" title="core_framework.constants.V_PLATFORM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">V_PLATFORM</span></code></a></p></td>
+<td><p>- &quot;platform&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.V_CREATE_STACK.html#core_framework.constants.V_CREATE_STACK" title="core_framework.constants.V_CREATE_STACK"><code class="xref py py-obj docutils literal notranslate"><span class="pre">V_CREATE_STACK</span></code></a></p></td>
+<td><p>- &quot;create_stack&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.V_DEFAULT_REGION.html#core_framework.constants.V_DEFAULT_REGION" title="core_framework.constants.V_DEFAULT_REGION"><code class="xref py py-obj docutils literal notranslate"><span class="pre">V_DEFAULT_REGION</span></code></a></p></td>
+<td><p>- &quot;ap-southeast-1&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.V_DEFAULT_REGION_NAME.html#core_framework.constants.V_DEFAULT_REGION_NAME" title="core_framework.constants.V_DEFAULT_REGION_NAME"><code class="xref py py-obj docutils literal notranslate"><span class="pre">V_DEFAULT_REGION_NAME</span></code></a></p></td>
+<td><p>- &quot;Singapore&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.V_DEFAULT_REGION_ALIAS.html#core_framework.constants.V_DEFAULT_REGION_ALIAS" title="core_framework.constants.V_DEFAULT_REGION_ALIAS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">V_DEFAULT_REGION_ALIAS</span></code></a></p></td>
+<td><p>- &quot;sin&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.V_DEFAULT_BRANCH.html#core_framework.constants.V_DEFAULT_BRANCH" title="core_framework.constants.V_DEFAULT_BRANCH"><code class="xref py py-obj docutils literal notranslate"><span class="pre">V_DEFAULT_BRANCH</span></code></a></p></td>
+<td><p>- &quot;master&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.V_DEFAULT_ENVIRONMENT.html#core_framework.constants.V_DEFAULT_ENVIRONMENT" title="core_framework.constants.V_DEFAULT_ENVIRONMENT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">V_DEFAULT_ENVIRONMENT</span></code></a></p></td>
+<td><p>- &quot;prod&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.V_TRUE.html#core_framework.constants.V_TRUE" title="core_framework.constants.V_TRUE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">V_TRUE</span></code></a></p></td>
+<td><p>- &quot;true&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.V_FALSE.html#core_framework.constants.V_FALSE" title="core_framework.constants.V_FALSE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">V_FALSE</span></code></a></p></td>
+<td><p>- &quot;false&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.V_EMPTY.html#core_framework.constants.V_EMPTY" title="core_framework.constants.V_EMPTY"><code class="xref py py-obj docutils literal notranslate"><span class="pre">V_EMPTY</span></code></a></p></td>
+<td><p>- &quot;&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.AUTH_CREDENTIALS.html#core_framework.constants.AUTH_CREDENTIALS" title="core_framework.constants.AUTH_CREDENTIALS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AUTH_CREDENTIALS</span></code></a></p></td>
+<td><p>- &quot;Credentials&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.AUTH_ROLE.html#core_framework.constants.AUTH_ROLE" title="core_framework.constants.AUTH_ROLE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AUTH_ROLE</span></code></a></p></td>
+<td><p>- &quot;Role&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.AUTH_ACCOUNT.html#core_framework.constants.AUTH_ACCOUNT" title="core_framework.constants.AUTH_ACCOUNT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AUTH_ACCOUNT</span></code></a></p></td>
+<td><p>- &quot;Account&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.AUTH_USER.html#core_framework.constants.AUTH_USER" title="core_framework.constants.AUTH_USER"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AUTH_USER</span></code></a></p></td>
+<td><p>- &quot;User&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.AUTH_ACCESS_KEY.html#core_framework.constants.AUTH_ACCESS_KEY" title="core_framework.constants.AUTH_ACCESS_KEY"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AUTH_ACCESS_KEY</span></code></a></p></td>
+<td><p>- &quot;AccessKey&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.AUTH_SECRET_KEY.html#core_framework.constants.AUTH_SECRET_KEY" title="core_framework.constants.AUTH_SECRET_KEY"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AUTH_SECRET_KEY</span></code></a></p></td>
+<td><p>- &quot;SecretKey&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.AUTH_TOKEN.html#core_framework.constants.AUTH_TOKEN" title="core_framework.constants.AUTH_TOKEN"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AUTH_TOKEN</span></code></a></p></td>
+<td><p>- &quot;Token&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.AUTH_ACCESS_KEY_ID.html#core_framework.constants.AUTH_ACCESS_KEY_ID" title="core_framework.constants.AUTH_ACCESS_KEY_ID"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AUTH_ACCESS_KEY_ID</span></code></a></p></td>
+<td><p>- &quot;AccessKeyId&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.AUTH_SECRET_ACCESS_KEY.html#core_framework.constants.AUTH_SECRET_ACCESS_KEY" title="core_framework.constants.AUTH_SECRET_ACCESS_KEY"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AUTH_SECRET_ACCESS_KEY</span></code></a></p></td>
+<td><p>- &quot;SecretAccessKey&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.AUTH_SESSION_TOKEN.html#core_framework.constants.AUTH_SESSION_TOKEN" title="core_framework.constants.AUTH_SESSION_TOKEN"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AUTH_SESSION_TOKEN</span></code></a></p></td>
+<td><p>- &quot;SessionToken&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.ACCOUNT_ID.html#core_framework.constants.ACCOUNT_ID" title="core_framework.constants.ACCOUNT_ID"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ACCOUNT_ID</span></code></a></p></td>
+<td><p>- &quot;Id&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.ACCOUNT_REGION.html#core_framework.constants.ACCOUNT_REGION" title="core_framework.constants.ACCOUNT_REGION"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ACCOUNT_REGION</span></code></a></p></td>
+<td><p>- &quot;Region&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.ACCOUNT_USER_ARN.html#core_framework.constants.ACCOUNT_USER_ARN" title="core_framework.constants.ACCOUNT_USER_ARN"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ACCOUNT_USER_ARN</span></code></a></p></td>
+<td><p>- &quot;UserArn&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.ACCOUNT_USER_ID.html#core_framework.constants.ACCOUNT_USER_ID" title="core_framework.constants.ACCOUNT_USER_ID"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ACCOUNT_USER_ID</span></code></a></p></td>
+<td><p>- &quot;UserId&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.TP_TASK.html#core_framework.constants.TP_TASK" title="core_framework.constants.TP_TASK"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TP_TASK</span></code></a></p></td>
+<td><p>- &quot;Task&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.TP_FORCE.html#core_framework.constants.TP_FORCE" title="core_framework.constants.TP_FORCE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TP_FORCE</span></code></a></p></td>
+<td><p>- &quot;Force&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.TP_DRY_RUN.html#core_framework.constants.TP_DRY_RUN" title="core_framework.constants.TP_DRY_RUN"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TP_DRY_RUN</span></code></a></p></td>
+<td><p>- &quot;DryRun&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.TP_IDENTITY.html#core_framework.constants.TP_IDENTITY" title="core_framework.constants.TP_IDENTITY"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TP_IDENTITY</span></code></a></p></td>
+<td><p>- &quot;Identity&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.TP_TYPE.html#core_framework.constants.TP_TYPE" title="core_framework.constants.TP_TYPE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TP_TYPE</span></code></a></p></td>
+<td><p>- &quot;Type&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.TP_DEPLOYMENT_DETAILS.html#core_framework.constants.TP_DEPLOYMENT_DETAILS" title="core_framework.constants.TP_DEPLOYMENT_DETAILS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TP_DEPLOYMENT_DETAILS</span></code></a></p></td>
+<td><p>- &quot;DeploymentDetails&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.TP_PACKAGE_DETAILS.html#core_framework.constants.TP_PACKAGE_DETAILS" title="core_framework.constants.TP_PACKAGE_DETAILS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TP_PACKAGE_DETAILS</span></code></a></p></td>
+<td><p>- &quot;Package&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.TP_FACTS.html#core_framework.constants.TP_FACTS" title="core_framework.constants.TP_FACTS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TP_FACTS</span></code></a></p></td>
+<td><p>- &quot;Facts&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.TP_ACTIONS.html#core_framework.constants.TP_ACTIONS" title="core_framework.constants.TP_ACTIONS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TP_ACTIONS</span></code></a></p></td>
+<td><p>- &quot;Actions&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.TP_DEPLOY_ACTIONS.html#core_framework.constants.TP_DEPLOY_ACTIONS" title="core_framework.constants.TP_DEPLOY_ACTIONS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TP_DEPLOY_ACTIONS</span></code></a></p></td>
+<td><p>- &quot;DeployActions&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.TP_STATE.html#core_framework.constants.TP_STATE" title="core_framework.constants.TP_STATE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TP_STATE</span></code></a></p></td>
+<td><p>- &quot;State&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.TP_FLOW_CONTROL.html#core_framework.constants.TP_FLOW_CONTROL" title="core_framework.constants.TP_FLOW_CONTROL"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TP_FLOW_CONTROL</span></code></a></p></td>
+<td><p>- &quot;FlowControl&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.ACT_VERSION.html#core_framework.constants.ACT_VERSION" title="core_framework.constants.ACT_VERSION"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ACT_VERSION</span></code></a></p></td>
+<td><p>- &quot;VersionId&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.ACT_BUCKETNAME.html#core_framework.constants.ACT_BUCKETNAME" title="core_framework.constants.ACT_BUCKETNAME"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ACT_BUCKETNAME</span></code></a></p></td>
+<td><p>- &quot;BucketName&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.ACT_BUCKET_REGION.html#core_framework.constants.ACT_BUCKET_REGION" title="core_framework.constants.ACT_BUCKET_REGION"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ACT_BUCKET_REGION</span></code></a></p></td>
+<td><p>- &quot;BucketRegion&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.ACT_KEY.html#core_framework.constants.ACT_KEY" title="core_framework.constants.ACT_KEY"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ACT_KEY</span></code></a></p></td>
+<td><p>- &quot;Key&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.ACT_MIME_TYPE.html#core_framework.constants.ACT_MIME_TYPE" title="core_framework.constants.ACT_MIME_TYPE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ACT_MIME_TYPE</span></code></a></p></td>
+<td><p>- &quot;ContentType&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.DD_CLIENT.html#core_framework.constants.DD_CLIENT" title="core_framework.constants.DD_CLIENT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DD_CLIENT</span></code></a></p></td>
+<td><p>- &quot;Client&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.DD_APP.html#core_framework.constants.DD_APP" title="core_framework.constants.DD_APP"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DD_APP</span></code></a></p></td>
+<td><p>- &quot;App&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.DD_PORTFOLIO.html#core_framework.constants.DD_PORTFOLIO" title="core_framework.constants.DD_PORTFOLIO"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DD_PORTFOLIO</span></code></a></p></td>
+<td><p>- &quot;Portfolio&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.DD_BRANCH.html#core_framework.constants.DD_BRANCH" title="core_framework.constants.DD_BRANCH"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DD_BRANCH</span></code></a></p></td>
+<td><p>- &quot;Branch&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.DD_BRANCH_SHORT_NAME.html#core_framework.constants.DD_BRANCH_SHORT_NAME" title="core_framework.constants.DD_BRANCH_SHORT_NAME"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DD_BRANCH_SHORT_NAME</span></code></a></p></td>
+<td><p>- &quot;BranchShortName&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.DD_BUILD.html#core_framework.constants.DD_BUILD" title="core_framework.constants.DD_BUILD"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DD_BUILD</span></code></a></p></td>
+<td><p>- &quot;Build&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.DD_COMPONENT.html#core_framework.constants.DD_COMPONENT" title="core_framework.constants.DD_COMPONENT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DD_COMPONENT</span></code></a></p></td>
+<td><p>- &quot;Component&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.DD_ENVIRONMENT.html#core_framework.constants.DD_ENVIRONMENT" title="core_framework.constants.DD_ENVIRONMENT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DD_ENVIRONMENT</span></code></a></p></td>
+<td><p>- &quot;Environment&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.DD_DATA_CENTER.html#core_framework.constants.DD_DATA_CENTER" title="core_framework.constants.DD_DATA_CENTER"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DD_DATA_CENTER</span></code></a></p></td>
+<td><p>- &quot;DataCenter&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.DD_SCOPE.html#core_framework.constants.DD_SCOPE" title="core_framework.constants.DD_SCOPE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DD_SCOPE</span></code></a></p></td>
+<td><p>- &quot;Scope&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.DD_ECR.html#core_framework.constants.DD_ECR" title="core_framework.constants.DD_ECR"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DD_ECR</span></code></a></p></td>
+<td><p>- &quot;Ecr&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.DD_TAGS.html#core_framework.constants.DD_TAGS" title="core_framework.constants.DD_TAGS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DD_TAGS</span></code></a></p></td>
+<td><p>- &quot;Tags&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.ECR_REGISTRY_URI.html#core_framework.constants.ECR_REGISTRY_URI" title="core_framework.constants.ECR_REGISTRY_URI"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ECR_REGISTRY_URI</span></code></a></p></td>
+<td><p>- &quot;RegistryUri&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.TAG_NAME.html#core_framework.constants.TAG_NAME" title="core_framework.constants.TAG_NAME"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TAG_NAME</span></code></a></p></td>
+<td><p>- &quot;Name&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.TAG_CLIENT.html#core_framework.constants.TAG_CLIENT" title="core_framework.constants.TAG_CLIENT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TAG_CLIENT</span></code></a></p></td>
+<td><p>- &quot;Client&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.TAG_PORTFOLIO.html#core_framework.constants.TAG_PORTFOLIO" title="core_framework.constants.TAG_PORTFOLIO"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TAG_PORTFOLIO</span></code></a></p></td>
+<td><p>- &quot;Portfolio&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.TAG_APP.html#core_framework.constants.TAG_APP" title="core_framework.constants.TAG_APP"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TAG_APP</span></code></a></p></td>
+<td><p>- &quot;App&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.TAG_BRANCH.html#core_framework.constants.TAG_BRANCH" title="core_framework.constants.TAG_BRANCH"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TAG_BRANCH</span></code></a></p></td>
+<td><p>- &quot;Branch&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.TAG_BUILD.html#core_framework.constants.TAG_BUILD" title="core_framework.constants.TAG_BUILD"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TAG_BUILD</span></code></a></p></td>
+<td><p>- &quot;Build&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.TAG_ENVIRONMENT.html#core_framework.constants.TAG_ENVIRONMENT" title="core_framework.constants.TAG_ENVIRONMENT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TAG_ENVIRONMENT</span></code></a></p></td>
+<td><p>- &quot;Environment&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.TAG_COMPONENT.html#core_framework.constants.TAG_COMPONENT" title="core_framework.constants.TAG_COMPONENT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TAG_COMPONENT</span></code></a></p></td>
+<td><p>- &quot;Component&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.TAG_ZONE.html#core_framework.constants.TAG_ZONE" title="core_framework.constants.TAG_ZONE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TAG_ZONE</span></code></a></p></td>
+<td><p>- &quot;Zone&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.TAG_REGION.html#core_framework.constants.TAG_REGION" title="core_framework.constants.TAG_REGION"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TAG_REGION</span></code></a></p></td>
+<td><p>- &quot;Region&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.TAG_CAPEX_CODE.html#core_framework.constants.TAG_CAPEX_CODE" title="core_framework.constants.TAG_CAPEX_CODE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TAG_CAPEX_CODE</span></code></a></p></td>
+<td><p>- &quot;CapexCode&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.TAG_OPEX_CODE.html#core_framework.constants.TAG_OPEX_CODE" title="core_framework.constants.TAG_OPEX_CODE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TAG_OPEX_CODE</span></code></a></p></td>
+<td><p>- &quot;OpexCode&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.TAG_JIRA_CODE.html#core_framework.constants.TAG_JIRA_CODE" title="core_framework.constants.TAG_JIRA_CODE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TAG_JIRA_CODE</span></code></a></p></td>
+<td><p>- &quot;JiraCode&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.TAG_OWNER.html#core_framework.constants.TAG_OWNER" title="core_framework.constants.TAG_OWNER"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TAG_OWNER</span></code></a></p></td>
+<td><p>- &quot;Owner&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.TAG_CONTACTS.html#core_framework.constants.TAG_CONTACTS" title="core_framework.constants.TAG_CONTACTS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TAG_CONTACTS</span></code></a></p></td>
+<td><p>- &quot;Contacts&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.PKG_BUCKET_REGION.html#core_framework.constants.PKG_BUCKET_REGION" title="core_framework.constants.PKG_BUCKET_REGION"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PKG_BUCKET_REGION</span></code></a></p></td>
+<td><p>- &quot;BucketRegion&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.PKG_BUCKET_NAME.html#core_framework.constants.PKG_BUCKET_NAME" title="core_framework.constants.PKG_BUCKET_NAME"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PKG_BUCKET_NAME</span></code></a></p></td>
+<td><p>- &quot;BucketName&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.PKG_S3_KEY.html#core_framework.constants.PKG_S3_KEY" title="core_framework.constants.PKG_S3_KEY"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PKG_S3_KEY</span></code></a></p></td>
+<td><p>- &quot;Key&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.PKG_VERSION_ID.html#core_framework.constants.PKG_VERSION_ID" title="core_framework.constants.PKG_VERSION_ID"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PKG_VERSION_ID</span></code></a></p></td>
+<td><p>- &quot;VersionId&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.PKG_MODE.html#core_framework.constants.PKG_MODE" title="core_framework.constants.PKG_MODE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PKG_MODE</span></code></a></p></td>
+<td><p>- &quot;Mode&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.PKG_APP_PATH.html#core_framework.constants.PKG_APP_PATH" title="core_framework.constants.PKG_APP_PATH"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PKG_APP_PATH</span></code></a></p></td>
+<td><p>- &quot;AppPath&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.PKG_COMPILE_MODE.html#core_framework.constants.PKG_COMPILE_MODE" title="core_framework.constants.PKG_COMPILE_MODE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PKG_COMPILE_MODE</span></code></a></p></td>
+<td><p>- &quot;CompileMode&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.PKG_DEPLOYSPEC.html#core_framework.constants.PKG_DEPLOYSPEC" title="core_framework.constants.PKG_DEPLOYSPEC"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PKG_DEPLOYSPEC</span></code></a></p></td>
+<td><p>- &quot;DeploySpec&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.PKG_TEMPDIR.html#core_framework.constants.PKG_TEMPDIR" title="core_framework.constants.PKG_TEMPDIR"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PKG_TEMPDIR</span></code></a></p></td>
+<td><p>- &quot;TempDir&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.DS_LABEL.html#core_framework.constants.DS_LABEL" title="core_framework.constants.DS_LABEL"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DS_LABEL</span></code></a></p></td>
+<td><p>- &quot;label&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.DS_TYPE.html#core_framework.constants.DS_TYPE" title="core_framework.constants.DS_TYPE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DS_TYPE</span></code></a></p></td>
+<td><p>- &quot;type&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.DS_PARAMS.html#core_framework.constants.DS_PARAMS" title="core_framework.constants.DS_PARAMS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DS_PARAMS</span></code></a></p></td>
+<td><p>- &quot;params&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.DS_DEPENDS_ON.html#core_framework.constants.DS_DEPENDS_ON" title="core_framework.constants.DS_DEPENDS_ON"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DS_DEPENDS_ON</span></code></a></p></td>
+<td><p>- &quot;depends_on&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.DS_TYPE_AWS_CREATE_STACK.html#core_framework.constants.DS_TYPE_AWS_CREATE_STACK" title="core_framework.constants.DS_TYPE_AWS_CREATE_STACK"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DS_TYPE_AWS_CREATE_STACK</span></code></a></p></td>
+<td><p>- &quot;aws.create_stack&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.DS_TYPE_CREATE_STACK.html#core_framework.constants.DS_TYPE_CREATE_STACK" title="core_framework.constants.DS_TYPE_CREATE_STACK"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DS_TYPE_CREATE_STACK</span></code></a></p></td>
+<td><p>- &quot;create_stack&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.DS_TYPE_AWS_DELETE_STACK.html#core_framework.constants.DS_TYPE_AWS_DELETE_STACK" title="core_framework.constants.DS_TYPE_AWS_DELETE_STACK"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DS_TYPE_AWS_DELETE_STACK</span></code></a></p></td>
+<td><p>- &quot;aws.delete_stack&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.DS_TYPE_DELETE_STACK.html#core_framework.constants.DS_TYPE_DELETE_STACK" title="core_framework.constants.DS_TYPE_DELETE_STACK"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DS_TYPE_DELETE_STACK</span></code></a></p></td>
+<td><p>- &quot;delete_stack&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.DS_TYPE_AWS_DELETE_USER.html#core_framework.constants.DS_TYPE_AWS_DELETE_USER" title="core_framework.constants.DS_TYPE_AWS_DELETE_USER"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DS_TYPE_AWS_DELETE_USER</span></code></a></p></td>
+<td><p>- &quot;aws.delete_user&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.DS_TYPE_DELETE_USER.html#core_framework.constants.DS_TYPE_DELETE_USER" title="core_framework.constants.DS_TYPE_DELETE_USER"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DS_TYPE_DELETE_USER</span></code></a></p></td>
+<td><p>- &quot;delete_user&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.DS_TYPE_AWS_CREATE_USER.html#core_framework.constants.DS_TYPE_AWS_CREATE_USER" title="core_framework.constants.DS_TYPE_AWS_CREATE_USER"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DS_TYPE_AWS_CREATE_USER</span></code></a></p></td>
+<td><p>- &quot;aws.create_user&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.DS_TYPE_CREATE_USER.html#core_framework.constants.DS_TYPE_CREATE_USER" title="core_framework.constants.DS_TYPE_CREATE_USER"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DS_TYPE_CREATE_USER</span></code></a></p></td>
+<td><p>- &quot;create_user&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.DSP_TEMPLATE.html#core_framework.constants.DSP_TEMPLATE" title="core_framework.constants.DSP_TEMPLATE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DSP_TEMPLATE</span></code></a></p></td>
+<td><p>- &quot;template&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.DSP_STACK_NAME.html#core_framework.constants.DSP_STACK_NAME" title="core_framework.constants.DSP_STACK_NAME"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DSP_STACK_NAME</span></code></a></p></td>
+<td><p>- &quot;stack_name&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.DSP_PARAMETERS.html#core_framework.constants.DSP_PARAMETERS" title="core_framework.constants.DSP_PARAMETERS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DSP_PARAMETERS</span></code></a></p></td>
+<td><p>- &quot;parameters&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.DSP_ACCOUNT.html#core_framework.constants.DSP_ACCOUNT" title="core_framework.constants.DSP_ACCOUNT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DSP_ACCOUNT</span></code></a></p></td>
+<td><p>- &quot;account&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.DSP_ACCOUNTS.html#core_framework.constants.DSP_ACCOUNTS" title="core_framework.constants.DSP_ACCOUNTS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DSP_ACCOUNTS</span></code></a></p></td>
+<td><p>- &quot;accounts&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.DSP_REGION.html#core_framework.constants.DSP_REGION" title="core_framework.constants.DSP_REGION"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DSP_REGION</span></code></a></p></td>
+<td><p>- &quot;region&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.DSP_REGIONS.html#core_framework.constants.DSP_REGIONS" title="core_framework.constants.DSP_REGIONS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DSP_REGIONS</span></code></a></p></td>
+<td><p>- &quot;regions&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.DSP_USER_NAME.html#core_framework.constants.DSP_USER_NAME" title="core_framework.constants.DSP_USER_NAME"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DSP_USER_NAME</span></code></a></p></td>
+<td><p>- &quot;user_name&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.DSP_STACK_POLICY.html#core_framework.constants.DSP_STACK_POLICY" title="core_framework.constants.DSP_STACK_POLICY"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DSP_STACK_POLICY</span></code></a></p></td>
+<td><p>- &quot;stack_policy&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.SCOPE_CLIENT.html#core_framework.constants.SCOPE_CLIENT" title="core_framework.constants.SCOPE_CLIENT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SCOPE_CLIENT</span></code></a></p></td>
+<td><p>- &quot;client&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.SCOPE_ZONE.html#core_framework.constants.SCOPE_ZONE" title="core_framework.constants.SCOPE_ZONE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SCOPE_ZONE</span></code></a></p></td>
+<td><p>- &quot;zone&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.SCOPE_PORTFOLIO.html#core_framework.constants.SCOPE_PORTFOLIO" title="core_framework.constants.SCOPE_PORTFOLIO"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SCOPE_PORTFOLIO</span></code></a></p></td>
+<td><p>- &quot;portfolio&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.SCOPE_APP.html#core_framework.constants.SCOPE_APP" title="core_framework.constants.SCOPE_APP"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SCOPE_APP</span></code></a></p></td>
+<td><p>- &quot;app&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.SCOPE_BRANCH.html#core_framework.constants.SCOPE_BRANCH" title="core_framework.constants.SCOPE_BRANCH"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SCOPE_BRANCH</span></code></a></p></td>
+<td><p>- &quot;branch&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.SCOPE_BUILD.html#core_framework.constants.SCOPE_BUILD" title="core_framework.constants.SCOPE_BUILD"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SCOPE_BUILD</span></code></a></p></td>
+<td><p>- &quot;build&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.SCOPE_COMPONENT.html#core_framework.constants.SCOPE_COMPONENT" title="core_framework.constants.SCOPE_COMPONENT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SCOPE_COMPONENT</span></code></a></p></td>
+<td><p>- &quot;component&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.SCOPE_ENVIRONMENT.html#core_framework.constants.SCOPE_ENVIRONMENT" title="core_framework.constants.SCOPE_ENVIRONMENT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SCOPE_ENVIRONMENT</span></code></a></p></td>
+<td><p>- &quot;environment&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.SCOPE_SHARED.html#core_framework.constants.SCOPE_SHARED" title="core_framework.constants.SCOPE_SHARED"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SCOPE_SHARED</span></code></a></p></td>
+<td><p>- &quot;shared&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.SCOPE_RELEASE.html#core_framework.constants.SCOPE_RELEASE" title="core_framework.constants.SCOPE_RELEASE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SCOPE_RELEASE</span></code></a></p></td>
+<td><p>- &quot;release&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.OBJ_FILES.html#core_framework.constants.OBJ_FILES" title="core_framework.constants.OBJ_FILES"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OBJ_FILES</span></code></a></p></td>
+<td><p>- &quot;files&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.OBJ_ARTEFACTS.html#core_framework.constants.OBJ_ARTEFACTS" title="core_framework.constants.OBJ_ARTEFACTS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OBJ_ARTEFACTS</span></code></a></p></td>
+<td><p>- &quot; artefacts &quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.OBJ_PACKAGES.html#core_framework.constants.OBJ_PACKAGES" title="core_framework.constants.OBJ_PACKAGES"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OBJ_PACKAGES</span></code></a></p></td>
+<td><p>- &quot;packages&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.TASK_RESULTS.html#core_framework.constants.TASK_RESULTS" title="core_framework.constants.TASK_RESULTS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TASK_RESULTS</span></code></a></p></td>
+<td><p>- &quot;Results&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.TR_COMPILE_RESULTS.html#core_framework.constants.TR_COMPILE_RESULTS" title="core_framework.constants.TR_COMPILE_RESULTS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TR_COMPILE_RESULTS</span></code></a></p></td>
+<td><p>- &quot;CompileResults&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.TR_STATUS.html#core_framework.constants.TR_STATUS" title="core_framework.constants.TR_STATUS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TR_STATUS</span></code></a></p></td>
+<td><p>- &quot;Status&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.TR_MESSAGE.html#core_framework.constants.TR_MESSAGE" title="core_framework.constants.TR_MESSAGE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TR_MESSAGE</span></code></a></p></td>
+<td><p>- &quot;Message&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.TR_DETAILS.html#core_framework.constants.TR_DETAILS" title="core_framework.constants.TR_DETAILS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TR_DETAILS</span></code></a></p></td>
+<td><p>- &quot;Details&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.TR_ERRORS.html#core_framework.constants.TR_ERRORS" title="core_framework.constants.TR_ERRORS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TR_ERRORS</span></code></a></p></td>
+<td><p>- &quot;Errors&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.TR_WARNINGS.html#core_framework.constants.TR_WARNINGS" title="core_framework.constants.TR_WARNINGS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TR_WARNINGS</span></code></a></p></td>
+<td><p>- &quot;Warnings&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.TR_RESPONSE.html#core_framework.constants.TR_RESPONSE" title="core_framework.constants.TR_RESPONSE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TR_RESPONSE</span></code></a></p></td>
+<td><p>- &quot;Response&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.SF_EXECUTION_ARN.html#core_framework.constants.SF_EXECUTION_ARN" title="core_framework.constants.SF_EXECUTION_ARN"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SF_EXECUTION_ARN</span></code></a></p></td>
+<td><p>- &quot;StepFunctionArn&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.SF_INPUT.html#core_framework.constants.SF_INPUT" title="core_framework.constants.SF_INPUT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SF_INPUT</span></code></a></p></td>
+<td><p>- &quot;Input&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.ENV_AWS_PROFILE.html#core_framework.constants.ENV_AWS_PROFILE" title="core_framework.constants.ENV_AWS_PROFILE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ENV_AWS_PROFILE</span></code></a></p></td>
+<td><p>- &quot;AWS_PROFILE&quot;.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.ENV_AWS_REGION.html#core_framework.constants.ENV_AWS_REGION" title="core_framework.constants.ENV_AWS_REGION"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ENV_AWS_REGION</span></code></a></p></td>
+<td><p>- &quot;AWS_REGION&quot;.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.ENV_CLIENT.html#core_framework.constants.ENV_CLIENT" title="core_framework.constants.ENV_CLIENT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ENV_CLIENT</span></code></a></p></td>
+<td><p>- &quot;CLIENT&quot;.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.ENV_CLIENT_NAME.html#core_framework.constants.ENV_CLIENT_NAME" title="core_framework.constants.ENV_CLIENT_NAME"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ENV_CLIENT_NAME</span></code></a></p></td>
+<td><p>- &quot;CLIENT_NAME&quot;.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.ENV_CLIENT_REGION.html#core_framework.constants.ENV_CLIENT_REGION" title="core_framework.constants.ENV_CLIENT_REGION"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ENV_CLIENT_REGION</span></code></a></p></td>
+<td><p>- &quot;CLIENT_REGION&quot;.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.ENV_SCOPE.html#core_framework.constants.ENV_SCOPE" title="core_framework.constants.ENV_SCOPE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ENV_SCOPE</span></code></a></p></td>
+<td><p>- &quot;SCOPE&quot;.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.ENV_PORTFOLIO.html#core_framework.constants.ENV_PORTFOLIO" title="core_framework.constants.ENV_PORTFOLIO"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ENV_PORTFOLIO</span></code></a></p></td>
+<td><p>- &quot;PORTFOLIO&quot;.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.ENV_APP.html#core_framework.constants.ENV_APP" title="core_framework.constants.ENV_APP"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ENV_APP</span></code></a></p></td>
+<td><p>- &quot;APP&quot;.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.ENV_BRANCH.html#core_framework.constants.ENV_BRANCH" title="core_framework.constants.ENV_BRANCH"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ENV_BRANCH</span></code></a></p></td>
+<td><p>- &quot;BRANCH&quot;.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.ENV_BUILD.html#core_framework.constants.ENV_BUILD" title="core_framework.constants.ENV_BUILD"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ENV_BUILD</span></code></a></p></td>
+<td><p>- &quot;BUILD&quot;.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.ENV_COMPONENT.html#core_framework.constants.ENV_COMPONENT" title="core_framework.constants.ENV_COMPONENT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ENV_COMPONENT</span></code></a></p></td>
+<td><p>- &quot;COMPONENT&quot;.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.ENV_ENVIRONMENT.html#core_framework.constants.ENV_ENVIRONMENT" title="core_framework.constants.ENV_ENVIRONMENT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ENV_ENVIRONMENT</span></code></a></p></td>
+<td><p>prod, dev, uat1, uat2.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.ENV_TASKS.html#core_framework.constants.ENV_TASKS" title="core_framework.constants.ENV_TASKS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ENV_TASKS</span></code></a></p></td>
+<td><p>upload, compile, deploy, plan, apply, release, teardown</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.ENV_UNITS.html#core_framework.constants.ENV_UNITS" title="core_framework.constants.ENV_UNITS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ENV_UNITS</span></code></a></p></td>
+<td><p>- &quot;UNITS&quot;.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.ENV_ENFORCE_VALIDATION.html#core_framework.constants.ENV_ENFORCE_VALIDATION" title="core_framework.constants.ENV_ENFORCE_VALIDATION"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ENV_ENFORCE_VALIDATION</span></code></a></p></td>
+<td><p>- &quot;ENFORCE_VALIDATION&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.ENV_LOCAL_MODE.html#core_framework.constants.ENV_LOCAL_MODE" title="core_framework.constants.ENV_LOCAL_MODE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ENV_LOCAL_MODE</span></code></a></p></td>
+<td><p>- &quot;LOCAL_MODE&quot;.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.ENV_API_LAMBDA_ARN.html#core_framework.constants.ENV_API_LAMBDA_ARN" title="core_framework.constants.ENV_API_LAMBDA_ARN"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ENV_API_LAMBDA_ARN</span></code></a></p></td>
+<td><p>- &quot;API_LAMBDA_ARN&quot;.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.ENV_API_LAMBDA_NAME.html#core_framework.constants.ENV_API_LAMBDA_NAME" title="core_framework.constants.ENV_API_LAMBDA_NAME"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ENV_API_LAMBDA_NAME</span></code></a></p></td>
+<td><p>- &quot;API_LAMBDA_NAME&quot;.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.ENV_INVOKER_LAMBDA_ARN.html#core_framework.constants.ENV_INVOKER_LAMBDA_ARN" title="core_framework.constants.ENV_INVOKER_LAMBDA_ARN"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ENV_INVOKER_LAMBDA_ARN</span></code></a></p></td>
+<td><p>- &quot;INVOKER_LAMBDA_ARN&quot;.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.ENV_INVOKER_LAMBDA_NAME.html#core_framework.constants.ENV_INVOKER_LAMBDA_NAME" title="core_framework.constants.ENV_INVOKER_LAMBDA_NAME"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ENV_INVOKER_LAMBDA_NAME</span></code></a></p></td>
+<td><p>- &quot;INVOKER_LAMBDA_NAME&quot;.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.ENV_INVOKER_LAMBDA_REGION.html#core_framework.constants.ENV_INVOKER_LAMBDA_REGION" title="core_framework.constants.ENV_INVOKER_LAMBDA_REGION"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ENV_INVOKER_LAMBDA_REGION</span></code></a></p></td>
+<td><p>- &quot;INVOKER_LAMBDA_REGION&quot;.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.ENV_DYNAMODB_REGION.html#core_framework.constants.ENV_DYNAMODB_REGION" title="core_framework.constants.ENV_DYNAMODB_REGION"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ENV_DYNAMODB_REGION</span></code></a></p></td>
+<td><p>- &quot;DYNAMODB_REGION&quot;.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.ENV_DYNAMODB_HOST.html#core_framework.constants.ENV_DYNAMODB_HOST" title="core_framework.constants.ENV_DYNAMODB_HOST"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ENV_DYNAMODB_HOST</span></code></a></p></td>
+<td><p>- &quot;DYNAMODB_HOST&quot;.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.ENV_AUTOMATION_TYPE.html#core_framework.constants.ENV_AUTOMATION_TYPE" title="core_framework.constants.ENV_AUTOMATION_TYPE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ENV_AUTOMATION_TYPE</span></code></a></p></td>
+<td><p>pipeline, deployspec</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.ENV_BUCKET_NAME.html#core_framework.constants.ENV_BUCKET_NAME" title="core_framework.constants.ENV_BUCKET_NAME"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ENV_BUCKET_NAME</span></code></a></p></td>
+<td><p>- &quot;BUCKET_NAME&quot;.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.ENV_BUCKET_REGION.html#core_framework.constants.ENV_BUCKET_REGION" title="core_framework.constants.ENV_BUCKET_REGION"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ENV_BUCKET_REGION</span></code></a></p></td>
+<td><p>- &quot;BUCKET_REGION&quot;.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.ENV_EXECUTE_LAMBDA_ARN.html#core_framework.constants.ENV_EXECUTE_LAMBDA_ARN" title="core_framework.constants.ENV_EXECUTE_LAMBDA_ARN"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ENV_EXECUTE_LAMBDA_ARN</span></code></a></p></td>
+<td><p>- &quot;EXECUTE_LAMBDA_ARN&quot;.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.ENV_START_RUNNER_LAMBDA_ARN.html#core_framework.constants.ENV_START_RUNNER_LAMBDA_ARN" title="core_framework.constants.ENV_START_RUNNER_LAMBDA_ARN"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ENV_START_RUNNER_LAMBDA_ARN</span></code></a></p></td>
+<td><p>- &quot;RUNNER_LAMBDA_ARN&quot;.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.ENV_DEPLOYSPEC_COMPILER_LAMBDA_ARN.html#core_framework.constants.ENV_DEPLOYSPEC_COMPILER_LAMBDA_ARN" title="core_framework.constants.ENV_DEPLOYSPEC_COMPILER_LAMBDA_ARN"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ENV_DEPLOYSPEC_COMPILER_LAMBDA_ARN</span></code></a></p></td>
+<td><p>- &quot;DEPLOYSPEC_COMPILER_LAMBDA_ARN&quot;.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.ENV_COMPONENT_COMPILER_LAMBDA_ARN.html#core_framework.constants.ENV_COMPONENT_COMPILER_LAMBDA_ARN" title="core_framework.constants.ENV_COMPONENT_COMPILER_LAMBDA_ARN"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ENV_COMPONENT_COMPILER_LAMBDA_ARN</span></code></a></p></td>
+<td><p>- &quot;COMPONENT_COMPILER_LAMBDA_ARN&quot;.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.ENV_MASTER_REGION.html#core_framework.constants.ENV_MASTER_REGION" title="core_framework.constants.ENV_MASTER_REGION"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ENV_MASTER_REGION</span></code></a></p></td>
+<td><p>- &quot;MASTER_REGION&quot;.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.ENV_AUTOMATION_ACCOUNT.html#core_framework.constants.ENV_AUTOMATION_ACCOUNT" title="core_framework.constants.ENV_AUTOMATION_ACCOUNT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ENV_AUTOMATION_ACCOUNT</span></code></a></p></td>
+<td><p>- &quot;AUTOMATION_ACCOUNT&quot;.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.ENV_ARTEFACT_BUCKET_REGION.html#core_framework.constants.ENV_ARTEFACT_BUCKET_REGION" title="core_framework.constants.ENV_ARTEFACT_BUCKET_REGION"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ENV_ARTEFACT_BUCKET_REGION</span></code></a></p></td>
+<td><p>- &quot;ARTEFACT_BUCKET_REGION&quot;.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.ENV_ARTEFACT_BUCKET_NAME.html#core_framework.constants.ENV_ARTEFACT_BUCKET_NAME" title="core_framework.constants.ENV_ARTEFACT_BUCKET_NAME"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ENV_ARTEFACT_BUCKET_NAME</span></code></a></p></td>
+<td><p>- &quot;ARTEFACT_BUCKET_NAME&quot;.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.ENV_LOG_AS_JSON.html#core_framework.constants.ENV_LOG_AS_JSON" title="core_framework.constants.ENV_LOG_AS_JSON"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ENV_LOG_AS_JSON</span></code></a></p></td>
+<td><p>- &quot;LOG_AS_JSON&quot;.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.ENV_VOLUME.html#core_framework.constants.ENV_VOLUME" title="core_framework.constants.ENV_VOLUME"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ENV_VOLUME</span></code></a></p></td>
+<td><p>- &quot;VOLUME&quot;.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.ENV_DELIVERED_BY.html#core_framework.constants.ENV_DELIVERED_BY" title="core_framework.constants.ENV_DELIVERED_BY"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ENV_DELIVERED_BY</span></code></a></p></td>
+<td><p>- &quot;DELIVERED_BY&quot;.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.ENV_LOG_DIR.html#core_framework.constants.ENV_LOG_DIR" title="core_framework.constants.ENV_LOG_DIR"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ENV_LOG_DIR</span></code></a></p></td>
+<td><p>- &quot;LOG_DIR&quot;.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.CTX_TAGS.html#core_framework.constants.CTX_TAGS" title="core_framework.constants.CTX_TAGS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CTX_TAGS</span></code></a></p></td>
+<td><p>- &quot;tags&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.CTX_APP.html#core_framework.constants.CTX_APP" title="core_framework.constants.CTX_APP"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CTX_APP</span></code></a></p></td>
+<td><p>- &quot;app&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.CTX_CONTEXT.html#core_framework.constants.CTX_CONTEXT" title="core_framework.constants.CTX_CONTEXT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CTX_CONTEXT</span></code></a></p></td>
+<td><p>- &quot;context&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.CTX_COMPONENT_NAME.html#core_framework.constants.CTX_COMPONENT_NAME" title="core_framework.constants.CTX_COMPONENT_NAME"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CTX_COMPONENT_NAME</span></code></a></p></td>
+<td><p>- &quot;component_name&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.CTX_FILES_BUCKET_URL.html#core_framework.constants.CTX_FILES_BUCKET_URL" title="core_framework.constants.CTX_FILES_BUCKET_URL"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CTX_FILES_BUCKET_URL</span></code></a></p></td>
+<td><p>- &quot;FilesBucketUrl&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.CTX_SHARED_FILES_PREFIX.html#core_framework.constants.CTX_SHARED_FILES_PREFIX" title="core_framework.constants.CTX_SHARED_FILES_PREFIX"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CTX_SHARED_FILES_PREFIX</span></code></a></p></td>
+<td><p>- &quot;SharedFilesPrefix&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.CTX_PORTFOLIO_FILES_PREFIX.html#core_framework.constants.CTX_PORTFOLIO_FILES_PREFIX" title="core_framework.constants.CTX_PORTFOLIO_FILES_PREFIX"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CTX_PORTFOLIO_FILES_PREFIX</span></code></a></p></td>
+<td><p>- &quot;PortfolioFilesPrefix&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.CTX_APP_FILES_PREFIX.html#core_framework.constants.CTX_APP_FILES_PREFIX" title="core_framework.constants.CTX_APP_FILES_PREFIX"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CTX_APP_FILES_PREFIX</span></code></a></p></td>
+<td><p>- &quot;AppFilesPrefix&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.CTX_BRANCH_FILES_PREFIX.html#core_framework.constants.CTX_BRANCH_FILES_PREFIX" title="core_framework.constants.CTX_BRANCH_FILES_PREFIX"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CTX_BRANCH_FILES_PREFIX</span></code></a></p></td>
+<td><p>- &quot;BranchFilesPrefix&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.CTX_BUILD_FILES_PREFIX.html#core_framework.constants.CTX_BUILD_FILES_PREFIX" title="core_framework.constants.CTX_BUILD_FILES_PREFIX"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CTX_BUILD_FILES_PREFIX</span></code></a></p></td>
+<td><p>- &quot;BuildFilesPrefix&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.CTX_SNAPSHOT_ALIASES.html#core_framework.constants.CTX_SNAPSHOT_ALIASES" title="core_framework.constants.CTX_SNAPSHOT_ALIASES"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CTX_SNAPSHOT_ALIASES</span></code></a></p></td>
+<td><p>- &quot;SnapshotAliases&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.CTX_ACCOUNT_ALIASES.html#core_framework.constants.CTX_ACCOUNT_ALIASES" title="core_framework.constants.CTX_ACCOUNT_ALIASES"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CTX_ACCOUNT_ALIASES</span></code></a></p></td>
+<td><p>- &quot;AccountAliases&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.ST_CIDR.html#core_framework.constants.ST_CIDR" title="core_framework.constants.ST_CIDR"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ST_CIDR</span></code></a></p></td>
+<td><p>- &quot;cidr&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.ST_IP_ADDRESS.html#core_framework.constants.ST_IP_ADDRESS" title="core_framework.constants.ST_IP_ADDRESS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ST_IP_ADDRESS</span></code></a></p></td>
+<td><p>- &quot;ip&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.ST_COMPONENT.html#core_framework.constants.ST_COMPONENT" title="core_framework.constants.ST_COMPONENT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ST_COMPONENT</span></code></a></p></td>
+<td><p>- &quot;component&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.ST_PREFIX.html#core_framework.constants.ST_PREFIX" title="core_framework.constants.ST_PREFIX"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ST_PREFIX</span></code></a></p></td>
+<td><p>- &quot;prefix&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.ST_SECURITY_GROUP.html#core_framework.constants.ST_SECURITY_GROUP" title="core_framework.constants.ST_SECURITY_GROUP"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ST_SECURITY_GROUP</span></code></a></p></td>
+<td><p>- &quot;sg-attachment&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.FACTS_ACCOUNT.html#core_framework.constants.FACTS_ACCOUNT" title="core_framework.constants.FACTS_ACCOUNT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FACTS_ACCOUNT</span></code></a></p></td>
+<td><p>- &quot;AccountFacts&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.FACTS_REGION.html#core_framework.constants.FACTS_REGION" title="core_framework.constants.FACTS_REGION"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FACTS_REGION</span></code></a></p></td>
+<td><p>- &quot;RegionFacts&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.FACTS_IMAGE.html#core_framework.constants.FACTS_IMAGE" title="core_framework.constants.FACTS_IMAGE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FACTS_IMAGE</span></code></a></p></td>
+<td><p>- &quot;ImageAliases&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.FACTS_TAGS.html#core_framework.constants.FACTS_TAGS" title="core_framework.constants.FACTS_TAGS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FACTS_TAGS</span></code></a></p></td>
+<td><p>- &quot;TagFacts&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.FACTS_VPC.html#core_framework.constants.FACTS_VPC" title="core_framework.constants.FACTS_VPC"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FACTS_VPC</span></code></a></p></td>
+<td><p>- &quot;VpcAliases&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.FACTS_SUBNET.html#core_framework.constants.FACTS_SUBNET" title="core_framework.constants.FACTS_SUBNET"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FACTS_SUBNET</span></code></a></p></td>
+<td><p>- &quot;SubnetAliases&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.FACTS_ENVIRONMENT.html#core_framework.constants.FACTS_ENVIRONMENT" title="core_framework.constants.FACTS_ENVIRONMENT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FACTS_ENVIRONMENT</span></code></a></p></td>
+<td><p>- &quot;Environment&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.FACTS_SECURITY.html#core_framework.constants.FACTS_SECURITY" title="core_framework.constants.FACTS_SECURITY"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FACTS_SECURITY</span></code></a></p></td>
+<td><p>- &quot;SecurityAliases&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.FACTS_SECURITY_GROUP.html#core_framework.constants.FACTS_SECURITY_GROUP" title="core_framework.constants.FACTS_SECURITY_GROUP"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FACTS_SECURITY_GROUP</span></code></a></p></td>
+<td><p>- &quot;SecurityGroupAliases&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.CORE_AUTOMATION_API_WRITE_ROLE.html#core_framework.constants.CORE_AUTOMATION_API_WRITE_ROLE" title="core_framework.constants.CORE_AUTOMATION_API_WRITE_ROLE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CORE_AUTOMATION_API_WRITE_ROLE</span></code></a></p></td>
+<td><p>- &quot;CoreAutomationApiWriteRole&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.CORE_AUTOMATION_API_READ_ROLE.html#core_framework.constants.CORE_AUTOMATION_API_READ_ROLE" title="core_framework.constants.CORE_AUTOMATION_API_READ_ROLE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CORE_AUTOMATION_API_READ_ROLE</span></code></a></p></td>
+<td><p>- &quot;CoreAutomationApiReadRole&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.CORE_AUTOMATION_DEPLOYMENT_WRITE_ROLE.html#core_framework.constants.CORE_AUTOMATION_DEPLOYMENT_WRITE_ROLE" title="core_framework.constants.CORE_AUTOMATION_DEPLOYMENT_WRITE_ROLE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CORE_AUTOMATION_DEPLOYMENT_WRITE_ROLE</span></code></a></p></td>
+<td><p>- &quot;CoreAutomationDeploymentWriteRole&quot;</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.constants.CORE_AUTOMATION_DEPLOYMENT_READ_ROLE.html#core_framework.constants.CORE_AUTOMATION_DEPLOYMENT_READ_ROLE" title="core_framework.constants.CORE_AUTOMATION_DEPLOYMENT_READ_ROLE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CORE_AUTOMATION_DEPLOYMENT_READ_ROLE</span></code></a></p></td>
+<td><p>- &quot;CoreAutomationDeploymentReadRole&quot;</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.constants.CORE_AUTOMATION_SESSION_ID_PREFIX.html#core_framework.constants.CORE_AUTOMATION_SESSION_ID_PREFIX" title="core_framework.constants.CORE_AUTOMATION_SESSION_ID_PREFIX"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CORE_AUTOMATION_SESSION_ID_PREFIX</span></code></a></p></td>
+<td><p>- &quot;Pipeline&quot;</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../core-framework.html" class="btn btn-neutral float-left" title="core-framework" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="core_framework.constants.HTTP_OK.html" class="btn btn-neutral float-right" title="core_framework.constants.HTTP_OK" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

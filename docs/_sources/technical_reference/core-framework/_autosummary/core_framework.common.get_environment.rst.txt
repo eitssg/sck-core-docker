@@ -1,0 +1,6 @@
+core\_framework.common.get\_environment
+=======================================
+
+.. currentmodule:: core_framework.common
+
+.. autofunction:: get_environment

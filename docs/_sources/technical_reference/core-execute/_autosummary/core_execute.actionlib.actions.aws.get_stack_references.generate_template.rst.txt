@@ -1,0 +1,6 @@
+core\_execute.actionlib.actions.aws.get\_stack\_references.generate\_template
+=============================================================================
+
+.. currentmodule:: core_execute.actionlib.actions.aws.get_stack_references
+
+.. autofunction:: generate_template

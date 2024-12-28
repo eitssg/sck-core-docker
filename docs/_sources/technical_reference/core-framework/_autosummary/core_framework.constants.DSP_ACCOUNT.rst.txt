@@ -1,0 +1,6 @@
+core\_framework.constants.DSP\_ACCOUNT
+======================================
+
+.. currentmodule:: core_framework.constants
+
+.. autodata:: DSP_ACCOUNT

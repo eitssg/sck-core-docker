@@ -1,0 +1,6 @@
+core\_db.constants.CONTACT\_EMAIL
+=================================
+
+.. currentmodule:: core_db.constants
+
+.. autodata:: CONTACT_EMAIL

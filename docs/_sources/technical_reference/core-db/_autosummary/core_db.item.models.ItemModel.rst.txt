@@ -1,0 +1,63 @@
+core\_db.item.models.ItemModel
+==============================
+
+.. currentmodule:: core_db.item.models
+
+.. autoclass:: ItemModel
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ItemModel.created_at
+      ~ItemModel.item_type
+      ~ItemModel.name
+      ~ItemModel.parent_created_at_index
+      ~ItemModel.parent_prn
+      ~ItemModel.prn
+      ~ItemModel.updated_at
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ItemModel.__init__
+      ~ItemModel.batch_get
+      ~ItemModel.batch_write
+      ~ItemModel.count
+      ~ItemModel.create_table
+      ~ItemModel.delete
+      ~ItemModel.delete_table
+      ~ItemModel.describe_table
+      ~ItemModel.deserialize
+      ~ItemModel.exists
+      ~ItemModel.from_dynamodb_dict
+      ~ItemModel.from_raw_data
+      ~ItemModel.from_simple_dict
+      ~ItemModel.get
+      ~ItemModel.get_attributes
+      ~ItemModel.get_delete_kwargs_from_instance
+      ~ItemModel.get_operation_kwargs_from_class
+      ~ItemModel.get_save_kwargs_from_instance
+      ~ItemModel.get_update_kwargs_from_instance
+      ~ItemModel.query
+      ~ItemModel.refresh
+      ~ItemModel.save
+      ~ItemModel.scan
+      ~ItemModel.serialize
+      ~ItemModel.to_dynamodb_dict
+      ~ItemModel.to_simple_dict
+      ~ItemModel.update
+      ~ItemModel.update_local_version_attribute
+      ~ItemModel.update_ttl
+   
+   

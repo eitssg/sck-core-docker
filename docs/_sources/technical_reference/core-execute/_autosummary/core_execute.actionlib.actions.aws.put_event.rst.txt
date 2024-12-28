@@ -1,0 +1,38 @@
+﻿core_execute.actionlib.actions.aws.put_event
+============================================
+
+.. automodule:: core_execute.actionlib.actions.aws.put_event
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+      generate_template
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      PutEventAction
+   
+   
+
+   
+   
+   
+
+
+

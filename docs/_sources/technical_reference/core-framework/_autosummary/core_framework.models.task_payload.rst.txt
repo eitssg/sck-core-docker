@@ -1,0 +1,31 @@
+core_framework.models.task_payload
+==================================
+
+.. automodule:: core_framework.models.task_payload
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      TaskPayload
+   
+   
+
+   
+   
+   
+
+
+

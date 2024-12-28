@@ -1,0 +1,6 @@
+core\_db.exceptions.ConflictException
+=====================================
+
+.. currentmodule:: core_db.exceptions
+
+.. autoexception:: ConflictException

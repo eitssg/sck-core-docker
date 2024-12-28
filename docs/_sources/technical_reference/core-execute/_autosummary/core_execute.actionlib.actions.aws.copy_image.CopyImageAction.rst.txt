@@ -1,0 +1,54 @@
+core\_execute.actionlib.actions.aws.copy\_image.CopyImageAction
+===============================================================
+
+.. currentmodule:: core_execute.actionlib.actions.aws.copy_image
+
+.. autoclass:: CopyImageAction
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~CopyImageAction.label
+      ~CopyImageAction.context
+      ~CopyImageAction.action_name
+      ~CopyImageAction.output_namespace
+      ~CopyImageAction.state_namespace
+      ~CopyImageAction.type
+      ~CopyImageAction.condition
+      ~CopyImageAction.after
+      ~CopyImageAction.params
+      ~CopyImageAction.lifecycle_hooks
+      ~CopyImageAction.deployment_details
+      ~CopyImageAction.renderer
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~CopyImageAction.__init__
+      ~CopyImageAction.check
+      ~CopyImageAction.execute
+      ~CopyImageAction.get_output
+      ~CopyImageAction.get_state
+      ~CopyImageAction.is_complete
+      ~CopyImageAction.is_failed
+      ~CopyImageAction.is_init
+      ~CopyImageAction.is_running
+      ~CopyImageAction.set_complete
+      ~CopyImageAction.set_failed
+      ~CopyImageAction.set_output
+      ~CopyImageAction.set_running
+      ~CopyImageAction.set_skipped
+      ~CopyImageAction.set_state
+   
+   

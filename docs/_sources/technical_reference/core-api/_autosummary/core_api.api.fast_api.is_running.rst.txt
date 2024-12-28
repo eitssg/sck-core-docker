@@ -1,0 +1,6 @@
+core\_api.api.fast\_api.is\_running
+===================================
+
+.. currentmodule:: core_api.api.fast_api
+
+.. autofunction:: is_running

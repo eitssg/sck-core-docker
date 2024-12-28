@@ -1,0 +1,6 @@
+core\_helper.aws.dynamodb\_resource
+===================================
+
+.. currentmodule:: core_helper.aws
+
+.. autofunction:: dynamodb_resource

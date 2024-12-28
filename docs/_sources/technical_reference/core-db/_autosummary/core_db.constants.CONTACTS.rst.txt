@@ -1,0 +1,6 @@
+core\_db.constants.CONTACTS
+===========================
+
+.. currentmodule:: core_db.constants
+
+.. autodata:: CONTACTS

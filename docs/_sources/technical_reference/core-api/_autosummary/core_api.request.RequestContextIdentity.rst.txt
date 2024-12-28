@@ -1,0 +1,68 @@
+core\_api.request.RequestContextIdentity
+========================================
+
+.. currentmodule:: core_api.request
+
+.. autoclass:: RequestContextIdentity
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~RequestContextIdentity.model_computed_fields
+      ~RequestContextIdentity.model_config
+      ~RequestContextIdentity.model_extra
+      ~RequestContextIdentity.model_fields
+      ~RequestContextIdentity.model_fields_set
+      ~RequestContextIdentity.cognitoIdentityPoolId
+      ~RequestContextIdentity.accountId
+      ~RequestContextIdentity.cognitoIdentityId
+      ~RequestContextIdentity.caller
+      ~RequestContextIdentity.sourceIp
+      ~RequestContextIdentity.principalOrgId
+      ~RequestContextIdentity.accessKey
+      ~RequestContextIdentity.cognitoAuthenticationType
+      ~RequestContextIdentity.cognitoAuthenticationProvider
+      ~RequestContextIdentity.userArn
+      ~RequestContextIdentity.userAgent
+      ~RequestContextIdentity.user
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~RequestContextIdentity.__init__
+      ~RequestContextIdentity.construct
+      ~RequestContextIdentity.copy
+      ~RequestContextIdentity.dict
+      ~RequestContextIdentity.from_orm
+      ~RequestContextIdentity.json
+      ~RequestContextIdentity.model_construct
+      ~RequestContextIdentity.model_copy
+      ~RequestContextIdentity.model_dump
+      ~RequestContextIdentity.model_dump_json
+      ~RequestContextIdentity.model_json_schema
+      ~RequestContextIdentity.model_parametrized_name
+      ~RequestContextIdentity.model_post_init
+      ~RequestContextIdentity.model_rebuild
+      ~RequestContextIdentity.model_validate
+      ~RequestContextIdentity.model_validate_json
+      ~RequestContextIdentity.model_validate_strings
+      ~RequestContextIdentity.parse_file
+      ~RequestContextIdentity.parse_obj
+      ~RequestContextIdentity.parse_raw
+      ~RequestContextIdentity.schema
+      ~RequestContextIdentity.schema_json
+      ~RequestContextIdentity.update_forward_refs
+      ~RequestContextIdentity.validate
+   
+   

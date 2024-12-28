@@ -1,0 +1,6 @@
+core\_db.constants.REGION
+=========================
+
+.. currentmodule:: core_db.constants
+
+.. autodata:: REGION

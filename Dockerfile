@@ -44,8 +44,15 @@ RUN python3 -m venv /home/core/.venv
 RUN source /home/core/.venv/bin/activate && python -m pip install --upgrade pip
 RUN source /home/core/.venv/bin/activate && pip install poetry poetry-dynamic-versioning
 
+ENV NEXUS_SERVER=https://monster-jj.jvj28.com:9091
+ENV PIP_INDEX_URL=${NEXUS_SERVER}/repository/pypi/simple
+
 # Ensure the virtual environment is activated for the core user
 RUN echo "source /home/core/.venv/bin/activate" >> /home/core/.bashrc
+RUN echo "NEXUS_SERVER=${NEXUS_SERVER}" >> /home/core/.bashrc
+
+# Tell PIP to pull from the mirror $NEXUS_SERVER/repository/pypi/simple
+RUN echo "export PIP_INDEX_URL=${PIP_INDEX_URL}" >> /home/core/.bashrc
 
 FROM os AS base
 
@@ -63,21 +70,16 @@ RUN chmod +x /home/core/core.sh
 # Switch back to the core user
 USER core
 
-# Copy the *whl file from ../core-db/dist to the folder /home/core/dist
-COPY dist/*.whl /home/core/dist/
-
 # Copy the docs folder from the current folder to /home/core/docs
 COPY docs /home/core/docs
-
-# Use PIP in the virtual environment to install all the wheel files in the /home/core/dist folder
-# RUN source /home/core/.venv/bin/activate && pip install /home/core/dist/*.whl
-RUN source /home/core/.venv/bin/activate && pip freeze > requirements.txt
 
 # Add the AWS CLI to the PATH
 RUN echo 'export PATH=$PATH:/usr/local/bin/aws' >> /home/core/.bashrc
 
 # Add the home folder to the PATH
 RUN echo 'export PATH=$PATH:/home/core' >> /home/core/.bashrc
+
+RUN source /home/core/.venv/bin/activate && PIP_INDEX_URL=${PIP_INDEX_URL} pip install sck-core-cli
 
 # Set the entrypoint
 ENTRYPOINT ["/bin/bash"]

@@ -1,0 +1,6 @@
+core\_renderer.monkeypatch.construct\_mapping
+=============================================
+
+.. currentmodule:: core_renderer.monkeypatch
+
+.. autofunction:: construct_mapping

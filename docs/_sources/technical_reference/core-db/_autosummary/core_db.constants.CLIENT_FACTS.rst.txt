@@ -1,0 +1,6 @@
+core\_db.constants.CLIENT\_FACTS
+================================
+
+.. currentmodule:: core_db.constants
+
+.. autodata:: CLIENT_FACTS

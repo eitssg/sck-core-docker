@@ -1,0 +1,6 @@
+core\_helper.aws.step\_functions\_client
+========================================
+
+.. currentmodule:: core_helper.aws
+
+.. autofunction:: step_functions_client

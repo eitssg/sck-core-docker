@@ -1,0 +1,54 @@
+core\_execute.actionlib.actions.aws.upload\_context.UploadContextAction
+=======================================================================
+
+.. currentmodule:: core_execute.actionlib.actions.aws.upload_context
+
+.. autoclass:: UploadContextAction
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~UploadContextAction.label
+      ~UploadContextAction.context
+      ~UploadContextAction.action_name
+      ~UploadContextAction.output_namespace
+      ~UploadContextAction.state_namespace
+      ~UploadContextAction.type
+      ~UploadContextAction.condition
+      ~UploadContextAction.after
+      ~UploadContextAction.params
+      ~UploadContextAction.lifecycle_hooks
+      ~UploadContextAction.deployment_details
+      ~UploadContextAction.renderer
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~UploadContextAction.__init__
+      ~UploadContextAction.check
+      ~UploadContextAction.execute
+      ~UploadContextAction.get_output
+      ~UploadContextAction.get_state
+      ~UploadContextAction.is_complete
+      ~UploadContextAction.is_failed
+      ~UploadContextAction.is_init
+      ~UploadContextAction.is_running
+      ~UploadContextAction.set_complete
+      ~UploadContextAction.set_failed
+      ~UploadContextAction.set_output
+      ~UploadContextAction.set_running
+      ~UploadContextAction.set_skipped
+      ~UploadContextAction.set_state
+   
+   

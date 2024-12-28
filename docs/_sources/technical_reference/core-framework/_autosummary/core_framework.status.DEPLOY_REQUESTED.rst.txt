@@ -1,0 +1,6 @@
+core\_framework.status.DEPLOY\_REQUESTED
+========================================
+
+.. currentmodule:: core_framework.status
+
+.. autodata:: DEPLOY_REQUESTED

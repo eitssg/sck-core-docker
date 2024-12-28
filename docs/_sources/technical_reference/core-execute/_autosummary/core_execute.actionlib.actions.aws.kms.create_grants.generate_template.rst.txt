@@ -1,0 +1,6 @@
+core\_execute.actionlib.actions.aws.kms.create\_grants.generate\_template
+=========================================================================
+
+.. currentmodule:: core_execute.actionlib.actions.aws.kms.create_grants
+
+.. autofunction:: generate_template

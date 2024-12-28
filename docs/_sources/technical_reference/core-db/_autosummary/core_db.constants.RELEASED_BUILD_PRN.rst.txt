@@ -1,0 +1,6 @@
+core\_db.constants.RELEASED\_BUILD\_PRN
+=======================================
+
+.. currentmodule:: core_db.constants
+
+.. autodata:: RELEASED_BUILD_PRN

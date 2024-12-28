@@ -1,0 +1,6 @@
+core\_helper.aws.login\_to\_aws
+===============================
+
+.. currentmodule:: core_helper.aws
+
+.. autofunction:: login_to_aws

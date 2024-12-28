@@ -1,0 +1,6 @@
+core\_execute.actionlib.actions.aws.delete\_stack.generate\_template
+====================================================================
+
+.. currentmodule:: core_execute.actionlib.actions.aws.delete_stack
+
+.. autofunction:: generate_template

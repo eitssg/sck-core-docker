@@ -1,0 +1,6 @@
+core\_db.constants.NAME
+=======================
+
+.. currentmodule:: core_db.constants
+
+.. autodata:: NAME

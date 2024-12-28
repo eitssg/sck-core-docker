@@ -1,0 +1,31 @@
+core\_db.item.actions.ItemTableActions
+======================================
+
+.. currentmodule:: core_db.item.actions
+
+.. autoclass:: ItemTableActions
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ItemTableActions.__init__
+      ~ItemTableActions.create
+      ~ItemTableActions.delete
+      ~ItemTableActions.get
+      ~ItemTableActions.list
+      ~ItemTableActions.patch
+      ~ItemTableActions.update
+      ~ItemTableActions.validate_date
+      ~ItemTableActions.validate_prn
+   
+   

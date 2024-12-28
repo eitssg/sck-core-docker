@@ -1,0 +1,44 @@
+core_api.item.build
+===================
+
+.. automodule:: core_api.item.build
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+      create_build
+      delete_build
+      get_build
+      get_builds
+      release_build
+      teardown_build
+      update_build
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      ApiBuildActions
+   
+   
+
+   
+   
+   
+
+
+

@@ -1,0 +1,6 @@
+core\_framework.constants.TASK\_COMPILE\_DEPLOYSPEC
+===================================================
+
+.. currentmodule:: core_framework.constants
+
+.. autodata:: TASK_COMPILE_DEPLOYSPEC

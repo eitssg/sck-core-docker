@@ -1,0 +1,6 @@
+core\_api.registry.zone.delete\_zones\_action
+=============================================
+
+.. currentmodule:: core_api.registry.zone
+
+.. autofunction:: delete_zones_action

@@ -1,0 +1,65 @@
+core\_db.registry.portfolio.models.ApproverFacts
+================================================
+
+.. currentmodule:: core_db.registry.portfolio.models
+
+.. autoclass:: ApproverFacts
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ApproverFacts.UserInstantiated
+      ~ApproverFacts.attr_name
+      ~ApproverFacts.attr_type
+      ~ApproverFacts.attribute_args
+      ~ApproverFacts.attributes
+      ~ApproverFacts.depends_on
+      ~ApproverFacts.email
+      ~ApproverFacts.enabled
+      ~ApproverFacts.name
+      ~ApproverFacts.null
+      ~ApproverFacts.roles
+      ~ApproverFacts.sequence
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ApproverFacts.__init__
+      ~ApproverFacts.add
+      ~ApproverFacts.append
+      ~ApproverFacts.as_dict
+      ~ApproverFacts.between
+      ~ApproverFacts.contains
+      ~ApproverFacts.delete
+      ~ApproverFacts.deserialize
+      ~ApproverFacts.does_not_exist
+      ~ApproverFacts.exists
+      ~ApproverFacts.from_dynamodb_dict
+      ~ApproverFacts.from_simple_dict
+      ~ApproverFacts.get_attributes
+      ~ApproverFacts.get_value
+      ~ApproverFacts.is_correctly_typed
+      ~ApproverFacts.is_in
+      ~ApproverFacts.is_raw
+      ~ApproverFacts.is_type
+      ~ApproverFacts.prepend
+      ~ApproverFacts.remove
+      ~ApproverFacts.serialize
+      ~ApproverFacts.set
+      ~ApproverFacts.startswith
+      ~ApproverFacts.to_dynamodb_dict
+      ~ApproverFacts.to_simple_dict
+      ~ApproverFacts.validate
+   
+   

@@ -1,0 +1,38 @@
+﻿core_execute.actionlib.actions.aws.create_cloud_front_invalidation
+==================================================================
+
+.. automodule:: core_execute.actionlib.actions.aws.create_cloud_front_invalidation
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+      generate_template
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      CreateCloudFrontInvalidationAction
+   
+   
+
+   
+   
+   
+
+
+

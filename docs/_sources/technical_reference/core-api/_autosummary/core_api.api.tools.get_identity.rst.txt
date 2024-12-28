@@ -1,0 +1,6 @@
+core\_api.api.tools.get\_identity
+=================================
+
+.. currentmodule:: core_api.api.tools
+
+.. autofunction:: get_identity

@@ -1,0 +1,34 @@
+core_db.registry.app
+====================
+
+.. automodule:: core_db.registry.app
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :template: custom-module-template.rst
+   :recursive:
+   
+      actions
+      models
+
+

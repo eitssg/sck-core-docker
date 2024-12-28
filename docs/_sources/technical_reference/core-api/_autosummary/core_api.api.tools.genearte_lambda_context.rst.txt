@@ -1,0 +1,6 @@
+core\_api.api.tools.genearte\_lambda\_context
+=============================================
+
+.. currentmodule:: core_api.api.tools
+
+.. autofunction:: genearte_lambda_context

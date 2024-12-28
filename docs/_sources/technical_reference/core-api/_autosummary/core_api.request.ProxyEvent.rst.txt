@@ -1,0 +1,68 @@
+core\_api.request.ProxyEvent
+============================
+
+.. currentmodule:: core_api.request
+
+.. autoclass:: ProxyEvent
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ProxyEvent.model_computed_fields
+      ~ProxyEvent.model_config
+      ~ProxyEvent.model_extra
+      ~ProxyEvent.model_fields
+      ~ProxyEvent.model_fields_set
+      ~ProxyEvent.route_key
+      ~ProxyEvent.httpMethod
+      ~ProxyEvent.resource
+      ~ProxyEvent.path
+      ~ProxyEvent.queryStringParameters
+      ~ProxyEvent.pathParameters
+      ~ProxyEvent.requestContext
+      ~ProxyEvent.headers
+      ~ProxyEvent.isBase64Encoded
+      ~ProxyEvent.body
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ProxyEvent.__init__
+      ~ProxyEvent.body_dict
+      ~ProxyEvent.construct
+      ~ProxyEvent.copy
+      ~ProxyEvent.dict
+      ~ProxyEvent.from_orm
+      ~ProxyEvent.json
+      ~ProxyEvent.model_construct
+      ~ProxyEvent.model_copy
+      ~ProxyEvent.model_dump
+      ~ProxyEvent.model_dump_json
+      ~ProxyEvent.model_json_schema
+      ~ProxyEvent.model_parametrized_name
+      ~ProxyEvent.model_post_init
+      ~ProxyEvent.model_rebuild
+      ~ProxyEvent.model_validate
+      ~ProxyEvent.model_validate_json
+      ~ProxyEvent.model_validate_strings
+      ~ProxyEvent.parse_file
+      ~ProxyEvent.parse_obj
+      ~ProxyEvent.parse_raw
+      ~ProxyEvent.schema
+      ~ProxyEvent.schema_json
+      ~ProxyEvent.update_forward_refs
+      ~ProxyEvent.uppercase_method
+      ~ProxyEvent.validate
+   
+   

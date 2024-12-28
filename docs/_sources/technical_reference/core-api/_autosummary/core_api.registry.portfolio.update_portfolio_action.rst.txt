@@ -1,0 +1,6 @@
+core\_api.registry.portfolio.update\_portfolio\_action
+======================================================
+
+.. currentmodule:: core_api.registry.portfolio
+
+.. autofunction:: update_portfolio_action

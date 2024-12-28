@@ -1,0 +1,6 @@
+core\_api.api.apis.generate\_response\_from\_lamnba
+===================================================
+
+.. currentmodule:: core_api.api.apis
+
+.. autofunction:: generate_response_from_lamnba

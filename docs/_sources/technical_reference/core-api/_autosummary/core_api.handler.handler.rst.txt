@@ -1,0 +1,6 @@
+core\_api.handler.handler
+=========================
+
+.. currentmodule:: core_api.handler
+
+.. autofunction:: handler

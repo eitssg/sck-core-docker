@@ -1,0 +1,6 @@
+core\_framework.status.RELEASE\_REQUESTED
+=========================================
+
+.. currentmodule:: core_framework.status
+
+.. autodata:: RELEASE_REQUESTED

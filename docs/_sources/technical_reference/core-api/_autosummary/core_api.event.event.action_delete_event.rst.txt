@@ -1,0 +1,6 @@
+core\_api.event.event.action\_delete\_event
+===========================================
+
+.. currentmodule:: core_api.event.event
+
+.. autofunction:: action_delete_event

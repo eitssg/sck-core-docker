@@ -1,0 +1,32 @@
+core\_db.item.models.ParentCreatedAtIndexMeta
+=============================================
+
+.. currentmodule:: core_db.item.models
+
+.. autoclass:: ParentCreatedAtIndexMeta
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ParentCreatedAtIndexMeta.index_name
+      ~ParentCreatedAtIndexMeta.projection
+      ~ParentCreatedAtIndexMeta.read_capacity_units
+      ~ParentCreatedAtIndexMeta.write_capacity_units
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ParentCreatedAtIndexMeta.__init__
+   
+   

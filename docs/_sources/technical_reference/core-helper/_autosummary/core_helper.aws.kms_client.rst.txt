@@ -1,0 +1,6 @@
+core\_helper.aws.kms\_client
+============================
+
+.. currentmodule:: core_helper.aws
+
+.. autofunction:: kms_client

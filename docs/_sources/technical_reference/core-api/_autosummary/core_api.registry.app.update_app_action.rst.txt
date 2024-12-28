@@ -1,0 +1,6 @@
+core\_api.registry.app.update\_app\_action
+==========================================
+
+.. currentmodule:: core_api.registry.app
+
+.. autofunction:: update_app_action

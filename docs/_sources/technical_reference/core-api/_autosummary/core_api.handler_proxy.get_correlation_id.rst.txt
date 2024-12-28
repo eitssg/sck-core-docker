@@ -1,0 +1,6 @@
+core\_api.handler\_proxy.get\_correlation\_id
+=============================================
+
+.. currentmodule:: core_api.handler_proxy
+
+.. autofunction:: get_correlation_id

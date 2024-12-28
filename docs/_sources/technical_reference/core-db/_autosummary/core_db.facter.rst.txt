@@ -1,0 +1,34 @@
+﻿core_db.facter
+==============
+
+.. automodule:: core_db.facter
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :template: custom-module-template.rst
+   :recursive:
+   
+      actions
+      facter
+
+

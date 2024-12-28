@@ -1,0 +1,6 @@
+core\_helper.aws.grant\_assume\_role\_permission
+================================================
+
+.. currentmodule:: core_helper.aws
+
+.. autofunction:: grant_assume_role_permission

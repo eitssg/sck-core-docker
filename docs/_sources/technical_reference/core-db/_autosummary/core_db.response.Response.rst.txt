@@ -1,0 +1,64 @@
+core\_db.response.Response
+==========================
+
+.. currentmodule:: core_db.response
+
+.. autoclass:: Response
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Response.model_computed_fields
+      ~Response.model_config
+      ~Response.model_extra
+      ~Response.model_fields
+      ~Response.model_fields_set
+      ~Response.timestamp
+      ~Response.status
+      ~Response.code
+      ~Response.data
+      ~Response.links
+      ~Response.metadata
+      ~Response.errors
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~Response.__init__
+      ~Response.construct
+      ~Response.copy
+      ~Response.dict
+      ~Response.from_orm
+      ~Response.json
+      ~Response.model_construct
+      ~Response.model_copy
+      ~Response.model_dump
+      ~Response.model_dump_json
+      ~Response.model_json_schema
+      ~Response.model_parametrized_name
+      ~Response.model_post_init
+      ~Response.model_rebuild
+      ~Response.model_validate
+      ~Response.model_validate_json
+      ~Response.model_validate_strings
+      ~Response.parse_file
+      ~Response.parse_obj
+      ~Response.parse_raw
+      ~Response.schema
+      ~Response.schema_json
+      ~Response.update_forward_refs
+      ~Response.validate
+      ~Response.validate_model
+   
+   

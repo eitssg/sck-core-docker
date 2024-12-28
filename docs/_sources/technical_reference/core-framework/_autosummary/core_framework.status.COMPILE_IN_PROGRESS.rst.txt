@@ -1,0 +1,6 @@
+core\_framework.status.COMPILE\_IN\_PROGRESS
+============================================
+
+.. currentmodule:: core_framework.status
+
+.. autodata:: COMPILE_IN_PROGRESS

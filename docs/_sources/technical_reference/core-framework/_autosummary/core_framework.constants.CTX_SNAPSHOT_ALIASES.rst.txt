@@ -1,0 +1,6 @@
+core\_framework.constants.CTX\_SNAPSHOT\_ALIASES
+================================================
+
+.. currentmodule:: core_framework.constants
+
+.. autodata:: CTX_SNAPSHOT_ALIASES

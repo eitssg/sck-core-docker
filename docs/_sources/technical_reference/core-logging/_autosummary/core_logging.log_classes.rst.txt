@@ -1,0 +1,61 @@
+﻿core_logging.log_classes
+========================
+
+.. automodule:: core_logging.log_classes
+
+   
+   
+   .. rubric:: Module Attributes
+
+   .. autosummary::
+      :toctree:
+   
+      LOG_DETAILS
+      LOG_STATUS
+      LOG_MESSAGE
+      LOG_REASON
+      LOG_RESOURCE
+      LOG_TIMESTAMP
+      LOG_TYPE
+      LOG_SCOPE
+      ENV_LOG_JSON
+      ENV_LOG_LEVEL
+      ENV_LOG_DIR
+      L_STATUS_LABEL
+      L_STATUS
+      L_REASON
+      L_MESSAGE
+      L_DETAILS
+      L_TYPE
+      L_SCOPE
+      L_IDENTITY
+      L_PRN
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      CoreLogFormatter
+      CoreLogJsonFormatter
+      CoreLogTextFormatter
+      CoreLogger
+      CoreLoggerHandler
+   
+   
+
+   
+   
+   
+
+
+

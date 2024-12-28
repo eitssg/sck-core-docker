@@ -1,0 +1,388 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>core_api.api.tools &mdash; SCK Core Automation 1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a3c9731c" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=45d66dd6" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=29a6c3e3"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            SCK Core Automation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_guide/index.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developer_guide/index.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../technical_reference/index.html">Technical Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SCK Core Automation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">core_api.api.tools</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for core_api.api.tools</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">platform</span>
+<span class="kn">import</span> <span class="nn">locale</span>
+<span class="kn">import</span> <span class="nn">uuid</span>
+<span class="kn">import</span> <span class="nn">core_framework</span> <span class="k">as</span> <span class="nn">util</span>
+
+<span class="kn">import</span> <span class="nn">core_helper.aws</span> <span class="k">as</span> <span class="nn">aws</span>
+
+<span class="kn">from</span> <span class="nn">.._version</span> <span class="kn">import</span> <span class="n">__version__</span>
+
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timezone</span>
+
+<span class="n">api_lambda_name</span> <span class="o">=</span> <span class="s2">&quot;core-automation-api-master&quot;</span>
+
+
+<div class="viewcode-block" id="event_headers">
+<a class="viewcode-back" href="../../../technical_reference/core-api/_autosummary/core_api.api.tools.event_headers.html#core_api.api.tools.event_headers">[docs]</a>
+<span class="k">def</span> <span class="nf">event_headers</span><span class="p">(</span>
+    <span class="n">host</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">protocol</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generate proxy forward headers</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        host (str, optional): The host IP of the caller. Defaults to None.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: _description_</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Get the current hostname</span>
+    <span class="n">hostname</span> <span class="o">=</span> <span class="n">platform</span><span class="o">.</span><span class="n">node</span><span class="p">()</span>
+
+    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;Accept&quot;</span><span class="p">:</span> <span class="s2">&quot;application/json&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Content-Type&quot;</span><span class="p">:</span> <span class="s2">&quot;application/json&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Host&quot;</span><span class="p">:</span> <span class="n">hostname</span><span class="p">,</span>
+        <span class="s2">&quot;User-Agent&quot;</span><span class="p">:</span> <span class="s2">&quot;FastAPI/7.26.8&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="n">host</span><span class="p">:</span>
+        <span class="n">headers</span><span class="p">[</span><span class="s2">&quot;X-Forwarded-For&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">host</span>
+    <span class="k">if</span> <span class="n">port</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">port</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">headers</span><span class="p">[</span><span class="s2">&quot;X-Forwarded-Port&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">port</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">protocol</span><span class="p">:</span>
+        <span class="n">headers</span><span class="p">[</span><span class="s2">&quot;X-Forwarded-Proto&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">protocol</span>
+
+    <span class="k">return</span> <span class="n">headers</span></div>
+
+
+
+<span class="c1"># There is also another paramter</span>
+
+
+<div class="viewcode-block" id="get_version_info">
+<a class="viewcode-back" href="../../../technical_reference/core-api/_autosummary/core_api.api.tools.get_version_info.html#core_api.api.tools.get_version_info">[docs]</a>
+<span class="k">def</span> <span class="nf">get_version_info</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+    <span class="n">system</span> <span class="o">=</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">system</span> <span class="o">==</span> <span class="s2">&quot;Windows&quot;</span><span class="p">:</span>
+        <span class="n">version</span> <span class="o">=</span> <span class="n">platform</span><span class="o">.</span><span class="n">version</span><span class="p">()</span>
+        <span class="n">release</span> <span class="o">=</span> <span class="n">platform</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
+        <span class="k">return</span> <span class="s2">&quot;Windows&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Version </span><span class="si">{</span><span class="n">version</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Release: </span><span class="si">{</span><span class="n">release</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">elif</span> <span class="n">system</span> <span class="o">==</span> <span class="s2">&quot;Linux&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">platform</span><span class="p">,</span> <span class="s2">&quot;linux_distribution&quot;</span><span class="p">):</span>
+            <span class="n">distro</span> <span class="o">=</span> <span class="n">platform</span><span class="o">.</span><span class="n">linux_distribution</span><span class="p">()</span>
+            <span class="k">return</span> <span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Linux </span><span class="si">{</span><span class="n">distro</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">&quot;Version: </span><span class="si">{</span><span class="n">distro</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">&quot;Codename: </span><span class="si">{</span><span class="n">distro</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;Linux&quot;</span><span class="p">,</span> <span class="s2">&quot;Unknown Version&quot;</span><span class="p">,</span> <span class="s2">&quot;Unknown Codename&quot;</span>
+    <span class="k">elif</span> <span class="n">system</span> <span class="o">==</span> <span class="s2">&quot;Darwin&quot;</span><span class="p">:</span>
+        <span class="n">release</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">machine</span> <span class="o">=</span> <span class="n">platform</span><span class="o">.</span><span class="n">mac_ver</span><span class="p">()</span>
+        <span class="k">return</span> <span class="s2">&quot;macOS&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Version: </span><span class="si">{</span><span class="n">release</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">machine</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;Unsupported&quot;</span><span class="p">,</span> <span class="s2">&quot;Unsupported Operating System&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="generate_user_agent">
+<a class="viewcode-back" href="../../../technical_reference/core-api/_autosummary/core_api.api.tools.generate_user_agent.html#core_api.api.tools.generate_user_agent">[docs]</a>
+<span class="k">def</span> <span class="nf">generate_user_agent</span><span class="p">(</span><span class="n">module_name</span><span class="p">,</span> <span class="n">module_version</span><span class="p">):</span>
+    <span class="n">python_version</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">version</span>
+    <span class="n">os_name</span><span class="p">,</span> <span class="n">os_version</span><span class="p">,</span> <span class="n">os_release</span> <span class="o">=</span> <span class="n">get_version_info</span><span class="p">()</span>
+    <span class="n">user_agent</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">module_name</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">module_version</span><span class="si">}</span><span class="s2"> (Python/</span><span class="si">{</span><span class="n">python_version</span><span class="si">}</span><span class="s2">; </span><span class="si">{</span><span class="n">os_name</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">os_version</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">os_release</span><span class="si">}</span><span class="s2">)&quot;</span>
+    <span class="k">return</span> <span class="n">user_agent</span></div>
+
+
+
+<span class="n">_identity</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+
+
+<div class="viewcode-block" id="get_identity">
+<a class="viewcode-back" href="../../../technical_reference/core-api/_autosummary/core_api.api.tools.get_identity.html#core_api.api.tools.get_identity">[docs]</a>
+<span class="k">def</span> <span class="nf">get_identity</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get&#39;s the identity of the caller.  Your workstation.</span>
+<span class="sd">    And uses, of course the AWS_PROFILE environment variable.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        (dict): A dictionary of the identity of the caller.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">_identity</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">_identity</span><span class="p">:</span>
+        <span class="n">_identity</span> <span class="o">=</span> <span class="n">aws</span><span class="o">.</span><span class="n">get_identity</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">_identity</span></div>
+
+
+
+<div class="viewcode-block" id="generate_proxy_event">
+<a class="viewcode-back" href="../../../technical_reference/core-api/_autosummary/core_api.api.tools.generate_proxy_event.html#core_api.api.tools.generate_proxy_event">[docs]</a>
+<span class="k">def</span> <span class="nf">generate_proxy_event</span><span class="p">(</span>
+    <span class="n">request_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">method</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">resource</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">path_params</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">query_params</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">body</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">headers</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">headers</span><span class="p">:</span>
+        <span class="n">headers</span> <span class="o">=</span> <span class="n">event_headers</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="s2">&quot;X-Correleation-Id&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">headers</span><span class="p">:</span>
+        <span class="n">headers</span><span class="p">[</span><span class="s2">&quot;X-Correleation-Id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">request_id</span>
+
+    <span class="n">host</span> <span class="o">=</span> <span class="n">platform</span><span class="o">.</span><span class="n">node</span><span class="p">()</span>
+
+    <span class="n">module_name</span> <span class="o">=</span> <span class="s2">&quot;core_api&quot;</span>
+
+    <span class="n">identity</span> <span class="o">=</span> <span class="n">get_identity</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">identity</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;Account&quot;</span> <span class="ow">in</span> <span class="n">identity</span><span class="p">:</span>
+            <span class="n">aws_account</span> <span class="o">=</span> <span class="n">identity</span><span class="p">[</span><span class="s2">&quot;Account&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s2">&quot;UserId&quot;</span> <span class="ow">in</span> <span class="n">identity</span><span class="p">:</span>
+            <span class="n">user_id</span> <span class="o">=</span> <span class="n">identity</span><span class="p">[</span><span class="s2">&quot;UserId&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s2">&quot;Arn&quot;</span> <span class="ow">in</span> <span class="n">identity</span><span class="p">:</span>
+            <span class="n">user_arn</span> <span class="o">=</span> <span class="n">identity</span><span class="p">[</span><span class="s2">&quot;Arn&quot;</span><span class="p">]</span>
+
+    <span class="c1"># get the current epoch</span>
+    <span class="n">request_time_epoch</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span><span class="o">.</span><span class="n">timestamp</span><span class="p">())</span>
+
+    <span class="c1"># format the epock as iso8601</span>
+    <span class="n">request_time_iso</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">fromtimestamp</span><span class="p">(</span><span class="n">request_time_epoch</span><span class="p">)</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+
+    <span class="n">user_agent</span> <span class="o">=</span> <span class="n">generate_user_agent</span><span class="p">(</span><span class="n">module_name</span><span class="p">,</span> <span class="n">__version__</span><span class="p">)</span>
+
+    <span class="n">function_name</span> <span class="o">=</span> <span class="s2">&quot;core-automation-api-master&quot;</span>
+    <span class="n">appId</span> <span class="o">=</span> <span class="vm">__name__</span>
+
+    <span class="n">environment</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">get_environment</span><span class="p">()</span>
+
+    <span class="n">rv</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;resource&quot;</span><span class="p">:</span> <span class="n">resource</span><span class="p">,</span>
+        <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="n">path</span><span class="p">,</span>
+        <span class="s2">&quot;httpMethod&quot;</span><span class="p">:</span> <span class="n">method</span><span class="p">,</span>
+        <span class="s2">&quot;headers&quot;</span><span class="p">:</span> <span class="n">headers</span><span class="p">,</span>
+        <span class="s2">&quot;requestContext&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;resourceId&quot;</span><span class="p">:</span> <span class="s2">&quot;123456&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;resourcePath&quot;</span><span class="p">:</span> <span class="n">resource</span><span class="p">,</span>
+            <span class="s2">&quot;httpMethod&quot;</span><span class="p">:</span> <span class="n">method</span><span class="p">,</span>
+            <span class="s2">&quot;extendedRequestId&quot;</span><span class="p">:</span> <span class="n">request_id</span><span class="p">,</span>
+            <span class="s2">&quot;requestTime&quot;</span><span class="p">:</span> <span class="n">request_time_iso</span><span class="p">,</span>
+            <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="n">path</span><span class="p">,</span>
+            <span class="s2">&quot;accountId&quot;</span><span class="p">:</span> <span class="n">aws_account</span><span class="p">,</span>
+            <span class="s2">&quot;protocol&quot;</span><span class="p">:</span> <span class="s2">&quot;HTTP/1.1&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;stage&quot;</span><span class="p">:</span> <span class="n">environment</span><span class="p">,</span>
+            <span class="s2">&quot;domainPrefix&quot;</span><span class="p">:</span> <span class="s2">&quot;example.com&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;requestTimeEpoch&quot;</span><span class="p">:</span> <span class="n">request_time_epoch</span><span class="p">,</span>
+            <span class="s2">&quot;requestId&quot;</span><span class="p">:</span> <span class="n">request_id</span><span class="p">,</span>
+            <span class="s2">&quot;identity&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;cognitoIdentityPoolId&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="s2">&quot;accountId&quot;</span><span class="p">:</span> <span class="n">aws_account</span><span class="p">,</span>
+                <span class="s2">&quot;cognitoIdentityId&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="s2">&quot;caller&quot;</span><span class="p">:</span> <span class="n">module_name</span><span class="p">,</span>
+                <span class="s2">&quot;sourceIp&quot;</span><span class="p">:</span> <span class="n">host</span><span class="p">,</span>
+                <span class="s2">&quot;principalOrgId&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="s2">&quot;accessKey&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="s2">&quot;cognitoAuthenticationType&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="s2">&quot;cognitoAuthenticationProvider&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="s2">&quot;userArn&quot;</span><span class="p">:</span> <span class="n">user_arn</span><span class="p">,</span>
+                <span class="s2">&quot;userAgent&quot;</span><span class="p">:</span> <span class="n">user_agent</span><span class="p">,</span>
+                <span class="s2">&quot;user&quot;</span><span class="p">:</span> <span class="n">user_id</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;domainName&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">function_name</span><span class="si">}</span><span class="s2">.execute-api.us-east-1.amazonaws.com&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;apiId&quot;</span><span class="p">:</span> <span class="n">appId</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;body&quot;</span><span class="p">:</span> <span class="n">body</span><span class="p">,</span>
+        <span class="s2">&quot;isBase64Encoded&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="n">path_params</span><span class="p">:</span>
+        <span class="n">rv</span><span class="p">[</span><span class="s2">&quot;pathParameters&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">path_params</span>
+
+    <span class="k">if</span> <span class="n">query_params</span><span class="p">:</span>
+        <span class="n">rv</span><span class="p">[</span><span class="s2">&quot;queryStringParameters&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">query_params</span>
+
+    <span class="k">return</span> <span class="n">rv</span></div>
+
+
+
+<div class="viewcode-block" id="get_locale">
+<a class="viewcode-back" href="../../../technical_reference/core-api/_autosummary/core_api.api.tools.get_locale.html#core_api.api.tools.get_locale">[docs]</a>
+<span class="k">def</span> <span class="nf">get_locale</span><span class="p">():</span>
+    <span class="c1"># get the locale of the system</span>
+    <span class="k">return</span> <span class="n">locale</span><span class="o">.</span><span class="n">getdefaultlocale</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="genearte_lambda_context">
+<a class="viewcode-back" href="../../../technical_reference/core-api/_autosummary/core_api.api.tools.genearte_lambda_context.html#core_api.api.tools.genearte_lambda_context">[docs]</a>
+<span class="k">def</span> <span class="nf">genearte_lambda_context</span><span class="p">(</span><span class="n">aws_request_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">SimpleContext</span><span class="p">(</span><span class="n">aws_request_id</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="SimpleContext">
+<a class="viewcode-back" href="../../../technical_reference/core-api/_autosummary/core_api.api.tools.SimpleContext.html#core_api.api.tools.SimpleContext">[docs]</a>
+<span class="k">class</span> <span class="nc">SimpleContext</span><span class="p">(</span><span class="nb">dict</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">aws_request_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+
+        <span class="n">formatted_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y/%m/</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="c1"># get the OS name</span>
+        <span class="n">os_name</span><span class="p">,</span> <span class="n">os_version</span><span class="p">,</span> <span class="n">os_release</span> <span class="o">=</span> <span class="n">get_version_info</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="p">[</span><span class="s2">&quot;function_name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">get_api_lambda_name</span><span class="p">()</span>
+        <span class="bp">self</span><span class="p">[</span><span class="s2">&quot;function_version&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;$LATEST&quot;</span>
+        <span class="bp">self</span><span class="p">[</span><span class="s2">&quot;invoked_function_arn&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">get_api_lambda_arn</span><span class="p">()</span>
+        <span class="bp">self</span><span class="p">[</span><span class="s2">&quot;memory_limit_in_mb&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">128</span>
+        <span class="bp">self</span><span class="p">[</span><span class="s2">&quot;aws_request_id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">aws_request_id</span>
+        <span class="bp">self</span><span class="p">[</span><span class="s2">&quot;log_group_name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;/aws/lambda/</span><span class="si">{</span><span class="bp">self</span><span class="p">[</span><span class="s1">&#39;function_name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="bp">self</span><span class="p">[</span><span class="s2">&quot;log_stream_name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">formatted_date</span><span class="si">}</span><span class="s2">/[$LATEST]</span><span class="si">{</span><span class="n">aws_request_id</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="bp">self</span><span class="p">[</span><span class="s2">&quot;identity&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;cognito_identity_id&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s2">&quot;cognito_identity_pool_id&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="bp">self</span><span class="p">[</span><span class="s2">&quot;client_context&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;client&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;installation_id&quot;</span><span class="p">:</span> <span class="n">__version__</span><span class="p">,</span>
+                <span class="s2">&quot;app_title&quot;</span><span class="p">:</span> <span class="s2">&quot;core-api&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;app_version_name&quot;</span><span class="p">:</span> <span class="n">__version__</span><span class="p">,</span>
+                <span class="s2">&quot;app_version_code&quot;</span><span class="p">:</span> <span class="n">__version__</span><span class="p">,</span>
+                <span class="s2">&quot;app_package_name&quot;</span><span class="p">:</span> <span class="s2">&quot;core_api.api&quot;</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;environment&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;platform&quot;</span><span class="p">:</span> <span class="n">os_name</span><span class="p">,</span>
+                <span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="n">sys</span><span class="o">.</span><span class="n">version</span><span class="p">,</span>
+                <span class="s2">&quot;make&quot;</span><span class="p">:</span> <span class="s2">&quot;Python&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;locale&quot;</span><span class="p">:</span> <span class="n">get_locale</span><span class="p">(),</span>
+                <span class="s2">&quot;network_type&quot;</span><span class="p">:</span> <span class="s2">&quot;direct&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;os_version&quot;</span><span class="p">:</span> <span class="n">os_version</span><span class="p">,</span>
+                <span class="s2">&quot;os_release&quot;</span><span class="p">:</span> <span class="n">os_release</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">get_remaining_time_in_millis</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;remaniing_time&quot;</span><span class="p">,</span> <span class="mi">10000</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">set_remaining_time_in_millis</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">[</span><span class="s2">&quot;remaniing_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span></div>
+
+
+
+<div class="viewcode-block" id="generate_event_and_context">
+<a class="viewcode-back" href="../../../technical_reference/core-api/_autosummary/core_api.api.tools.generate_event_and_context.html#core_api.api.tools.generate_event_and_context">[docs]</a>
+<span class="k">def</span> <span class="nf">generate_event_and_context</span><span class="p">(</span>
+    <span class="n">method</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">resource</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">path_params</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">query_params</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">body</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">headers</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
+
+    <span class="n">request_id</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span>
+
+    <span class="n">event</span> <span class="o">=</span> <span class="n">generate_proxy_event</span><span class="p">(</span>
+        <span class="n">request_id</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">resource</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">path_params</span><span class="p">,</span> <span class="n">query_params</span><span class="p">,</span> <span class="n">body</span><span class="p">,</span> <span class="n">headers</span>
+    <span class="p">)</span>
+
+    <span class="n">context</span> <span class="o">=</span> <span class="n">genearte_lambda_context</span><span class="p">(</span><span class="n">request_id</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">event</span><span class="p">,</span> <span class="n">context</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

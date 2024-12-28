@@ -1,0 +1,6 @@
+core\_helper.aws.revoke\_assume\_role\_permission
+=================================================
+
+.. currentmodule:: core_helper.aws
+
+.. autofunction:: revoke_assume_role_permission

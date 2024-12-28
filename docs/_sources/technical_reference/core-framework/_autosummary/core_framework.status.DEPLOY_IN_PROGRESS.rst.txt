@@ -1,0 +1,6 @@
+core\_framework.status.DEPLOY\_IN\_PROGRESS
+===========================================
+
+.. currentmodule:: core_framework.status
+
+.. autodata:: DEPLOY_IN_PROGRESS

@@ -1,0 +1,6 @@
+core\_framework.common.get\_component\_compiler\_lambda\_arn
+============================================================
+
+.. currentmodule:: core_framework.common
+
+.. autofunction:: get_component_compiler_lambda_arn

@@ -1,0 +1,6 @@
+core\_api.handler\_proxy.handler\_proxy
+=======================================
+
+.. currentmodule:: core_api.handler_proxy
+
+.. autofunction:: handler_proxy

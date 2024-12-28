@@ -1,0 +1,6 @@
+core\_api.registry.app.create\_app\_action
+==========================================
+
+.. currentmodule:: core_api.registry.app
+
+.. autofunction:: create_app_action

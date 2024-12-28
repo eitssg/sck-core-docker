@@ -1,0 +1,6 @@
+core\_framework.prn\_utils.branch\_short\_name
+==============================================
+
+.. currentmodule:: core_framework.prn_utils
+
+.. autofunction:: branch_short_name

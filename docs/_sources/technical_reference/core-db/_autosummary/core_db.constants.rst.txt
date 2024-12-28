@@ -1,0 +1,62 @@
+﻿core_db.constants
+=================
+
+.. automodule:: core_db.constants
+
+   
+   
+   .. rubric:: Module Attributes
+
+   .. autosummary::
+      :toctree:
+   
+      CLIENT_FACTS
+      PORTFOLIO_FACTS
+      ZONE_FACTS
+      APP_FACTS
+      EVENTS
+      ITEMS
+      PRN
+      ITEM_TYPE
+      EVENT_TYPE
+      APPROVERS
+      CONTACTS
+      OWNER
+      REGION
+      ENVIRONMENT
+      CLIENT_KEY
+      PORTFOLIO_KEY
+      CLIENT_PORTFOLIO_KEY
+      APP_KEY
+      ZONE_KEY
+      NAME
+      CONTACT_EMAIL
+      PARENT_PRN
+      PORTFOLIO_PRN
+      APP_PRN
+      BRANCH_PRN
+      BUILD_PRN
+      COMPONENT_PRN
+      SHORT_NAME
+      RELEASED_BUILD_PRN
+      RELEASED_BUILD
+      STATUS
+      UPDATED_AT
+      CREATED_AT
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

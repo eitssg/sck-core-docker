@@ -1,0 +1,54 @@
+core\_execute.actionlib.actions.aws.get\_stack\_references.GetStackReferencesAction
+===================================================================================
+
+.. currentmodule:: core_execute.actionlib.actions.aws.get_stack_references
+
+.. autoclass:: GetStackReferencesAction
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~GetStackReferencesAction.label
+      ~GetStackReferencesAction.context
+      ~GetStackReferencesAction.action_name
+      ~GetStackReferencesAction.output_namespace
+      ~GetStackReferencesAction.state_namespace
+      ~GetStackReferencesAction.type
+      ~GetStackReferencesAction.condition
+      ~GetStackReferencesAction.after
+      ~GetStackReferencesAction.params
+      ~GetStackReferencesAction.lifecycle_hooks
+      ~GetStackReferencesAction.deployment_details
+      ~GetStackReferencesAction.renderer
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~GetStackReferencesAction.__init__
+      ~GetStackReferencesAction.check
+      ~GetStackReferencesAction.execute
+      ~GetStackReferencesAction.get_output
+      ~GetStackReferencesAction.get_state
+      ~GetStackReferencesAction.is_complete
+      ~GetStackReferencesAction.is_failed
+      ~GetStackReferencesAction.is_init
+      ~GetStackReferencesAction.is_running
+      ~GetStackReferencesAction.set_complete
+      ~GetStackReferencesAction.set_failed
+      ~GetStackReferencesAction.set_output
+      ~GetStackReferencesAction.set_running
+      ~GetStackReferencesAction.set_skipped
+      ~GetStackReferencesAction.set_state
+   
+   

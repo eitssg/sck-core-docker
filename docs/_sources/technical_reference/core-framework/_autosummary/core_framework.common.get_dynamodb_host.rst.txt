@@ -1,0 +1,6 @@
+core\_framework.common.get\_dynamodb\_host
+==========================================
+
+.. currentmodule:: core_framework.common
+
+.. autofunction:: get_dynamodb_host

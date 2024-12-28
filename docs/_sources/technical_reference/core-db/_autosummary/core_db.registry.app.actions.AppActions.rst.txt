@@ -1,0 +1,30 @@
+core\_db.registry.app.actions.AppActions
+========================================
+
+.. currentmodule:: core_db.registry.app.actions
+
+.. autoclass:: AppActions
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~AppActions.__init__
+      ~AppActions.create
+      ~AppActions.delete
+      ~AppActions.get
+      ~AppActions.get_client_portfolio_app
+      ~AppActions.list
+      ~AppActions.patch
+      ~AppActions.update
+   
+   

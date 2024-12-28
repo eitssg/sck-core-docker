@@ -1,0 +1,6 @@
+core\_renderer.monkeypatch.MappingConstructorError
+==================================================
+
+.. currentmodule:: core_renderer.monkeypatch
+
+.. autoexception:: MappingConstructorError

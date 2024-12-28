@@ -1,0 +1,6 @@
+core\_db.constants.CLIENT\_PORTFOLIO\_KEY
+=========================================
+
+.. currentmodule:: core_db.constants
+
+.. autodata:: CLIENT_PORTFOLIO_KEY

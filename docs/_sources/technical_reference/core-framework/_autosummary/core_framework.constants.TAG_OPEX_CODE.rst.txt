@@ -1,0 +1,6 @@
+core\_framework.constants.TAG\_OPEX\_CODE
+=========================================
+
+.. currentmodule:: core_framework.constants
+
+.. autodata:: TAG_OPEX_CODE

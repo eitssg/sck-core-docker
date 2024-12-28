@@ -1,0 +1,6 @@
+core\_framework.constants.DS\_TYPE\_CREATE\_STACK
+=================================================
+
+.. currentmodule:: core_framework.constants
+
+.. autodata:: DS_TYPE_CREATE_STACK

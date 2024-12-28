@@ -1,0 +1,6 @@
+core\_runner.handler.handler
+============================
+
+.. currentmodule:: core_runner.handler
+
+.. autofunction:: handler

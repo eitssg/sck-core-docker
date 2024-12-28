@@ -26,18 +26,8 @@ if (Test-Path -Path .\docs) {
     Remove-Item -Path .\docs -Recurse
 }
 
-# Get the ..\core-db\dist\*.whl files and put in the dist folder from the current directory
-Copy-Item -Path ..\core-framework\dist\*.whl -Destination .\dist
-Copy-Item -Path ..\core-db\dist\*.whl -Destination .\dist
-Copy-Item -Path ..\core-execute\dist\*.whl -Destination .\dist
-Copy-Item -Path ..\core-runner\dist\*.whl -Destination .\dist
-Copy-Item -Path ..\core-component-compiler\dist\*.whl -Destination .\dist
-Copy-Item -Path ..\core-deployspec-compiler\dist\*.whl -Destination .\dist
-Copy-Item -Path ..\core-invoker\dist\*.whl -Destination .\dist
-Copy-Item -Path ..\core-api\dist\*.whl -Destination .\dist
-
 # Copy all files recursively from ..\core-docs\build\docs to the current folder
-Copy-Item -Path ..\core-docs\build\docs\html -Destination .\docs -Recurse
+Copy-Item -Path ..\sck-core-docs\build\docs\html -Destination .\docs -Recurse
 
 # Print a message indicating the architecture of the machine
 Write-Host "Building Docker image for architecture: $archType"

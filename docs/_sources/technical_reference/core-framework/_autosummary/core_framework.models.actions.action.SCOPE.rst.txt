@@ -1,0 +1,6 @@
+core\_framework.models.actions.action.SCOPE
+===========================================
+
+.. currentmodule:: core_framework.models.actions.action
+
+.. autodata:: SCOPE

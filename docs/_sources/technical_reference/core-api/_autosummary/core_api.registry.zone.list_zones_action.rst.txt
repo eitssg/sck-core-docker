@@ -1,0 +1,6 @@
+core\_api.registry.zone.list\_zones\_action
+===========================================
+
+.. currentmodule:: core_api.registry.zone
+
+.. autofunction:: list_zones_action

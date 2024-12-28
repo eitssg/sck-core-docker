@@ -1,0 +1,64 @@
+core\_db.item.portfolio.models.PortfolioModel
+=============================================
+
+.. currentmodule:: core_db.item.portfolio.models
+
+.. autoclass:: PortfolioModel
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~PortfolioModel.contact_email
+      ~PortfolioModel.created_at
+      ~PortfolioModel.item_type
+      ~PortfolioModel.name
+      ~PortfolioModel.parent_created_at_index
+      ~PortfolioModel.parent_prn
+      ~PortfolioModel.prn
+      ~PortfolioModel.updated_at
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~PortfolioModel.__init__
+      ~PortfolioModel.batch_get
+      ~PortfolioModel.batch_write
+      ~PortfolioModel.count
+      ~PortfolioModel.create_table
+      ~PortfolioModel.delete
+      ~PortfolioModel.delete_table
+      ~PortfolioModel.describe_table
+      ~PortfolioModel.deserialize
+      ~PortfolioModel.exists
+      ~PortfolioModel.from_dynamodb_dict
+      ~PortfolioModel.from_raw_data
+      ~PortfolioModel.from_simple_dict
+      ~PortfolioModel.get
+      ~PortfolioModel.get_attributes
+      ~PortfolioModel.get_delete_kwargs_from_instance
+      ~PortfolioModel.get_operation_kwargs_from_class
+      ~PortfolioModel.get_save_kwargs_from_instance
+      ~PortfolioModel.get_update_kwargs_from_instance
+      ~PortfolioModel.query
+      ~PortfolioModel.refresh
+      ~PortfolioModel.save
+      ~PortfolioModel.scan
+      ~PortfolioModel.serialize
+      ~PortfolioModel.to_dynamodb_dict
+      ~PortfolioModel.to_simple_dict
+      ~PortfolioModel.update
+      ~PortfolioModel.update_local_version_attribute
+      ~PortfolioModel.update_ttl
+   
+   

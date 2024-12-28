@@ -1,0 +1,6 @@
+core\_framework.common.get\_log\_dir
+====================================
+
+.. currentmodule:: core_framework.common
+
+.. autofunction:: get_log_dir

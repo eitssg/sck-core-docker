@@ -1,0 +1,6 @@
+core\_db.facter.facter.get\_facts\_by\_identity
+===============================================
+
+.. currentmodule:: core_db.facter.facter
+
+.. autofunction:: get_facts_by_identity

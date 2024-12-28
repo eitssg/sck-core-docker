@@ -1,0 +1,6 @@
+core\_db.exceptions.ForbiddenException
+======================================
+
+.. currentmodule:: core_db.exceptions
+
+.. autoexception:: ForbiddenException

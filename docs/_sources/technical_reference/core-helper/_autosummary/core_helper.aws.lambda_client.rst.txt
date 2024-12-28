@@ -1,0 +1,6 @@
+core\_helper.aws.lambda\_client
+===============================
+
+.. currentmodule:: core_helper.aws
+
+.. autofunction:: lambda_client

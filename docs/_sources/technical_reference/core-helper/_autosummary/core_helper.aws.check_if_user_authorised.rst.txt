@@ -1,0 +1,6 @@
+core\_helper.aws.check\_if\_user\_authorised
+============================================
+
+.. currentmodule:: core_helper.aws
+
+.. autofunction:: check_if_user_authorised

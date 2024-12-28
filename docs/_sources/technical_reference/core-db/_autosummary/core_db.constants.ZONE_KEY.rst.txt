@@ -1,0 +1,6 @@
+core\_db.constants.ZONE\_KEY
+============================
+
+.. currentmodule:: core_db.constants
+
+.. autodata:: ZONE_KEY

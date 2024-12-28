@@ -1,0 +1,6 @@
+core\_framework.prn\_utils.extract\_build\_prn
+==============================================
+
+.. currentmodule:: core_framework.prn_utils
+
+.. autofunction:: extract_build_prn

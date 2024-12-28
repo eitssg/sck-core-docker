@@ -1,0 +1,202 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>core_db.registry.app.models &mdash; SCK Core Automation 1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=a3c9731c" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/custom.css?v=45d66dd6" />
+
+  
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=29a6c3e3"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            SCK Core Automation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../user_guide/index.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../developer_guide/index.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../technical_reference/index.html">Technical Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">SCK Core Automation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">core_db.registry.app.models</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for core_db.registry.app.models</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; Classes defining the Apps record model for the core-automation-apps table &quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">re</span>
+
+<span class="kn">from</span> <span class="nn">pynamodb.models</span> <span class="kn">import</span> <span class="n">Model</span>
+<span class="kn">from</span> <span class="nn">pynamodb.attributes</span> <span class="kn">import</span> <span class="n">MapAttribute</span><span class="p">,</span> <span class="n">UnicodeAttribute</span>
+
+<span class="kn">import</span> <span class="nn">core_framework</span> <span class="k">as</span> <span class="nn">util</span>
+
+<span class="kn">from</span> <span class="nn">...constants</span> <span class="kn">import</span> <span class="n">CLIENT_PORTFOLIO_KEY</span><span class="p">,</span> <span class="n">APP_KEY</span>
+
+<span class="kn">from</span> <span class="nn">...config</span> <span class="kn">import</span> <span class="n">get_table_name</span><span class="p">,</span> <span class="n">APP_FACTS</span>
+
+
+<div class="viewcode-block" id="AppFacts">
+<a class="viewcode-back" href="../../../../technical_reference/core-db/_autosummary/core_db.registry.app.models.AppFacts.html#core_db.registry.app.models.AppFacts">[docs]</a>
+<span class="k">class</span> <span class="nc">AppFacts</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Classes defining the Apps record model for the core-automation-apps table</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        **kwargs: Arbitrary keyword arguments with the attributes</span>
+<span class="sd">            * ClientPortfolio: str: Client Portfolio (alternate key &quot;client-portfolio&quot;)</span>
+<span class="sd">            * AppRegex: str: App Regex (alternate key &quot;app-regex&quot;)</span>
+<span class="sd">            * Name: str: Name of the app (alternate key &quot;name&quot;)</span>
+<span class="sd">            * Environment: str: Environment of the app (alternate key &quot;environment&quot;)</span>
+<span class="sd">            * Account: str: Account of the app (alternate key &quot;account&quot;)</span>
+<span class="sd">            * Zone: str: Zone of the app (alternate key &quot;zone&quot;)</span>
+<span class="sd">            * ImgeAliases: dict: Image Aliases of the app to reduce bake time (alternate key &quot;image-aliases&quot;)</span>
+<span class="sd">            * Repository: str: Git repository of the app (alternate key &quot;repository&quot;)</span>
+<span class="sd">            * Region: str: Region of the app (alternate key &quot;region&quot;)</span>
+<span class="sd">            * Tags: dict: Tags of the app (alternate key &quot;tags&quot;)</span>
+<span class="sd">            * EnforceValidation: str: Enforce validation of the app (alternate key &quot;enforce-validation&quot;)</span>
+<span class="sd">            * Metadata: dict: Metadata of the app (alternate key &quot;metadata&quot;)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        AppFacts: AppFacts object</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">table_name</span> <span class="o">=</span> <span class="n">get_table_name</span><span class="p">(</span><span class="n">APP_FACTS</span><span class="p">)</span>
+        <span class="n">region</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">get_region</span><span class="p">()</span>
+        <span class="n">host</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">get_dynamodb_host</span><span class="p">()</span>
+        <span class="n">read_capacity_units</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">write_capacity_units</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="n">ClientPortfolio</span> <span class="o">=</span> <span class="n">UnicodeAttribute</span><span class="p">(</span><span class="n">attr_name</span><span class="o">=</span><span class="n">CLIENT_PORTFOLIO_KEY</span><span class="p">,</span> <span class="n">hash_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;str: Client Portfolio (alternate key &quot;client-portfolio&quot;) &quot;&quot;&quot;</span>
+
+    <span class="n">AppRegex</span> <span class="o">=</span> <span class="n">UnicodeAttribute</span><span class="p">(</span><span class="n">attr_name</span><span class="o">=</span><span class="n">APP_KEY</span><span class="p">,</span> <span class="n">range_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;str: App Regex (alternate key &quot;app-regex&quot;) &quot;&quot;&quot;</span>
+
+    <span class="n">Name</span><span class="p">:</span> <span class="n">UnicodeAttribute</span> <span class="o">=</span> <span class="n">UnicodeAttribute</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;str: Name of the app (alternate key &quot;name&quot;) &quot;&quot;&quot;</span>
+
+    <span class="n">Environment</span><span class="p">:</span> <span class="n">UnicodeAttribute</span> <span class="o">=</span> <span class="n">UnicodeAttribute</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;str: Environment of the app (alternate key &quot;environment&quot;) &quot;&quot;&quot;</span>
+
+    <span class="n">Account</span><span class="p">:</span> <span class="n">UnicodeAttribute</span> <span class="o">=</span> <span class="n">UnicodeAttribute</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;str: Zone name of the app (alternate key &quot;account&quot;) (same as Zone) &quot;&quot;&quot;</span>
+
+    <span class="n">Zone</span><span class="p">:</span> <span class="n">UnicodeAttribute</span> <span class="o">=</span> <span class="n">UnicodeAttribute</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;str: Zone name of the app (alternate key &quot;zone&quot;) (same as Account)</span>
+
+<span class="sd">        We call this &quot;zone&quot; now.  a &quot;zone&quot; contains &quot;apps&quot; that are deployed together</span>
+<span class="sd">        in an Acccount. A zone can have multiple region definitions.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">ImgeAliases</span><span class="p">:</span> <span class="n">MapAttribute</span> <span class="o">=</span> <span class="n">MapAttribute</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;str: Image Aliases of the app to reduce bake time (alternate key &quot;image-aliases&quot;) &quot;&quot;&quot;</span>
+
+    <span class="n">Repository</span> <span class="o">=</span> <span class="n">UnicodeAttribute</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;str: Git repository of the app (alternate key &quot;repository&quot;) &quot;&quot;&quot;</span>
+
+    <span class="n">Region</span> <span class="o">=</span> <span class="n">UnicodeAttribute</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;str: Region alise (slug) of the app (alternate key &quot;region&quot;) &quot;&quot;&quot;</span>
+
+    <span class="n">Tags</span><span class="p">:</span> <span class="n">MapAttribute</span> <span class="o">=</span> <span class="n">MapAttribute</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;dict: Tags of the app (alternate key &quot;tags&quot;) &quot;&quot;&quot;</span>
+
+    <span class="n">EnforceValidation</span><span class="p">:</span> <span class="n">UnicodeAttribute</span> <span class="o">=</span> <span class="n">UnicodeAttribute</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;str: Enforce validation of the app (alternate key &quot;enforce-validation&quot;) &quot;&quot;&quot;</span>
+
+    <span class="n">Metadata</span><span class="p">:</span> <span class="n">MapAttribute</span> <span class="o">=</span> <span class="n">MapAttribute</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;dict: Metadata of the app (alternate key &quot;metadata&quot;) &quot;&quot;&quot;</span>
+
+    <span class="n">UserInstantiated</span><span class="p">:</span> <span class="n">UnicodeAttribute</span> <span class="o">=</span> <span class="n">UnicodeAttribute</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="c1"># Convert lowercase keys to camelCase keys</span>
+        <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_convert_key</span><span class="p">(</span><span class="n">k</span><span class="p">):</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_convert_key</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
+        <span class="c1"># Convert lowercase keys to camelCase keys</span>
+        <span class="n">words</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;[-_]&quot;</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+        <span class="n">camel_case_key</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">word</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">words</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">camel_case_key</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

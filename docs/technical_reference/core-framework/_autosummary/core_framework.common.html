@@ -1,0 +1,280 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>core_framework.common &mdash; SCK Core Automation 1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a3c9731c" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=45d66dd6" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=29a6c3e3"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="core_framework.common.custom_serializer" href="core_framework.common.custom_serializer.html" />
+    <link rel="prev" title="core_framework.models.task_payload.TaskPayload" href="core_framework.models.task_payload.TaskPayload.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            SCK Core Automation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../user_guide/index.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developer_guide/index.html">Developer Guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Technical Reference Guide</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../modules.html">Modules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../core-logging/core-logging.html">core-logging</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../core-framework.html">core-framework</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../core-framework.html#constants">Constants</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../core-framework.html#object-models">Object Models</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="../core-framework.html#common-functions">Common Functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../core-framework.html#local-execution-magic">Local Execution Magic</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-db/core-db.html">core-db</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-helper/core-helper.html">core-helper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-renderer/core-renderer.html">core-renderer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-component-compiler/core-component-compiler.html">core-component-compiler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-deployspec-compiler/core-deployspec-compiler.html">core-deployspec-compiler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-execute/core-execute.html">core-execute</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-organization/core-organization.html">core-organization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-runner/core-runner.html">core-runner</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-invoker/core-invoker.html">core-invoker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-report/core-report.html">core-report</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-api-auth/core-api-auth.html">core-api-auth</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-api/core-api.html">core-api</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-codecommit-listener/core-codecommit-listener.html">core-codecommit-listener</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../core-automation/core-automation.html">core-automation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../core-db/db_schema.html">Database Schema</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SCK Core Automation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Technical Reference Guide</a></li>
+          <li class="breadcrumb-item"><a href="../../modules.html">Modules</a></li>
+          <li class="breadcrumb-item"><a href="../core-framework.html">core-framework</a></li>
+      <li class="breadcrumb-item active">core_framework.common</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/technical_reference/core-framework/_autosummary/core_framework.common.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-core_framework.common">
+<span id="core-framework-common"></span><h1>core_framework.common<a class="headerlink" href="#module-core_framework.common" title="Link to this heading"></a></h1>
+<p>The common module provides a suite of function that are used throughout the Core Automation framework.</p>
+<p>These functions assist wtih generating and using model instances as well as environment variables and
+other very commont tasks.</p>
+<p class="rubric">Functions</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.common.custom_serializer.html#core_framework.common.custom_serializer" title="core_framework.common.custom_serializer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">custom_serializer</span></code></a>(obj)</p></td>
+<td><p>Handy tool for deserializing json objects that contain datetime objects as for SOME reason the standard json deserializer does not support datetime objects.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.common.from_json.html#core_framework.common.from_json" title="core_framework.common.from_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_json</span></code></a>(data)</p></td>
+<td><p>The Json deserializer for the data object.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.common.generate_branch_short_name.html#core_framework.common.generate_branch_short_name" title="core_framework.common.generate_branch_short_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generate_branch_short_name</span></code></a>(branch)</p></td>
+<td><p>Generates a shortened version of the branch name.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.common.generate_bucket_name.html#core_framework.common.generate_bucket_name" title="core_framework.common.generate_bucket_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generate_bucket_name</span></code></a>([client, branch, ...])</p></td>
+<td><p>Get the configuration bucket name from the environment variables</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.common.get_api_lambda_arn.html#core_framework.common.get_api_lambda_arn" title="core_framework.common.get_api_lambda_arn"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_api_lambda_arn</span></code></a>()</p></td>
+<td><p>The ARN of the Core Automation API Lambda.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.common.get_api_lambda_name.html#core_framework.common.get_api_lambda_name" title="core_framework.common.get_api_lambda_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_api_lambda_name</span></code></a>()</p></td>
+<td><p>The name of the Core Automation API Lambda.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.common.get_artefact_bucket_name.html#core_framework.common.get_artefact_bucket_name" title="core_framework.common.get_artefact_bucket_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_artefact_bucket_name</span></code></a>([client])</p></td>
+<td><p>Return the bucket nmame for the artefacts.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.common.get_artefact_bucket_region.html#core_framework.common.get_artefact_bucket_region" title="core_framework.common.get_artefact_bucket_region"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_artefact_bucket_region</span></code></a>()</p></td>
+<td><p>Return the region of the artefact bucket.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.common.get_automation_account.html#core_framework.common.get_automation_account" title="core_framework.common.get_automation_account"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_automation_account</span></code></a>()</p></td>
+<td><p>Return the AWS account number for the automation account.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.common.get_automation_scope.html#core_framework.common.get_automation_scope" title="core_framework.common.get_automation_scope"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_automation_scope</span></code></a>()</p></td>
+<td><p>The automation scope is a prefix on all automation objects.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.common.get_aws_profile.html#core_framework.common.get_aws_profile" title="core_framework.common.get_aws_profile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_aws_profile</span></code></a>()</p></td>
+<td><p>Return an AWS profile name that is based on the client region specified.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.common.get_bucket_name.html#core_framework.common.get_bucket_name" title="core_framework.common.get_bucket_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_bucket_name</span></code></a>([client])</p></td>
+<td><p>Return the bucket name specified in the environment variabe BUCKET_NAME.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.common.get_bucket_region.html#core_framework.common.get_bucket_region" title="core_framework.common.get_bucket_region"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_bucket_region</span></code></a>()</p></td>
+<td><p>Get the bucket region from the environment variable ENV_BUCKET_REGION or the master region.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.common.get_client.html#core_framework.common.get_client" title="core_framework.common.get_client"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_client</span></code></a>()</p></td>
+<td><p>Get the client name from the environment variable ENV_CLIENT.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.common.get_client_name.html#core_framework.common.get_client_name" title="core_framework.common.get_client_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_client_name</span></code></a>()</p></td>
+<td><p>Get the client name from the environment variable ENV_CLIENT.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.common.get_client_region.html#core_framework.common.get_client_region" title="core_framework.common.get_client_region"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_client_region</span></code></a>()</p></td>
+<td><p>Get the client region from the environment variable ENV_CLIENT_REGION or V_DEFAULT_REGION.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.common.get_component_compiler_lambda_arn.html#core_framework.common.get_component_compiler_lambda_arn" title="core_framework.common.get_component_compiler_lambda_arn"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_component_compiler_lambda_arn</span></code></a>()</p></td>
+<td><p>The ARN of the component compiler lambda.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.common.get_delivered_by.html#core_framework.common.get_delivered_by" title="core_framework.common.get_delivered_by"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_delivered_by</span></code></a>()</p></td>
+<td><p>Get the delivered by value from the environment variable ENV_DELIVERED_BY.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.common.get_deployspec_compiler_lambda_arn.html#core_framework.common.get_deployspec_compiler_lambda_arn" title="core_framework.common.get_deployspec_compiler_lambda_arn"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_deployspec_compiler_lambda_arn</span></code></a>()</p></td>
+<td><p>The ARN of the deployspec compiler lambda.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.common.get_dynamodb_host.html#core_framework.common.get_dynamodb_host" title="core_framework.common.get_dynamodb_host"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_dynamodb_host</span></code></a>()</p></td>
+<td><p>The URL for the DynamoDB host.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.common.get_dynamodb_region.html#core_framework.common.get_dynamodb_region" title="core_framework.common.get_dynamodb_region"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_dynamodb_region</span></code></a>()</p></td>
+<td><p>Get the DynamoDB region from the environment variable ENV_DYNAMODB_REGION or the master region</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.common.get_environment.html#core_framework.common.get_environment" title="core_framework.common.get_environment"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_environment</span></code></a>()</p></td>
+<td><p>Get the environment name from the environment variable ENV_ENVIRONMENT.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.common.get_execute_lambda_arn.html#core_framework.common.get_execute_lambda_arn" title="core_framework.common.get_execute_lambda_arn"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_execute_lambda_arn</span></code></a>()</p></td>
+<td><p>The ARN of the execute lambda.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.common.get_invoker_lambda_arn.html#core_framework.common.get_invoker_lambda_arn" title="core_framework.common.get_invoker_lambda_arn"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_invoker_lambda_arn</span></code></a>()</p></td>
+<td><p>The ARN of the invoker lambda.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.common.get_invoker_lambda_name.html#core_framework.common.get_invoker_lambda_name" title="core_framework.common.get_invoker_lambda_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_invoker_lambda_name</span></code></a>()</p></td>
+<td><p>The name of the invoker lambda.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.common.get_invoker_lambda_region.html#core_framework.common.get_invoker_lambda_region" title="core_framework.common.get_invoker_lambda_region"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_invoker_lambda_region</span></code></a>()</p></td>
+<td><p>Get the invoker lambda region from the environment variable ENV_INVOKER_LAMBDA_REGION or the master region.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.common.get_log_dir.html#core_framework.common.get_log_dir" title="core_framework.common.get_log_dir"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_log_dir</span></code></a>()</p></td>
+<td><p>Get the log directory for the core automation engine.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.common.get_master_region.html#core_framework.common.get_master_region" title="core_framework.common.get_master_region"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_master_region</span></code></a>()</p></td>
+<td><p>The AWS region of the Core-Automation engine.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.common.get_mode.html#core_framework.common.get_mode" title="core_framework.common.get_mode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_mode</span></code></a>()</p></td>
+<td><p>Get the mode from the environment variable ENV_LOCAL_MODE.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.common.get_prn.html#core_framework.common.get_prn" title="core_framework.common.get_prn"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_prn</span></code></a>(portfolio[, app, branch, build, ...])</p></td>
+<td><p>Generates a PRN with a delimter between the parts as specified in the 'delim' parameter.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.common.get_prn_alt.html#core_framework.common.get_prn_alt" title="core_framework.common.get_prn_alt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_prn_alt</span></code></a>(portfolio[, app, branch, build, ...])</p></td>
+<td><p>Helper functon to generate a PRN with a hyphen delimiter.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.common.get_provisioning_role_arn.html#core_framework.common.get_provisioning_role_arn" title="core_framework.common.get_provisioning_role_arn"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_provisioning_role_arn</span></code></a>(account)</p></td>
+<td><p>Get the provisioning role ARN for the specified account.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.common.get_region.html#core_framework.common.get_region" title="core_framework.common.get_region"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_region</span></code></a>()</p></td>
+<td><p>Return the AWS region for the Deployment .</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.common.get_start_runner_lambda_arn.html#core_framework.common.get_start_runner_lambda_arn" title="core_framework.common.get_start_runner_lambda_arn"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_start_runner_lambda_arn</span></code></a>()</p></td>
+<td><p>The ARN of the start runner lambda.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.common.get_step_function_arn.html#core_framework.common.get_step_function_arn" title="core_framework.common.get_step_function_arn"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_step_function_arn</span></code></a>()</p></td>
+<td><p>Core Automation Step Function ARN.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.common.get_storage_volume.html#core_framework.common.get_storage_volume" title="core_framework.common.get_storage_volume"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_storage_volume</span></code></a>()</p></td>
+<td><p>If you enable the envoronment variable LOCAL_MODE=true, you can specify a local storage volume for the core automation objects.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.common.get_store_volume.html#core_framework.common.get_store_volume" title="core_framework.common.get_store_volume"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_store_volume</span></code></a>()</p></td>
+<td><p>Get the mount point for the storage volume.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.common.get_temp_dir.html#core_framework.common.get_temp_dir" title="core_framework.common.get_temp_dir"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_temp_dir</span></code></a>()</p></td>
+<td><p>Get the temporary directory for the application.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.common.is_local_mode.html#core_framework.common.is_local_mode" title="core_framework.common.is_local_mode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_local_mode</span></code></a>()</p></td>
+<td><p>You may set the mode to local in the PACKAGE_DETAILS object or the ENV_LOCAL_MODE environment variable.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.common.load_deployspec.html#core_framework.common.load_deployspec" title="core_framework.common.load_deployspec"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_deployspec</span></code></a>([app_dir])</p></td>
+<td><p>Load the Deployspec with YAML/JSON validation from the current directory.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.common.split_branch.html#core_framework.common.split_branch" title="core_framework.common.split_branch"><code class="xref py py-obj docutils literal notranslate"><span class="pre">split_branch</span></code></a>(branch[, default_region_alias])</p></td>
+<td><p>Splits the branch into the environment and data_center parts.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.common.split_portfolio.html#core_framework.common.split_portfolio" title="core_framework.common.split_portfolio"><code class="xref py py-obj docutils literal notranslate"><span class="pre">split_portfolio</span></code></a>(portfolio)</p></td>
+<td><p>Split the portfolio into it component parts.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="core_framework.common.split_prn.html#core_framework.common.split_prn" title="core_framework.common.split_prn"><code class="xref py py-obj docutils literal notranslate"><span class="pre">split_prn</span></code></a>(prn)</p></td>
+<td><p>Splits the prn and returns the parts relevant to the deployment details.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="core_framework.common.to_json.html#core_framework.common.to_json" title="core_framework.common.to_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_json</span></code></a>(data)</p></td>
+<td><p>The Json serializer for the data object.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="core_framework.models.task_payload.TaskPayload.html" class="btn btn-neutral float-left" title="core_framework.models.task_payload.TaskPayload" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="core_framework.common.custom_serializer.html" class="btn btn-neutral float-right" title="core_framework.common.custom_serializer" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

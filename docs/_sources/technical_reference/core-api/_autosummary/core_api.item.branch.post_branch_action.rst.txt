@@ -1,0 +1,6 @@
+core\_api.item.branch.post\_branch\_action
+==========================================
+
+.. currentmodule:: core_api.item.branch
+
+.. autofunction:: post_branch_action

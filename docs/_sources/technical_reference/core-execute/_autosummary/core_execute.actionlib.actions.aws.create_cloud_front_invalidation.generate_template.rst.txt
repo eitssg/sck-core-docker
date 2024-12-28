@@ -1,0 +1,6 @@
+core\_execute.actionlib.actions.aws.create\_cloud\_front\_invalidation.generate\_template
+=========================================================================================
+
+.. currentmodule:: core_execute.actionlib.actions.aws.create_cloud_front_invalidation
+
+.. autofunction:: generate_template

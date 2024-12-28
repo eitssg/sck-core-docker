@@ -1,0 +1,30 @@
+core\_api.facts.facter.ApiFactsActions
+======================================
+
+.. currentmodule:: core_api.facts.facter
+
+.. autoclass:: ApiFactsActions
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ApiFactsActions.__init__
+      ~ApiFactsActions.create
+      ~ApiFactsActions.delete
+      ~ApiFactsActions.get
+      ~ApiFactsActions.list
+      ~ApiFactsActions.patch
+      ~ApiFactsActions.update
+      ~ApiFactsActions.validate_prn_scope
+   
+   

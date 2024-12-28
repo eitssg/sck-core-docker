@@ -1,0 +1,336 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>core_api.item.build &mdash; SCK Core Automation 1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a3c9731c" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=45d66dd6" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=29a6c3e3"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            SCK Core Automation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_guide/index.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developer_guide/index.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../technical_reference/index.html">Technical Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SCK Core Automation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">core_api.item.build</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for core_api.item.build</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">ChainMap</span>
+
+<span class="kn">from</span> <span class="nn">botocore.exceptions</span> <span class="kn">import</span> <span class="n">ClientError</span>
+<span class="kn">from</span> <span class="nn">pynamodb.exceptions</span> <span class="kn">import</span> <span class="n">DoesNotExist</span>
+
+<span class="kn">import</span> <span class="nn">core_framework</span> <span class="k">as</span> <span class="nn">util</span>
+
+<span class="kn">import</span> <span class="nn">core_logging</span> <span class="k">as</span> <span class="nn">log</span>
+
+<span class="kn">from</span> <span class="nn">core_framework.constants</span> <span class="kn">import</span> <span class="n">TR_RESPONSE</span>
+
+<span class="kn">from</span> <span class="nn">core_framework.status</span> <span class="kn">import</span> <span class="n">RELEASE_REQUESTED</span><span class="p">,</span> <span class="n">TEARDOWN_REQUESTED</span><span class="p">,</span> <span class="n">BuildStatus</span>
+
+<span class="kn">import</span> <span class="nn">core_helper.aws</span> <span class="k">as</span> <span class="nn">aws</span>
+
+<span class="kn">from</span> <span class="nn">core_invoker.handler</span> <span class="kn">import</span> <span class="n">handler</span> <span class="k">as</span> <span class="n">invoker_handler</span>
+
+<span class="kn">from</span> <span class="nn">..types</span> <span class="kn">import</span> <span class="n">ActionHandlerRoutes</span>
+
+<span class="kn">from</span> <span class="nn">..constants</span> <span class="kn">import</span> <span class="n">QUERY_STRING_PARAMETERS</span><span class="p">,</span> <span class="n">BODY_PARAMETER</span><span class="p">,</span> <span class="n">PATH_PARAMETERS</span>
+<span class="kn">from</span> <span class="nn">core_db.response</span> <span class="kn">import</span> <span class="n">Response</span><span class="p">,</span> <span class="n">SuccessResponse</span>
+
+<span class="kn">from</span> <span class="nn">core_db.exceptions</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">BadRequestException</span><span class="p">,</span>
+    <span class="n">NotFoundException</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">core_db.item.branch.models</span> <span class="kn">import</span> <span class="n">BranchModel</span>
+<span class="kn">from</span> <span class="nn">core_db.item.build.actions</span> <span class="kn">import</span> <span class="n">BuildActions</span>
+<span class="kn">from</span> <span class="nn">core_db.item.build.models</span> <span class="kn">import</span> <span class="n">BuildModel</span>
+
+<span class="kn">from</span> <span class="nn">..actions</span> <span class="kn">import</span> <span class="n">ApiActions</span>
+
+<span class="kn">from</span> <span class="nn">core_framework.models</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">TaskPayload</span><span class="p">,</span>
+    <span class="n">DeploymentDetails</span> <span class="k">as</span> <span class="n">DeploymentDetailsClass</span><span class="p">,</span>
+    <span class="n">PackageDetails</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="ApiBuildActions">
+<a class="viewcode-back" href="../../../technical_reference/core-api/_autosummary/core_api.item.build.ApiBuildActions.html#core_api.item.build.ApiBuildActions">[docs]</a>
+<span class="k">class</span> <span class="nc">ApiBuildActions</span><span class="p">(</span><span class="n">ApiActions</span><span class="p">,</span> <span class="n">BuildActions</span><span class="p">):</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">__invoker_action_request</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">build</span><span class="p">:</span> <span class="n">BuildModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+
+        <span class="c1"># Retrieve the branch Parent for this build</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">branch</span> <span class="o">=</span> <span class="n">BranchModel</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">build</span><span class="o">.</span><span class="n">parent_prn</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">DoesNotExist</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NotFoundException</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Build </span><span class="si">{</span><span class="n">build</span><span class="o">.</span><span class="n">prn</span><span class="si">}</span><span class="s2">: Branch not found: </span><span class="si">{</span><span class="n">build</span><span class="o">.</span><span class="n">parent_prn</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
+        <span class="c1"># The release and teardown actions do not require a &quot;Package&quot; definition.</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="n">TaskPayload</span><span class="p">(</span>
+            <span class="n">Task</span><span class="o">=</span><span class="n">action</span><span class="p">,</span>
+            <span class="n">DeploymentDetails</span><span class="o">=</span><span class="n">DeploymentDetailsClass</span><span class="p">(</span>
+                <span class="n">Portfolio</span><span class="o">=</span><span class="n">util</span><span class="o">.</span><span class="n">extract_portfolio</span><span class="p">(</span><span class="n">build</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                <span class="n">App</span><span class="o">=</span><span class="n">util</span><span class="o">.</span><span class="n">extract_app</span><span class="p">(</span><span class="n">build</span><span class="p">),</span>
+                <span class="n">Branch</span><span class="o">=</span><span class="n">branch</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                <span class="n">BranchShortName</span><span class="o">=</span><span class="n">branch</span><span class="o">.</span><span class="n">short_name</span><span class="p">,</span>
+                <span class="n">Build</span><span class="o">=</span><span class="n">build</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="n">Package</span><span class="o">=</span><span class="n">PackageDetails</span><span class="p">(</span>
+                <span class="n">BucketName</span><span class="o">=</span><span class="n">util</span><span class="o">.</span><span class="n">get_bucket_name</span><span class="p">(),</span> <span class="n">BucketRegion</span><span class="o">=</span><span class="n">util</span><span class="o">.</span><span class="n">get_bucket_region</span><span class="p">()</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">util</span><span class="o">.</span><span class="n">is_local_mode</span><span class="p">():</span>
+            <span class="k">return</span> <span class="n">invoker_handler</span><span class="p">(</span><span class="n">payload</span><span class="o">.</span><span class="n">model_dump</span><span class="p">())</span>
+
+        <span class="n">arn</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">get_invoker_lambda_arn</span><span class="p">()</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">aws</span><span class="o">.</span><span class="n">invoke_lambda</span><span class="p">(</span><span class="n">arn</span><span class="p">,</span> <span class="n">payload</span><span class="o">.</span><span class="n">model_dump</span><span class="p">())</span>
+        <span class="k">if</span> <span class="n">TR_RESPONSE</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">response</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">BadRequestException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid invoker response: </span><span class="si">{</span><span class="n">response</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span><span class="p">[</span><span class="n">TR_RESPONSE</span><span class="p">]</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">release</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Response</span><span class="p">:</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="n">BuildActions</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">response</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">NotFoundException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cannot find build </span><span class="si">{</span><span class="n">kwargs</span><span class="si">}</span><span class="s2">:&quot;</span><span class="p">)</span>
+
+        <span class="n">build</span> <span class="o">=</span> <span class="n">BuildModel</span><span class="p">(</span><span class="o">**</span><span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">BuildStatus</span><span class="p">(</span><span class="n">build</span><span class="o">.</span><span class="n">status</span><span class="p">)</span><span class="o">.</span><span class="n">is_allowed_to_release</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="n">BadRequestException</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Build </span><span class="si">{</span><span class="n">build</span><span class="o">.</span><span class="n">prn</span><span class="si">}</span><span class="s2"> is not allowed to be released: </span><span class="si">{</span><span class="n">build</span><span class="o">.</span><span class="n">status</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
+        <span class="n">build</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">RELEASE_REQUESTED</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="n">BuildActions</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">**</span><span class="n">build</span><span class="o">.</span><span class="n">to_simple_dict</span><span class="p">())</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Build status updated: RELEASE_REQUESTED&quot;</span><span class="p">)</span>
+
+        <span class="c1"># It can be released, so let&#39;s do it</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Trigger the release</span>
+            <span class="n">release_response</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">__invoker_action_request</span><span class="p">(</span><span class="s2">&quot;release&quot;</span><span class="p">,</span> <span class="n">build</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">ClientError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">BadRequestException</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;AWS Client Error requesting bu8ild releasing: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">release_response</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">BadRequestException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid release response: </span><span class="si">{</span><span class="n">release_response</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Build </span><span class="si">{</span><span class="n">build</span><span class="o">.</span><span class="n">prn</span><span class="si">}</span><span class="s2"> release response: &quot;</span><span class="p">,</span> <span class="n">details</span><span class="o">=</span><span class="n">release_response</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">SuccessResponse</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Build </span><span class="si">{</span><span class="n">build</span><span class="o">.</span><span class="n">prn</span><span class="si">}</span><span class="s2"> release requested&quot;</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">teardown</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Response</span><span class="p">:</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="n">BuildActions</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">response</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">response</span><span class="o">.</span><span class="n">data</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">NotFoundException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cannot find build </span><span class="si">{</span><span class="n">kwargs</span><span class="si">}</span><span class="s2">:&quot;</span><span class="p">)</span>
+
+        <span class="n">build</span> <span class="o">=</span> <span class="n">BuildModel</span><span class="p">(</span><span class="o">**</span><span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">BuildStatus</span><span class="p">(</span><span class="n">build</span><span class="o">.</span><span class="n">status</span><span class="p">)</span><span class="o">.</span><span class="n">is_allowed_to_teardown</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="n">BadRequestException</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Build </span><span class="si">{</span><span class="n">build</span><span class="o">.</span><span class="n">prn</span><span class="si">}</span><span class="s2"> is not allowed to be teared down: </span><span class="si">{</span><span class="n">build</span><span class="o">.</span><span class="n">status</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
+        <span class="n">build</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">TEARDOWN_REQUESTED</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="n">BuildActions</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">**</span><span class="n">build</span><span class="o">.</span><span class="n">to_simple_dict</span><span class="p">())</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Build status updated: TEARDOWN_REQUESTED&quot;</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Trigger the teardown</span>
+            <span class="n">teardown_response</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">__invoker_action_request</span><span class="p">(</span><span class="s2">&quot;teardown&quot;</span><span class="p">,</span> <span class="n">build</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">ClientError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">BadRequestException</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;AWS Client Error requesting build teardown: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">teardown_response</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">BadRequestException</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid teardown response: </span><span class="si">{</span><span class="n">teardown_response</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Build </span><span class="si">{</span><span class="n">build</span><span class="o">.</span><span class="n">prn</span><span class="si">}</span><span class="s2"> teardown response: &quot;</span><span class="p">,</span> <span class="n">details</span><span class="o">=</span><span class="n">teardown_response</span><span class="p">)</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="s2">&quot;Build teardown response&quot;</span><span class="p">,</span> <span class="n">details</span><span class="o">=</span><span class="n">response</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">SuccessResponse</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Build </span><span class="si">{</span><span class="n">build</span><span class="o">.</span><span class="n">prn</span><span class="si">}</span><span class="s2"> teardown requested&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="get_builds">
+<a class="viewcode-back" href="../../../technical_reference/core-api/_autosummary/core_api.item.build.get_builds.html#core_api.item.build.get_builds">[docs]</a>
+<span class="k">def</span> <span class="nf">get_builds</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Response</span><span class="p">:</span>
+    <span class="n">qsp</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">QUERY_STRING_PARAMETERS</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+    <span class="n">pp</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">PATH_PARAMETERS</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+    <span class="n">body</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">BODY_PARAMETER</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+    <span class="k">return</span> <span class="n">ApiBuildActions</span><span class="o">.</span><span class="n">list</span><span class="p">(</span><span class="o">**</span><span class="nb">dict</span><span class="p">(</span><span class="n">ChainMap</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="n">pp</span><span class="p">,</span> <span class="n">qsp</span><span class="p">)))</span></div>
+
+
+
+<div class="viewcode-block" id="get_build">
+<a class="viewcode-back" href="../../../technical_reference/core-api/_autosummary/core_api.item.build.get_build.html#core_api.item.build.get_build">[docs]</a>
+<span class="k">def</span> <span class="nf">get_build</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Response</span><span class="p">:</span>
+    <span class="n">qsp</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">QUERY_STRING_PARAMETERS</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+    <span class="n">pp</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">PATH_PARAMETERS</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+    <span class="n">body</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">BODY_PARAMETER</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+    <span class="k">return</span> <span class="n">ApiBuildActions</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="o">**</span><span class="nb">dict</span><span class="p">(</span><span class="n">ChainMap</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="n">pp</span><span class="p">,</span> <span class="n">qsp</span><span class="p">)))</span></div>
+
+
+
+<div class="viewcode-block" id="create_build">
+<a class="viewcode-back" href="../../../technical_reference/core-api/_autosummary/core_api.item.build.create_build.html#core_api.item.build.create_build">[docs]</a>
+<span class="k">def</span> <span class="nf">create_build</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Response</span><span class="p">:</span>
+    <span class="n">qsp</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">QUERY_STRING_PARAMETERS</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+    <span class="n">pp</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">PATH_PARAMETERS</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+    <span class="n">body</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">BODY_PARAMETER</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+    <span class="k">return</span> <span class="n">ApiBuildActions</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="o">**</span><span class="nb">dict</span><span class="p">(</span><span class="n">ChainMap</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="n">pp</span><span class="p">,</span> <span class="n">qsp</span><span class="p">)))</span></div>
+
+
+
+<div class="viewcode-block" id="update_build">
+<a class="viewcode-back" href="../../../technical_reference/core-api/_autosummary/core_api.item.build.update_build.html#core_api.item.build.update_build">[docs]</a>
+<span class="k">def</span> <span class="nf">update_build</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Response</span><span class="p">:</span>
+    <span class="n">qsp</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">QUERY_STRING_PARAMETERS</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+    <span class="n">pp</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">PATH_PARAMETERS</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+    <span class="n">body</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">BODY_PARAMETER</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+    <span class="k">return</span> <span class="n">ApiBuildActions</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">**</span><span class="nb">dict</span><span class="p">(</span><span class="n">ChainMap</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="n">pp</span><span class="p">,</span> <span class="n">qsp</span><span class="p">)))</span></div>
+
+
+
+<div class="viewcode-block" id="delete_build">
+<a class="viewcode-back" href="../../../technical_reference/core-api/_autosummary/core_api.item.build.delete_build.html#core_api.item.build.delete_build">[docs]</a>
+<span class="k">def</span> <span class="nf">delete_build</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Response</span><span class="p">:</span>
+    <span class="n">qsp</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">QUERY_STRING_PARAMETERS</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+    <span class="n">pp</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">PATH_PARAMETERS</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+    <span class="n">body</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">BODY_PARAMETER</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+    <span class="k">return</span> <span class="n">ApiBuildActions</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="o">**</span><span class="nb">dict</span><span class="p">(</span><span class="n">ChainMap</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="n">pp</span><span class="p">,</span> <span class="n">qsp</span><span class="p">)))</span></div>
+
+
+
+<div class="viewcode-block" id="release_build">
+<a class="viewcode-back" href="../../../technical_reference/core-api/_autosummary/core_api.item.build.release_build.html#core_api.item.build.release_build">[docs]</a>
+<span class="k">def</span> <span class="nf">release_build</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Response</span><span class="p">:</span>
+    <span class="n">qsp</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">QUERY_STRING_PARAMETERS</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+    <span class="n">pp</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">PATH_PARAMETERS</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+    <span class="n">body</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">BODY_PARAMETER</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+    <span class="k">return</span> <span class="n">ApiBuildActions</span><span class="o">.</span><span class="n">release</span><span class="p">(</span><span class="o">**</span><span class="nb">dict</span><span class="p">(</span><span class="n">ChainMap</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="n">pp</span><span class="p">,</span> <span class="n">qsp</span><span class="p">)))</span></div>
+
+
+
+<div class="viewcode-block" id="teardown_build">
+<a class="viewcode-back" href="../../../technical_reference/core-api/_autosummary/core_api.item.build.teardown_build.html#core_api.item.build.teardown_build">[docs]</a>
+<span class="k">def</span> <span class="nf">teardown_build</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Response</span><span class="p">:</span>
+    <span class="n">qsp</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">QUERY_STRING_PARAMETERS</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+    <span class="n">pp</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">PATH_PARAMETERS</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+    <span class="n">body</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">BODY_PARAMETER</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+    <span class="k">return</span> <span class="n">ApiBuildActions</span><span class="o">.</span><span class="n">teardown</span><span class="p">(</span><span class="o">**</span><span class="nb">dict</span><span class="p">(</span><span class="n">ChainMap</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="n">pp</span><span class="p">,</span> <span class="n">qsp</span><span class="p">)))</span></div>
+
+
+
+<span class="c1"># API Gateway Lambda Proxy Integration routes</span>
+<span class="n">item_build_actions</span><span class="p">:</span> <span class="n">ActionHandlerRoutes</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;GET:/api/v1/item/builds&quot;</span><span class="p">:</span> <span class="n">get_builds</span><span class="p">,</span>
+    <span class="s2">&quot;GET:/api/v1/item/build&quot;</span><span class="p">:</span> <span class="n">get_build</span><span class="p">,</span>
+    <span class="s2">&quot;PUT:/api/v1/item/build&quot;</span><span class="p">:</span> <span class="n">update_build</span><span class="p">,</span>
+    <span class="s2">&quot;DELETE:/api/vi/item/build&quot;</span><span class="p">:</span> <span class="n">delete_build</span><span class="p">,</span>
+    <span class="s2">&quot;POST:/api/v1/item/build&quot;</span><span class="p">:</span> <span class="n">create_build</span><span class="p">,</span>
+    <span class="s2">&quot;POST:/api/v1/item/build/teardown&quot;</span><span class="p">:</span> <span class="n">teardown_build</span><span class="p">,</span>
+    <span class="s2">&quot;POST:/api/v1/item/build/release&quot;</span><span class="p">:</span> <span class="n">release_build</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

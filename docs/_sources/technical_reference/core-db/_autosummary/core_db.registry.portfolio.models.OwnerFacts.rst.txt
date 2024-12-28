@@ -1,0 +1,62 @@
+core\_db.registry.portfolio.models.OwnerFacts
+=============================================
+
+.. currentmodule:: core_db.registry.portfolio.models
+
+.. autoclass:: OwnerFacts
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~OwnerFacts.UserInstantiated
+      ~OwnerFacts.attr_name
+      ~OwnerFacts.attr_type
+      ~OwnerFacts.attribute_args
+      ~OwnerFacts.attributes
+      ~OwnerFacts.email
+      ~OwnerFacts.name
+      ~OwnerFacts.null
+      ~OwnerFacts.phone
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~OwnerFacts.__init__
+      ~OwnerFacts.add
+      ~OwnerFacts.append
+      ~OwnerFacts.as_dict
+      ~OwnerFacts.between
+      ~OwnerFacts.contains
+      ~OwnerFacts.delete
+      ~OwnerFacts.deserialize
+      ~OwnerFacts.does_not_exist
+      ~OwnerFacts.exists
+      ~OwnerFacts.from_dynamodb_dict
+      ~OwnerFacts.from_simple_dict
+      ~OwnerFacts.get_attributes
+      ~OwnerFacts.get_value
+      ~OwnerFacts.is_correctly_typed
+      ~OwnerFacts.is_in
+      ~OwnerFacts.is_raw
+      ~OwnerFacts.is_type
+      ~OwnerFacts.prepend
+      ~OwnerFacts.remove
+      ~OwnerFacts.serialize
+      ~OwnerFacts.set
+      ~OwnerFacts.startswith
+      ~OwnerFacts.to_dynamodb_dict
+      ~OwnerFacts.to_simple_dict
+      ~OwnerFacts.validate
+   
+   

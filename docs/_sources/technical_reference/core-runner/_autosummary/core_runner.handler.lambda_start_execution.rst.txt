@@ -1,0 +1,6 @@
+core\_runner.handler.lambda\_start\_execution
+=============================================
+
+.. currentmodule:: core_runner.handler
+
+.. autofunction:: lambda_start_execution

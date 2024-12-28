@@ -1,0 +1,31 @@
+core\_api.item.component.ApiComponentActions
+============================================
+
+.. currentmodule:: core_api.item.component
+
+.. autoclass:: ApiComponentActions
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ApiComponentActions.__init__
+      ~ApiComponentActions.create
+      ~ApiComponentActions.delete
+      ~ApiComponentActions.get
+      ~ApiComponentActions.list
+      ~ApiComponentActions.patch
+      ~ApiComponentActions.update
+      ~ApiComponentActions.validate_date
+      ~ApiComponentActions.validate_prn
+   
+   

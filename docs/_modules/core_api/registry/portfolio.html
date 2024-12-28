@@ -1,0 +1,223 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>core_api.registry.portfolio &mdash; SCK Core Automation 1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a3c9731c" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=45d66dd6" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=29a6c3e3"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            SCK Core Automation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../user_guide/index.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developer_guide/index.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../technical_reference/index.html">Technical Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SCK Core Automation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">core_api.registry.portfolio</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for core_api.registry.portfolio</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module contains the schemas for the core API for the APP Fact.</span>
+
+<span class="sd">Each deployment will be conducted for a &quot;client_portfolio&quot; and will need to match</span>
+<span class="sd">the regular expressions provided within the defintion.</span>
+
+<span class="sd">typically the user will always perform action_get_list() to retrieve all the deployment defintions (There wont be many).</span>
+
+<span class="sd">The user will then perform action_get_item() to retrieve the deployment definition for a specific app.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">ChainMap</span>
+
+<span class="kn">from</span> <span class="nn">core_db.response</span> <span class="kn">import</span> <span class="n">Response</span>
+<span class="kn">from</span> <span class="nn">core_db.registry.portfolio.actions</span> <span class="kn">import</span> <span class="n">PortfolioActions</span>
+
+<span class="kn">from</span> <span class="nn">..constants</span> <span class="kn">import</span> <span class="n">PATH_PARAMETERS</span><span class="p">,</span> <span class="n">QUERY_STRING_PARAMETERS</span><span class="p">,</span> <span class="n">BODY_PARAMETER</span>
+
+<span class="kn">from</span> <span class="nn">..types</span> <span class="kn">import</span> <span class="n">ActionHandlerRoutes</span>
+
+<span class="kn">from</span> <span class="nn">..actions</span> <span class="kn">import</span> <span class="n">ApiActions</span>
+
+
+<div class="viewcode-block" id="ApiRegPortfolioActions">
+<a class="viewcode-back" href="../../../technical_reference/core-api/_autosummary/core_api.registry.portfolio.ApiRegPortfolioActions.html#core_api.registry.portfolio.ApiRegPortfolioActions">[docs]</a>
+<span class="k">class</span> <span class="nc">ApiRegPortfolioActions</span><span class="p">(</span><span class="n">ApiActions</span><span class="p">,</span> <span class="n">PortfolioActions</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+
+<div class="viewcode-block" id="list_portfolios_action">
+<a class="viewcode-back" href="../../../technical_reference/core-api/_autosummary/core_api.registry.portfolio.list_portfolios_action.html#core_api.registry.portfolio.list_portfolios_action">[docs]</a>
+<span class="k">def</span> <span class="nf">list_portfolios_action</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Response</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a list of all portfolios for the client.</span>
+
+<span class="sd">    Specify client as a path parameter.</span>
+
+<span class="sd">    The cilent is a slug.</span>
+
+<span class="sd">    Ex:</span>
+<span class="sd">        event = {</span>
+<span class="sd">            PATH_PARAMETERS: {</span>
+<span class="sd">                &quot;client&quot;: &quot;the_client&quot;</span>
+<span class="sd">            }</span>
+<span class="sd">        }</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        event (): Http Request Object from API Gateway to lambda (lambda event)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Response: AWS Api Gateway Response</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">qsp</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">QUERY_STRING_PARAMETERS</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+    <span class="n">pp</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">PATH_PARAMETERS</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+    <span class="n">body</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">BODY_PARAMETER</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+    <span class="k">return</span> <span class="n">ApiRegPortfolioActions</span><span class="o">.</span><span class="n">list</span><span class="p">(</span><span class="o">**</span><span class="nb">dict</span><span class="p">(</span><span class="n">ChainMap</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="n">pp</span><span class="p">,</span> <span class="n">qsp</span><span class="p">)))</span></div>
+
+
+
+<div class="viewcode-block" id="get_portfolio_action">
+<a class="viewcode-back" href="../../../technical_reference/core-api/_autosummary/core_api.registry.portfolio.get_portfolio_action.html#core_api.registry.portfolio.get_portfolio_action">[docs]</a>
+<span class="k">def</span> <span class="nf">get_portfolio_action</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Response</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a portfolio for the client.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">qsp</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">QUERY_STRING_PARAMETERS</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+    <span class="n">pp</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">PATH_PARAMETERS</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+    <span class="n">body</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">BODY_PARAMETER</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+    <span class="k">return</span> <span class="n">ApiRegPortfolioActions</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="o">**</span><span class="nb">dict</span><span class="p">(</span><span class="n">ChainMap</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="n">pp</span><span class="p">,</span> <span class="n">qsp</span><span class="p">)))</span></div>
+
+
+
+<div class="viewcode-block" id="create_portfolio_action">
+<a class="viewcode-back" href="../../../technical_reference/core-api/_autosummary/core_api.registry.portfolio.create_portfolio_action.html#core_api.registry.portfolio.create_portfolio_action">[docs]</a>
+<span class="k">def</span> <span class="nf">create_portfolio_action</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Response</span><span class="p">:</span>
+    <span class="n">qsp</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">QUERY_STRING_PARAMETERS</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+    <span class="n">pp</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">PATH_PARAMETERS</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+    <span class="n">body</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">BODY_PARAMETER</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+    <span class="k">return</span> <span class="n">ApiRegPortfolioActions</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="o">**</span><span class="nb">dict</span><span class="p">(</span><span class="n">ChainMap</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="n">pp</span><span class="p">,</span> <span class="n">qsp</span><span class="p">)))</span></div>
+
+
+
+<div class="viewcode-block" id="update_portfolio_action">
+<a class="viewcode-back" href="../../../technical_reference/core-api/_autosummary/core_api.registry.portfolio.update_portfolio_action.html#core_api.registry.portfolio.update_portfolio_action">[docs]</a>
+<span class="k">def</span> <span class="nf">update_portfolio_action</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Response</span><span class="p">:</span>
+    <span class="n">qsp</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">QUERY_STRING_PARAMETERS</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+    <span class="n">pp</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">PATH_PARAMETERS</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+    <span class="n">body</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">BODY_PARAMETER</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+    <span class="k">return</span> <span class="n">ApiRegPortfolioActions</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">**</span><span class="nb">dict</span><span class="p">(</span><span class="n">ChainMap</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="n">pp</span><span class="p">,</span> <span class="n">qsp</span><span class="p">)))</span></div>
+
+
+
+<div class="viewcode-block" id="patch_portfolio_action">
+<a class="viewcode-back" href="../../../technical_reference/core-api/_autosummary/core_api.registry.portfolio.patch_portfolio_action.html#core_api.registry.portfolio.patch_portfolio_action">[docs]</a>
+<span class="k">def</span> <span class="nf">patch_portfolio_action</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Response</span><span class="p">:</span>
+    <span class="n">qsp</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">QUERY_STRING_PARAMETERS</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+    <span class="n">pp</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">PATH_PARAMETERS</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+    <span class="n">body</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">BODY_PARAMETER</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+    <span class="k">return</span> <span class="n">ApiRegPortfolioActions</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="o">**</span><span class="nb">dict</span><span class="p">(</span><span class="n">ChainMap</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="n">pp</span><span class="p">,</span> <span class="n">qsp</span><span class="p">)))</span></div>
+
+
+
+<div class="viewcode-block" id="delete_portfolio_action">
+<a class="viewcode-back" href="../../../technical_reference/core-api/_autosummary/core_api.registry.portfolio.delete_portfolio_action.html#core_api.registry.portfolio.delete_portfolio_action">[docs]</a>
+<span class="k">def</span> <span class="nf">delete_portfolio_action</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Response</span><span class="p">:</span>
+    <span class="n">qsp</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">QUERY_STRING_PARAMETERS</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+    <span class="n">pp</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">PATH_PARAMETERS</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+    <span class="n">body</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">BODY_PARAMETER</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+    <span class="k">return</span> <span class="n">ApiRegPortfolioActions</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="o">**</span><span class="nb">dict</span><span class="p">(</span><span class="n">ChainMap</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="n">pp</span><span class="p">,</span> <span class="n">qsp</span><span class="p">)))</span></div>
+
+
+
+<span class="n">registry_portfolio_actions</span><span class="p">:</span> <span class="n">ActionHandlerRoutes</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;GET:/api/v1/registry/</span><span class="si">{client}</span><span class="s2">/portfolios&quot;</span><span class="p">:</span> <span class="n">list_portfolios_action</span><span class="p">,</span>
+    <span class="s2">&quot;POST:/api/v1/registry/</span><span class="si">{client}</span><span class="s2">/portfolios&quot;</span><span class="p">:</span> <span class="n">create_portfolio_action</span><span class="p">,</span>
+    <span class="s2">&quot;GET:/api/v1/registry/</span><span class="si">{client}</span><span class="s2">/portfolio/</span><span class="si">{portfolio}</span><span class="s2">&quot;</span><span class="p">:</span> <span class="n">get_portfolio_action</span><span class="p">,</span>
+    <span class="s2">&quot;PUT:/api/v1/registry/</span><span class="si">{client}</span><span class="s2">/portfolio/</span><span class="si">{portfolio}</span><span class="s2">&quot;</span><span class="p">:</span> <span class="n">update_portfolio_action</span><span class="p">,</span>
+    <span class="s2">&quot;DELETE:/api/v1/registry/</span><span class="si">{client}</span><span class="s2">/portfolio/</span><span class="si">{portfolio}</span><span class="s2">&quot;</span><span class="p">:</span> <span class="n">delete_portfolio_action</span><span class="p">,</span>
+    <span class="s2">&quot;PATCH:/api/v1/registry/</span><span class="si">{client}</span><span class="s2">/portfolio/</span><span class="si">{portfolio}</span><span class="s2">&quot;</span><span class="p">:</span> <span class="n">patch_portfolio_action</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

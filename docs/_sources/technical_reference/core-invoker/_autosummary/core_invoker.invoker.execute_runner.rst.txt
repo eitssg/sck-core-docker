@@ -1,0 +1,6 @@
+core\_invoker.invoker.execute\_runner
+=====================================
+
+.. currentmodule:: core_invoker.invoker
+
+.. autofunction:: execute_runner

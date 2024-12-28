@@ -1,0 +1,39 @@
+core_framework.models.models
+============================
+
+.. automodule:: core_framework.models.models
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+   
+      generate_action_details
+      generate_deployment_details
+      generate_deployment_details_from_stack
+      generate_package_details
+      generate_state_details
+      generate_task_payload
+      get_artefact_key
+      get_artefacts_path
+      get_files_path
+      get_packages_path
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

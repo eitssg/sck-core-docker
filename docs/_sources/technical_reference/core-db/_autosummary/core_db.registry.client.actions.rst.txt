@@ -1,0 +1,31 @@
+core_db.registry.client.actions
+===============================
+
+.. automodule:: core_db.registry.client.actions
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+   
+      ClientActions
+   
+   
+
+   
+   
+   
+
+
+

@@ -1,0 +1,6 @@
+core\_framework.models.models.generate\_deployment\_details
+===========================================================
+
+.. currentmodule:: core_framework.models.models
+
+.. autofunction:: generate_deployment_details

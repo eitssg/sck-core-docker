@@ -1,0 +1,33 @@
+core_api.event
+==============
+
+.. automodule:: core_api.event
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :template: custom-module-template.rst
+   :recursive:
+   
+      event
+
+

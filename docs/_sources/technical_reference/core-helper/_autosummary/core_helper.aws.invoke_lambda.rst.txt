@@ -1,0 +1,6 @@
+core\_helper.aws.invoke\_lambda
+===============================
+
+.. currentmodule:: core_helper.aws
+
+.. autofunction:: invoke_lambda

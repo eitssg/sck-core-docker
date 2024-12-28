@@ -1,0 +1,33 @@
+core_api.facts
+==============
+
+.. automodule:: core_api.facts
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :template: custom-module-template.rst
+   :recursive:
+   
+      facter
+
+

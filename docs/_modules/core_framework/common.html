@@ -1,0 +1,1052 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>core_framework.common &mdash; SCK Core Automation 1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a3c9731c" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=45d66dd6" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=29a6c3e3"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            SCK Core Automation
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/index.html">User Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/index.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../technical_reference/index.html">Technical Reference Guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">SCK Core Automation</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">core_framework.common</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for core_framework.common</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; The common module provides a suite of function that are used throughout the Core Automation framework.</span>
+
+<span class="sd">These functions assist wtih generating and using model instances as well as environment variables and</span>
+<span class="sd">other very commont tasks.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">from</span> <span class="nn">decimal</span> <span class="kn">import</span> <span class="n">Decimal</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">boto3</span>
+<span class="kn">from</span> <span class="nn">botocore.exceptions</span> <span class="kn">import</span> <span class="n">ProfileNotFound</span>
+
+<span class="kn">from</span> <span class="nn">ruamel.yaml</span> <span class="kn">import</span> <span class="n">YAML</span>
+
+<span class="kn">from</span> <span class="nn">.constants</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="c1"># Environment Variables</span>
+    <span class="n">ENV_AUTOMATION_ACCOUNT</span><span class="p">,</span>
+    <span class="n">ENV_API_LAMBDA_NAME</span><span class="p">,</span>
+    <span class="n">ENV_API_LAMBDA_ARN</span><span class="p">,</span>
+    <span class="n">ENV_COMPONENT_COMPILER_LAMBDA_ARN</span><span class="p">,</span>
+    <span class="n">ENV_DEPLOYSPEC_COMPILER_LAMBDA_ARN</span><span class="p">,</span>
+    <span class="n">ENV_START_RUNNER_LAMBDA_ARN</span><span class="p">,</span>
+    <span class="n">ENV_EXECUTE_LAMBDA_ARN</span><span class="p">,</span>
+    <span class="n">ENV_INVOKER_LAMBDA_ARN</span><span class="p">,</span>
+    <span class="n">ENV_INVOKER_LAMBDA_NAME</span><span class="p">,</span>
+    <span class="n">ENV_INVOKER_LAMBDA_REGION</span><span class="p">,</span>
+    <span class="n">ENV_LOCAL_MODE</span><span class="p">,</span>
+    <span class="n">ENV_AWS_PROFILE</span><span class="p">,</span>
+    <span class="n">ENV_AWS_REGION</span><span class="p">,</span>
+    <span class="n">ENV_CLIENT</span><span class="p">,</span>
+    <span class="n">ENV_CLIENT_NAME</span><span class="p">,</span>
+    <span class="n">ENV_CLIENT_REGION</span><span class="p">,</span>
+    <span class="n">ENV_DYNAMODB_REGION</span><span class="p">,</span>
+    <span class="n">ENV_DYNAMODB_HOST</span><span class="p">,</span>
+    <span class="n">ENV_BUCKET_NAME</span><span class="p">,</span>
+    <span class="n">ENV_BUCKET_REGION</span><span class="p">,</span>
+    <span class="n">ENV_ARTEFACT_BUCKET_NAME</span><span class="p">,</span>
+    <span class="n">ENV_ARTEFACT_BUCKET_REGION</span><span class="p">,</span>
+    <span class="n">ENV_MASTER_REGION</span><span class="p">,</span>
+    <span class="n">ENV_ENVIRONMENT</span><span class="p">,</span>
+    <span class="n">ENV_SCOPE</span><span class="p">,</span>
+    <span class="n">ENV_VOLUME</span><span class="p">,</span>
+    <span class="n">ENV_DELIVERED_BY</span><span class="p">,</span>
+    <span class="n">ENV_LOG_DIR</span><span class="p">,</span>
+    <span class="c1"># Data Values</span>
+    <span class="n">V_CORE_AUTOMATION</span><span class="p">,</span>
+    <span class="n">V_DEFAULT_REGION</span><span class="p">,</span>
+    <span class="n">V_DEFAULT_BRANCH</span><span class="p">,</span>
+    <span class="n">V_DEFAULT_REGION_ALIAS</span><span class="p">,</span>
+    <span class="n">V_DEPLOYSPEC_FILE_YAML</span><span class="p">,</span>
+    <span class="n">V_DEPLOYSPEC_FILE_YML</span><span class="p">,</span>
+    <span class="n">V_DEPLOYSPEC_FILE_JSON</span><span class="p">,</span>
+    <span class="n">V_FALSE</span><span class="p">,</span>
+    <span class="n">V_TRUE</span><span class="p">,</span>
+    <span class="n">V_LOCAL</span><span class="p">,</span>
+    <span class="n">V_SERVICE</span><span class="p">,</span>
+    <span class="n">V_EMPTY</span><span class="p">,</span>
+    <span class="c1"># Dpeloyment Scopes (NOT Automation SCOPE.  That&#39;s different!  ENV_SCOPE is a &quot;prefix&quot; to all automation objects)</span>
+    <span class="n">SCOPE_PORTFOLIO</span><span class="p">,</span>
+    <span class="n">SCOPE_APP</span><span class="p">,</span>
+    <span class="n">SCOPE_BRANCH</span><span class="p">,</span>
+    <span class="n">SCOPE_BUILD</span><span class="p">,</span>
+    <span class="n">SCOPE_COMPONENT</span><span class="p">,</span>
+    <span class="n">CORE_AUTOMATION_PIPELINE_PROVISIONING_ROLE</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="generate_branch_short_name">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.common.generate_branch_short_name.html#core_framework.common.generate_branch_short_name">[docs]</a>
+<span class="k">def</span> <span class="nf">generate_branch_short_name</span><span class="p">(</span><span class="n">branch</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generates a shortened version of the branch name.</span>
+
+<span class="sd">    FIRST: the entire thing is converted to lowercase.</span>
+<span class="sd">    THEN Anything that is not a-z or 0-9 is replaced with a dash.</span>
+<span class="sd">    THEN only the 1st 20 characters of the branch name are used.</span>
+<span class="sd">    Trailing hyphens are removed.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        branch: The branch name to shorten</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The shortened branch name</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">branch</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;[^a-z0-9-]&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="n">branch</span><span class="o">.</span><span class="n">lower</span><span class="p">())[</span><span class="mi">0</span><span class="p">:</span><span class="mi">20</span><span class="p">]</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="custom_serializer">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.common.custom_serializer.html#core_framework.common.custom_serializer">[docs]</a>
+<span class="k">def</span> <span class="nf">custom_serializer</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Handy tool for deserializing json objects that contain datetime objects as for SOME reason</span>
+<span class="sd">    the standard json deserializer does not support datetime objects. (No one knows why)</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        obj: The object to serialize</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Any: The serialized object</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Custom serializer for objects not serializable by default json code&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">time</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">Decimal</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>  <span class="c1"># or str(obj) if precision is important</span>
+    <span class="c1"># No need to handle strings, ints, lists, dicts, etc. as they are already supported</span>
+    <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Type </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span><span class="si">}</span><span class="s2"> not serializable&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="split_prn">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.common.split_prn.html#core_framework.common.split_prn">[docs]</a>
+<span class="k">def</span> <span class="nf">split_prn</span><span class="p">(</span>
+    <span class="n">prn</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Splits the prn and returns the parts relevant to the deployment details.</span>
+
+<span class="sd">    The PRN is in the format: prn:portfolio:app:branch:build:component</span>
+
+<span class="sd">    If you have too many colons, at most it will return the first 5 parts after prn:</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        prn (str): The PRN to split (ex: prn:portfolio:app:branch:build)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple[str, str | None, str | None, str | None, str | None, str | None]: portfolio, app, branch, build, component</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">parts</span> <span class="o">=</span> <span class="n">prn</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">parts</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">5</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">parts</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">parts</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">6</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">parts</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">parts</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">parts</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="kc">None</span>
+
+    <span class="k">return</span> <span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">parts</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">parts</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">parts</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">parts</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="split_portfolio">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.common.split_portfolio.html#core_framework.common.split_portfolio">[docs]</a>
+<span class="k">def</span> <span class="nf">split_portfolio</span><span class="p">(</span>
+    <span class="n">portfolio</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Split the portfolio into it component parts.  Company, Group, Owner, Application</span>
+<span class="sd">    The portfolio must have at least 2 parts separated by a hyphen(&#39;-&#39;).</span>
+
+<span class="sd">    For:</span>
+<span class="sd">       owner-bizapp -&gt; returns Owner and BizApp parts. Company and Group is None</span>
+<span class="sd">       group-owner-bizapp -&gt; returns Group and Owner and BizApp parts. Company is None</span>
+<span class="sd">       company-group-owner-bizapp -&gt; returns Company, Group, Owner and BizApp parts</span>
+
+<span class="sd">    Deprecated: I don&#39;t wnt to do this anymore.  Was a bad idea.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        portfolio (str): Name of the portfolio to parse</span>
+<span class="sd">    Return:</span>
+<span class="sd">        tuple: Company, Group, Owner, Application</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+        <span class="s2">&quot;The split_portfolio function is deprecated and will be removed in a future version.&quot;</span><span class="p">,</span>
+        <span class="ne">DeprecationWarning</span><span class="p">,</span>
+        <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">portfolio</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s2">&quot;Portfolio name must be specified.&quot;</span><span class="p">)</span>
+
+    <span class="n">parts</span> <span class="o">=</span> <span class="n">portfolio</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">parts</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">parts</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">parts</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+
+    <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;Portfolio should have 1 to 4 segments separated by a dash &quot;-&quot;&#39;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="split_branch">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.common.split_branch.html#core_framework.common.split_branch">[docs]</a>
+<span class="k">def</span> <span class="nf">split_branch</span><span class="p">(</span>
+    <span class="n">branch</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">default_region_alias</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Splits the branch into the environment and data_center parts.  If the data center is not specified,</span>
+<span class="sd">    the DEFAULT_DATA_CENTER is used.  Currently, this is the value &quot;sin&quot; to identify the Singapore data center.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        branch: The branch name to split</span>
+<span class="sd">        default_region_alias: The default region alias to use if the data center (region) is not specified.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple: The environment and data center parts</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">parts</span> <span class="o">=</span> <span class="n">branch</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">branch</span><span class="p">,</span> <span class="n">default_region_alias</span> <span class="ow">or</span> <span class="n">V_DEFAULT_REGION_ALIAS</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">default_region_alias</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span> <span class="k">else</span> <span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span></div>
+
+
+
+<div class="viewcode-block" id="load_deployspec">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.common.load_deployspec.html#core_framework.common.load_deployspec">[docs]</a>
+<span class="k">def</span> <span class="nf">load_deployspec</span><span class="p">(</span><span class="n">app_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load the Deployspec with YAML/JSON validation from the current directory.</span>
+
+<span class="sd">    Filenames are:</span>
+<span class="sd">        * deployspec.yaml</span>
+<span class="sd">        * deployspec.json</span>
+
+<span class="sd">    Return:</span>
+<span class="sd">        Any: return Any so I don&#39;t get a type error on Pydantic DeplySpec Model parser</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">app_dir</span><span class="p">:</span>
+            <span class="n">app_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>  <span class="c1"># We assume we are running in the project folder</span>
+
+        <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="nb">list</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="n">fn</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">app_dir</span><span class="p">,</span> <span class="n">V_DEPLOYSPEC_FILE_YAML</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">fn</span><span class="p">):</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">YAML</span><span class="p">(</span><span class="n">typ</span><span class="o">=</span><span class="s2">&quot;safe&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">fn</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">app_dir</span><span class="p">,</span> <span class="n">V_DEPLOYSPEC_FILE_YML</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">fn</span><span class="p">):</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                    <span class="n">data</span> <span class="o">=</span> <span class="n">YAML</span><span class="p">(</span><span class="n">typ</span><span class="o">=</span><span class="s2">&quot;safe&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">fn</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">app_dir</span><span class="p">,</span> <span class="n">V_DEPLOYSPEC_FILE_JSON</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">fn</span><span class="p">):</span>
+                    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                        <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">data</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">data</span>
+
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="get_prn">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.common.get_prn.html#core_framework.common.get_prn">[docs]</a>
+<span class="k">def</span> <span class="nf">get_prn</span><span class="p">(</span>
+    <span class="n">portfolio</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">app</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">branch</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">build</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">component</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">scope</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">SCOPE_BUILD</span><span class="p">,</span>
+    <span class="n">delim</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;:&quot;</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generates a PRN with a delimter between the parts as specified in the &#39;delim&#39; parameter.</span>
+
+<span class="sd">    The &quot;Scope&quot; argument is used to determine how many parts of the PRN are included in the result.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        portfolio (str): Business application (portfolio) name.</span>
+<span class="sd">        app (str | None, optional): Deployment part of the Business application (app). Defaults to None.</span>
+<span class="sd">        branch (str | None, optional): Branch of the source-code repository. Defaults to None.</span>
+<span class="sd">        build (str | None, optional): Build Number or Commit ID of the deployment. Defaults to None.</span>
+<span class="sd">        component (str | None, optional): Component Part of the deployment. Defaults to None.</span>
+<span class="sd">        scope (str, optional): Socpe of the PRN. Defaults to SCOPE_BUILD.</span>
+<span class="sd">        delim (_type_, optional): _description_. Defaults to &quot;:&quot;.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The Pipeline Reference Number (PRN)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">portfolio</span>
+    <span class="k">if</span> <span class="n">scope</span> <span class="o">==</span> <span class="n">SCOPE_PORTFOLIO</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">result</span>
+    <span class="k">if</span> <span class="n">app</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">result</span><span class="si">}{</span><span class="n">delim</span><span class="si">}{</span><span class="n">app</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">if</span> <span class="n">scope</span> <span class="o">==</span> <span class="n">SCOPE_APP</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">result</span>
+    <span class="k">if</span> <span class="n">branch</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">result</span><span class="si">}{</span><span class="n">delim</span><span class="si">}{</span><span class="n">branch</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">if</span> <span class="n">scope</span> <span class="o">==</span> <span class="n">SCOPE_BRANCH</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">result</span>
+    <span class="k">if</span> <span class="n">build</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">result</span><span class="si">}{</span><span class="n">delim</span><span class="si">}{</span><span class="n">build</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">if</span> <span class="n">scope</span> <span class="o">==</span> <span class="n">SCOPE_BUILD</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">result</span>
+    <span class="k">if</span> <span class="n">component</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">result</span><span class="si">}{</span><span class="n">delim</span><span class="si">}{</span><span class="n">component</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">if</span> <span class="n">scope</span> <span class="o">==</span> <span class="n">SCOPE_COMPONENT</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">result</span>
+    <span class="k">return</span> <span class="n">result</span></div>
+
+
+
+<div class="viewcode-block" id="generate_bucket_name">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.common.generate_bucket_name.html#core_framework.common.generate_bucket_name">[docs]</a>
+<span class="k">def</span> <span class="nf">generate_bucket_name</span><span class="p">(</span>
+    <span class="n">client</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">branch</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">V_DEFAULT_BRANCH</span><span class="p">,</span> <span class="n">scope_prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the configuration bucket name from the environment variables</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        client: The client name</span>
+<span class="sd">        branch: The branch name</span>
+<span class="sd">        scope_prefix: The scope prefix</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The bucket name</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">scope_prefix</span><span class="si">}{</span><span class="n">client</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">V_CORE_AUTOMATION</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">branch</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="get_bucket_name">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.common.get_bucket_name.html#core_framework.common.get_bucket_name">[docs]</a>
+<span class="k">def</span> <span class="nf">get_bucket_name</span><span class="p">(</span><span class="n">client</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return the bucket name specified in the environment variabe BUCKET_NAME.  If not specified, generate a bucket name</span>
+<span class="sd">    based on the client name, branch name and automation scope prefix.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The bucket name for the core automation objects</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">client</span> <span class="o">=</span> <span class="n">client</span> <span class="ow">or</span> <span class="n">get_client</span><span class="p">()</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">automation_scope_prefix</span> <span class="o">=</span> <span class="n">get_automation_scope</span><span class="p">()</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+        <span class="n">ENV_BUCKET_NAME</span><span class="p">,</span>
+        <span class="n">generate_bucket_name</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">V_DEFAULT_BRANCH</span><span class="p">,</span> <span class="n">automation_scope_prefix</span><span class="p">),</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="get_artefact_bucket_name">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.common.get_artefact_bucket_name.html#core_framework.common.get_artefact_bucket_name">[docs]</a>
+<span class="k">def</span> <span class="nf">get_artefact_bucket_name</span><span class="p">(</span><span class="n">client</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return the bucket nmame for the artefacts.  This is specified in the environment variable ARTEFACT_BUCKET_NAME.</span>
+<span class="sd">    If not specified, the bucket name is the same as the core automation bucket name.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The bucket name for the artefacts</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">ENV_ARTEFACT_BUCKET_NAME</span><span class="p">,</span> <span class="n">get_bucket_name</span><span class="p">(</span><span class="n">client</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="get_artefact_bucket_region">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.common.get_artefact_bucket_region.html#core_framework.common.get_artefact_bucket_region">[docs]</a>
+<span class="k">def</span> <span class="nf">get_artefact_bucket_region</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return the region of the artefact bucket.  This is specified in the environment variable ARTEFACT_BUCKET_REGION.</span>
+<span class="sd">    If not specified, the region is the same as the core automation bucket region.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: Region of the artefact bucket</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">ENV_ARTEFACT_BUCKET_REGION</span><span class="p">,</span> <span class="n">get_bucket_region</span><span class="p">())</span></div>
+
+
+
+<div class="viewcode-block" id="get_prn_alt">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.common.get_prn_alt.html#core_framework.common.get_prn_alt">[docs]</a>
+<span class="k">def</span> <span class="nf">get_prn_alt</span><span class="p">(</span>
+    <span class="n">portfolio</span><span class="p">,</span>
+    <span class="n">app</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">branch</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">build</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">component</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">scope</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">SCOPE_BUILD</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Helper functon to generate a PRN with a hyphen delimiter.</span>
+
+<span class="sd">    Returns a result like: prn-portfolio-app-branch-build-component</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        portfolio (_type_): Portfolio Business Application Name</span>
+<span class="sd">        app (str | None, optional): Deployment component of the Business Application Portfolio. Defaults to None.</span>
+<span class="sd">        branch (str | None, optional): Repository Branch for the source code. Defaults to None.</span>
+<span class="sd">        build (str | None, optional): Branch build reference or Commit ID. Defaults to None.</span>
+<span class="sd">        component (str | None, optional): Infrastructure Component part. Defaults to None.</span>
+<span class="sd">        scope (str, optional): Scope of the Pipeline Reference Number. Defaults to SCOPE_BUILD.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The Pipeline Reference Number (PRN)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">get_prn</span><span class="p">(</span><span class="n">portfolio</span><span class="p">,</span> <span class="n">app</span><span class="p">,</span> <span class="n">branch</span><span class="p">,</span> <span class="n">build</span><span class="p">,</span> <span class="n">component</span><span class="p">,</span> <span class="n">scope</span><span class="p">,</span> <span class="n">delim</span><span class="o">=</span><span class="s2">&quot;-&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="get_automation_scope">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.common.get_automation_scope.html#core_framework.common.get_automation_scope">[docs]</a>
+<span class="k">def</span> <span class="nf">get_automation_scope</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The automation scope is a prefix on all automation objects.  This is typically an empty string or None.</span>
+
+<span class="sd">    This is NOT the same thing as the deployment scope.  The deployment scope is a part of the PRN.</span>
+
+<span class="sd">    This is the &quot;Automation Scope&quot;  Typically ued to differentiate mutiple core automation engines in the same AWS account.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str | None: The prefix for all automation objects</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="n">ENV_SCOPE</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="get_provisioning_role_arn">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.common.get_provisioning_role_arn.html#core_framework.common.get_provisioning_role_arn">[docs]</a>
+<span class="k">def</span> <span class="nf">get_provisioning_role_arn</span><span class="p">(</span><span class="n">account</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the provisioning role ARN for the specified account.  This is specified in the environment variable ENV_AUTOMATION_ACCOUNT.</span>
+<span class="sd">    If not specified, the default value is used based on the region and account number.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        account (str): The AWS account number</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The ARN for the provisioning</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">scope_prefix</span> <span class="o">=</span> <span class="n">get_automation_scope</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="s2">&quot;arn:aws:iam::</span><span class="si">{}</span><span class="s2">:role/</span><span class="si">{}{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">account</span><span class="p">,</span> <span class="n">scope_prefix</span><span class="p">,</span> <span class="n">CORE_AUTOMATION_PIPELINE_PROVISIONING_ROLE</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="is_local_mode">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.common.is_local_mode.html#core_framework.common.is_local_mode">[docs]</a>
+<span class="k">def</span> <span class="nf">is_local_mode</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    You may set the mode to local in the PACKAGE_DETAILS object or the ENV_LOCAL_MODE environment variable.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        package_details (dict | None, optional): PACKAGE_DETAILS object. Defaults to None.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: True of the mode is local</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="n">ENV_LOCAL_MODE</span><span class="p">,</span> <span class="n">V_FALSE</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="n">V_TRUE</span></div>
+
+
+
+<div class="viewcode-block" id="get_storage_volume">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.common.get_storage_volume.html#core_framework.common.get_storage_volume">[docs]</a>
+<span class="k">def</span> <span class="nf">get_storage_volume</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    If you enable the envoronment variable LOCAL_MODE=true, you can specify a local storage volume for the core automation</span>
+<span class="sd">    objects.  This is specified in the environment variable VOLUME.  If not specified, the current working directory</span>
+<span class="sd">    is used.</span>
+
+<span class="sd">    When using docker, this is your volume mount point.</span>
+
+<span class="sd">        Examples.</span>
+
+<span class="sd">        .. code-block:: bash</span>
+
+<span class="sd">            export LOCAL_MODE=true</span>
+<span class="sd">            export VOLUME=/mnt/data/core</span>
+
+<span class="sd">    Then the engine will use /mnt/data/core/artefacts/**, /mnt/data/core/packages/**, /mnt/data/core/files/** as</span>
+<span class="sd">    the storage locations.</span>
+
+<span class="sd">    setting LOCAL_MODE=false will store artefacts on S3.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: Storage Volumen Path.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">is_local_mode</span><span class="p">():</span>
+        <span class="k">return</span> <span class="n">V_EMPTY</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="n">ENV_VOLUME</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="n">V_LOCAL</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="get_temp_dir">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.common.get_temp_dir.html#core_framework.common.get_temp_dir">[docs]</a>
+<span class="k">def</span> <span class="nf">get_temp_dir</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the temporary directory for the application.  This is specified in the environment variable TEMP_DIR.</span>
+<span class="sd">    If not specified, the default value is used based on the region and account number.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The temporary directory</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;TEMP_DIR&quot;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="s2">&quot;local&quot;</span><span class="p">,</span> <span class="s2">&quot;tmp&quot;</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="get_mode">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.common.get_mode.html#core_framework.common.get_mode">[docs]</a>
+<span class="k">def</span> <span class="nf">get_mode</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the mode from the environment variable ENV_LOCAL_MODE.  The default value is &quot;service&quot;.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The mode of the deployment</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">V_LOCAL</span> <span class="k">if</span> <span class="n">is_local_mode</span><span class="p">()</span> <span class="k">else</span> <span class="n">V_SERVICE</span></div>
+
+
+
+<div class="viewcode-block" id="get_client">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.common.get_client.html#core_framework.common.get_client">[docs]</a>
+<span class="k">def</span> <span class="nf">get_client</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the client name from the environment variable ENV_CLIENT.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str | None: The client name</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="n">ENV_CLIENT</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="n">ENV_AWS_PROFILE</span><span class="p">,</span> <span class="s2">&quot;default&quot;</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="get_client_name">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.common.get_client_name.html#core_framework.common.get_client_name">[docs]</a>
+<span class="k">def</span> <span class="nf">get_client_name</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the client name from the environment variable ENV_CLIENT.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str | None: The client name</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="n">ENV_CLIENT_NAME</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="get_store_volume">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.common.get_store_volume.html#core_framework.common.get_store_volume">[docs]</a>
+<span class="k">def</span> <span class="nf">get_store_volume</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the mount point for the storage volume.  This is specified in the environment variable VOLUME.  If not specified,</span>
+<span class="sd">    the current working directory is used.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The mount point for the storage volume</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="n">ENV_VOLUME</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="s2">&quot;local&quot;</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="get_log_dir">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.common.get_log_dir.html#core_framework.common.get_log_dir">[docs]</a>
+<span class="k">def</span> <span class="nf">get_log_dir</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the log directory for the core automation engine.  This is specified in the environment variable LOG_DIR.</span>
+<span class="sd">    If not specified, the current working directory is used.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The log directory</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="n">ENV_LOG_DIR</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="s2">&quot;local&quot;</span><span class="p">,</span> <span class="s2">&quot;logs&quot;</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="get_delivered_by">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.common.get_delivered_by.html#core_framework.common.get_delivered_by">[docs]</a>
+<span class="k">def</span> <span class="nf">get_delivered_by</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the delivered by value from the environment variable ENV_DELIVERED_BY.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The delivered by value. Default is &quot;automation&quot;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="n">ENV_DELIVERED_BY</span><span class="p">,</span> <span class="s2">&quot;automation&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="get_aws_profile">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.common.get_aws_profile.html#core_framework.common.get_aws_profile">[docs]</a>
+<span class="k">def</span> <span class="nf">get_aws_profile</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return an AWS profile name that is based on the client region specified.</span>
+
+<span class="sd">    Looks at the environment variable ENV_AWS_PROFILE.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: Value of the environment variable or client name or default</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">profile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="n">ENV_AWS_PROFILE</span><span class="p">,</span> <span class="n">get_client</span><span class="p">()</span> <span class="ow">or</span> <span class="s2">&quot;default&quot;</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># if the profile is not in the boto3.session credentials, then return &quot;default&quot;</span>
+        <span class="n">boto3</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">Session</span><span class="p">(</span><span class="n">profile_name</span><span class="o">=</span><span class="n">profile</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">ProfileNotFound</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;default&quot;</span>
+
+    <span class="k">return</span> <span class="n">profile</span></div>
+
+
+
+<div class="viewcode-block" id="get_client_region">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.common.get_client_region.html#core_framework.common.get_client_region">[docs]</a>
+<span class="k">def</span> <span class="nf">get_client_region</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the client region from the environment variable ENV_CLIENT_REGION or V_DEFAULT_REGION.</span>
+
+<span class="sd">    This is the BASE region where all other regions are derived from.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The AWS region for the client</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="n">ENV_CLIENT_REGION</span><span class="p">,</span> <span class="n">V_DEFAULT_REGION</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="get_master_region">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.common.get_master_region.html#core_framework.common.get_master_region">[docs]</a>
+<span class="k">def</span> <span class="nf">get_master_region</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The AWS region of the Core-Automation engine.  If you don&#39;t specify this value, it will</span>
+<span class="sd">    be derived from the client region.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The AWS region for the Core Automation Engine</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="n">ENV_MASTER_REGION</span><span class="p">,</span> <span class="n">get_client_region</span><span class="p">())</span></div>
+
+
+
+<div class="viewcode-block" id="get_region">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.common.get_region.html#core_framework.common.get_region">[docs]</a>
+<span class="k">def</span> <span class="nf">get_region</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return the AWS region for the Deployment .  If not specified, the region will</span>
+<span class="sd">    be derived from the master region.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: THe AWS region for the deployment</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="n">ENV_AWS_REGION</span><span class="p">,</span> <span class="n">get_master_region</span><span class="p">())</span></div>
+
+
+
+<div class="viewcode-block" id="get_bucket_region">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.common.get_bucket_region.html#core_framework.common.get_bucket_region">[docs]</a>
+<span class="k">def</span> <span class="nf">get_bucket_region</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the bucket region from the environment variable ENV_BUCKET_REGION or the master region.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The AWS region for the bucket where core automation objects are stored.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">ENV_BUCKET_REGION</span><span class="p">,</span> <span class="n">get_master_region</span><span class="p">())</span></div>
+
+
+
+<div class="viewcode-block" id="get_dynamodb_region">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.common.get_dynamodb_region.html#core_framework.common.get_dynamodb_region">[docs]</a>
+<span class="k">def</span> <span class="nf">get_dynamodb_region</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the DynamoDB region from the environment variable ENV_DYNAMODB_REGION or the master region</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The AWS region for the DynamoDB table</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="n">ENV_DYNAMODB_REGION</span><span class="p">,</span> <span class="n">get_master_region</span><span class="p">())</span></div>
+
+
+
+<div class="viewcode-block" id="get_invoker_lambda_region">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.common.get_invoker_lambda_region.html#core_framework.common.get_invoker_lambda_region">[docs]</a>
+<span class="k">def</span> <span class="nf">get_invoker_lambda_region</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the invoker lambda region from the environment variable ENV_INVOKER_LAMBDA_REGION or the master region.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The AWS region for the invoker lambda</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="n">ENV_INVOKER_LAMBDA_REGION</span><span class="p">,</span> <span class="n">get_master_region</span><span class="p">())</span></div>
+
+
+
+<div class="viewcode-block" id="get_automation_account">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.common.get_automation_account.html#core_framework.common.get_automation_account">[docs]</a>
+<span class="k">def</span> <span class="nf">get_automation_account</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return the AWS account number for the automation account.  This is specified in the environment variable ENV_AUTOMATION_ACCOUNT.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str | None: The AWS account number for the automation account where the core automation is installed or None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="n">ENV_AUTOMATION_ACCOUNT</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="get_dynamodb_host">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.common.get_dynamodb_host.html#core_framework.common.get_dynamodb_host">[docs]</a>
+<span class="k">def</span> <span class="nf">get_dynamodb_host</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The URL for the DynamoDB host.  This is specified in the environment variable ENV_DYNAMODB_HOST.  It is typically</span>
+<span class="sd">    the AWS DynamoDB endpoint for the region.  However, you can specify a different endpoint if you are using a local</span>
+<span class="sd">    DynamoDB instance or a different DynamoDB service.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: URL for the DynamoDB host</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">region</span> <span class="o">=</span> <span class="n">get_dynamodb_region</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="n">ENV_DYNAMODB_HOST</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;https://dynamodb.</span><span class="si">{</span><span class="n">region</span><span class="si">}</span><span class="s2">.amazonaws.com&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="get_step_function_arn">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.common.get_step_function_arn.html#core_framework.common.get_step_function_arn">[docs]</a>
+<span class="k">def</span> <span class="nf">get_step_function_arn</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Core Automation Step Function ARN.  This is specified in the environment variable RUNNER_STEP_FUNCTION_ARN.</span>
+<span class="sd">    If not specified, the default value is used based on the region and account number.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The ARN for the Core Automation Step Function</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">region</span> <span class="o">=</span> <span class="n">get_region</span><span class="p">()</span>
+    <span class="n">account</span> <span class="o">=</span> <span class="n">get_automation_account</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+        <span class="s2">&quot;RUNNER_STEP_FUNCTION_ARN&quot;</span><span class="p">,</span>
+        <span class="sa">f</span><span class="s2">&quot;arn:aws:states:</span><span class="si">{</span><span class="n">region</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">account</span><span class="si">}</span><span class="s2">:stateMachine:CoreAutomationRunner&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="get_invoker_lambda_name">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.common.get_invoker_lambda_name.html#core_framework.common.get_invoker_lambda_name">[docs]</a>
+<span class="k">def</span> <span class="nf">get_invoker_lambda_name</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The name of the invoker lambda.  This is specified in the environment variable ENV_INVOKER_LAMBDA_NAME.</span>
+
+<span class="sd">    The default value is &quot;core-automation-invoker&quot;</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The name of the invoker lambda</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="n">ENV_INVOKER_LAMBDA_NAME</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">V_CORE_AUTOMATION</span><span class="si">}</span><span class="s2">-invoker&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="get_api_lambda_name">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.common.get_api_lambda_name.html#core_framework.common.get_api_lambda_name">[docs]</a>
+<span class="k">def</span> <span class="nf">get_api_lambda_name</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The name of the Core Automation API Lambda.  This is specified in the environment variable ENV_API_LAMBDA_NAME.</span>
+
+<span class="sd">    The default value is &quot;core-automation-api&quot;</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The name of the Core Automation API Lambda</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="n">ENV_API_LAMBDA_NAME</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">V_CORE_AUTOMATION</span><span class="si">}</span><span class="s2">-api&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="get_api_lambda_arn">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.common.get_api_lambda_arn.html#core_framework.common.get_api_lambda_arn">[docs]</a>
+<span class="k">def</span> <span class="nf">get_api_lambda_arn</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The ARN of the Core Automation API Lambda.  This is specified in the environment variable ENV_API_LAMBDA_ARN.</span>
+<span class="sd">    If not specified, the default value is used based on the region and account number.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The ARN for the Core Automation API Lambda</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">region</span> <span class="o">=</span> <span class="n">get_region</span><span class="p">()</span>
+    <span class="n">account</span> <span class="o">=</span> <span class="n">get_automation_account</span><span class="p">()</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">get_api_lambda_name</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span>
+        <span class="n">ENV_API_LAMBDA_ARN</span><span class="p">,</span>
+        <span class="sa">f</span><span class="s2">&quot;arn:aws:lambda:</span><span class="si">{</span><span class="n">region</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">account</span><span class="si">}</span><span class="s2">:function:</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="get_invoker_lambda_arn">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.common.get_invoker_lambda_arn.html#core_framework.common.get_invoker_lambda_arn">[docs]</a>
+<span class="k">def</span> <span class="nf">get_invoker_lambda_arn</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The ARN of the invoker lambda.  This is specified in the environment variable ENV_INVOKER_LAMBDA_ARN.</span>
+<span class="sd">    If not specified, the default value is used based on the region and account number.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The ARN for the Core Automation Invoker lambda</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">region</span> <span class="o">=</span> <span class="n">get_region</span><span class="p">()</span>
+    <span class="n">account</span> <span class="o">=</span> <span class="n">get_automation_account</span><span class="p">()</span>
+    <span class="n">invoker_name</span> <span class="o">=</span> <span class="n">get_invoker_lambda_name</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span>
+        <span class="n">ENV_INVOKER_LAMBDA_ARN</span><span class="p">,</span>
+        <span class="sa">f</span><span class="s2">&quot;arn:aws:lambda:</span><span class="si">{</span><span class="n">region</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">account</span><span class="si">}</span><span class="s2">:function:</span><span class="si">{</span><span class="n">invoker_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="get_execute_lambda_arn">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.common.get_execute_lambda_arn.html#core_framework.common.get_execute_lambda_arn">[docs]</a>
+<span class="k">def</span> <span class="nf">get_execute_lambda_arn</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The ARN of the execute lambda.  This is specified in the environment variable ENV_EXECUTE_LAMBDA_ARN.</span>
+<span class="sd">    If not specified, the default value is used based on the region and account number.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The ARN for the Core Automation Execute lambda</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">region</span> <span class="o">=</span> <span class="n">get_region</span><span class="p">()</span>
+    <span class="n">account</span> <span class="o">=</span> <span class="n">get_automation_account</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span>
+        <span class="n">ENV_EXECUTE_LAMBDA_ARN</span><span class="p">,</span>
+        <span class="sa">f</span><span class="s2">&quot;arn:aws:lambda:</span><span class="si">{</span><span class="n">region</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">account</span><span class="si">}</span><span class="s2">:function:</span><span class="si">{</span><span class="n">V_CORE_AUTOMATION</span><span class="si">}</span><span class="s2">-execute&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="get_start_runner_lambda_arn">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.common.get_start_runner_lambda_arn.html#core_framework.common.get_start_runner_lambda_arn">[docs]</a>
+<span class="k">def</span> <span class="nf">get_start_runner_lambda_arn</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The ARN of the start runner lambda.  This is specified in the environment variable ENV_START_RUNNER_LAMBDA_ARN.</span>
+<span class="sd">    If not specified, the default value is used based on the region and account number</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The ARN for the Core Automation Start Runner lambda</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">region</span> <span class="o">=</span> <span class="n">get_region</span><span class="p">()</span>
+    <span class="n">account</span> <span class="o">=</span> <span class="n">get_automation_account</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span>
+        <span class="n">ENV_START_RUNNER_LAMBDA_ARN</span><span class="p">,</span>
+        <span class="sa">f</span><span class="s2">&quot;arn:aws:lambda:</span><span class="si">{</span><span class="n">region</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">account</span><span class="si">}</span><span class="s2">:function:</span><span class="si">{</span><span class="n">V_CORE_AUTOMATION</span><span class="si">}</span><span class="s2">-runner&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="get_deployspec_compiler_lambda_arn">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.common.get_deployspec_compiler_lambda_arn.html#core_framework.common.get_deployspec_compiler_lambda_arn">[docs]</a>
+<span class="k">def</span> <span class="nf">get_deployspec_compiler_lambda_arn</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The ARN of the deployspec compiler lambda.  This is specified in the environment variable ENV_DEPLOYSPEC_COMPILER_LAMBDA_ARN.</span>
+<span class="sd">    If not specified, the default value is used based on the region and account number.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The ARN for the Core Automation Deployspec Compiler lambda</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">region</span> <span class="o">=</span> <span class="n">get_region</span><span class="p">()</span>
+    <span class="n">account</span> <span class="o">=</span> <span class="n">get_automation_account</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span>
+        <span class="n">ENV_DEPLOYSPEC_COMPILER_LAMBDA_ARN</span><span class="p">,</span>
+        <span class="sa">f</span><span class="s2">&quot;arn:aws:lambda:</span><span class="si">{</span><span class="n">region</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">account</span><span class="si">}</span><span class="s2">:function:</span><span class="si">{</span><span class="n">V_CORE_AUTOMATION</span><span class="si">}</span><span class="s2">-deployspec-compiler&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="get_component_compiler_lambda_arn">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.common.get_component_compiler_lambda_arn.html#core_framework.common.get_component_compiler_lambda_arn">[docs]</a>
+<span class="k">def</span> <span class="nf">get_component_compiler_lambda_arn</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The ARN of the component compiler lambda.  This is specified in the environment variable ENV_COMPONENT_COMPILER_LAMBDA_ARN.</span>
+<span class="sd">    If not specified, the default value is used based on the region and account number</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The ARN for the Core Automation Component Compiler lambda</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">region</span> <span class="o">=</span> <span class="n">get_region</span><span class="p">()</span>
+    <span class="n">account</span> <span class="o">=</span> <span class="n">get_automation_account</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span>
+        <span class="n">ENV_COMPONENT_COMPILER_LAMBDA_ARN</span><span class="p">,</span>
+        <span class="sa">f</span><span class="s2">&quot;arn:aws:lambda:</span><span class="si">{</span><span class="n">region</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">account</span><span class="si">}</span><span class="s2">:function:</span><span class="si">{</span><span class="n">V_CORE_AUTOMATION</span><span class="si">}</span><span class="s2">-component-compiler&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="get_environment">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.common.get_environment.html#core_framework.common.get_environment">[docs]</a>
+<span class="k">def</span> <span class="nf">get_environment</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the environment name from the environment variable ENV_ENVIRONMENT.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: The environment name</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="n">ENV_ENVIRONMENT</span><span class="p">,</span> <span class="s2">&quot;prod&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="to_json">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.common.to_json.html#core_framework.common.to_json">[docs]</a>
+<span class="k">def</span> <span class="nf">to_json</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The Json serializer for the data object.  This will serialize datetime objects and other objects that are not</span>
+<span class="sd">    serializable by the default json serializer.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data (dict): The data object to serialize</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: JSON string</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">V_EMPTY</span>
+    <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">custom_serializer</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="from_json">
+<a class="viewcode-back" href="../../technical_reference/core-framework/_autosummary/core_framework.common.from_json.html#core_framework.common.from_json">[docs]</a>
+<span class="k">def</span> <span class="nf">from_json</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The Json deserializer for the data object.  This will deserialize datetime objects and other objects that are not</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data (str): The JSON string to deserialize</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: The deserialized data object</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

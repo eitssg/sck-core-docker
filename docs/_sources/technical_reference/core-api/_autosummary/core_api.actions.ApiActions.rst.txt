@@ -1,0 +1,29 @@
+core\_api.actions.ApiActions
+============================
+
+.. currentmodule:: core_api.actions
+
+.. autoclass:: ApiActions
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ApiActions.__init__
+      ~ApiActions.create
+      ~ApiActions.delete
+      ~ApiActions.get
+      ~ApiActions.list
+      ~ApiActions.patch
+      ~ApiActions.update
+   
+   

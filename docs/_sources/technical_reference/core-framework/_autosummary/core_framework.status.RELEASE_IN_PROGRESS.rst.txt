@@ -1,0 +1,6 @@
+core\_framework.status.RELEASE\_IN\_PROGRESS
+============================================
+
+.. currentmodule:: core_framework.status
+
+.. autodata:: RELEASE_IN_PROGRESS

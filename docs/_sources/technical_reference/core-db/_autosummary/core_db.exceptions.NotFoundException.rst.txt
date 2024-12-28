@@ -1,0 +1,6 @@
+core\_db.exceptions.NotFoundException
+=====================================
+
+.. currentmodule:: core_db.exceptions
+
+.. autoexception:: NotFoundException

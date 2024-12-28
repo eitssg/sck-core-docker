@@ -1,0 +1,6 @@
+core\_api.item.portfolio.delete\_portfolio\_action
+==================================================
+
+.. currentmodule:: core_api.item.portfolio
+
+.. autofunction:: delete_portfolio_action

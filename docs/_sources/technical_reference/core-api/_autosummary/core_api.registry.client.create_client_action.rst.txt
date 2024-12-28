@@ -1,0 +1,6 @@
+core\_api.registry.client.create\_client\_action
+================================================
+
+.. currentmodule:: core_api.registry.client
+
+.. autofunction:: create_client_action

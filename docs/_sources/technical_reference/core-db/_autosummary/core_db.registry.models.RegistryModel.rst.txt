@@ -1,0 +1,51 @@
+core\_db.registry.models.RegistryModel
+======================================
+
+.. currentmodule:: core_db.registry.models
+
+.. autoclass:: RegistryModel
+   :members:
+   :show-inheritance:
+   :inherited-members:
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~RegistryModel.__init__
+      ~RegistryModel.batch_get
+      ~RegistryModel.batch_write
+      ~RegistryModel.count
+      ~RegistryModel.create_table
+      ~RegistryModel.delete
+      ~RegistryModel.delete_table
+      ~RegistryModel.describe_table
+      ~RegistryModel.deserialize
+      ~RegistryModel.exists
+      ~RegistryModel.from_dynamodb_dict
+      ~RegistryModel.from_raw_data
+      ~RegistryModel.from_simple_dict
+      ~RegistryModel.get
+      ~RegistryModel.get_attributes
+      ~RegistryModel.get_delete_kwargs_from_instance
+      ~RegistryModel.get_operation_kwargs_from_class
+      ~RegistryModel.get_save_kwargs_from_instance
+      ~RegistryModel.get_update_kwargs_from_instance
+      ~RegistryModel.query
+      ~RegistryModel.refresh
+      ~RegistryModel.save
+      ~RegistryModel.scan
+      ~RegistryModel.serialize
+      ~RegistryModel.to_dynamodb_dict
+      ~RegistryModel.to_simple_dict
+      ~RegistryModel.update
+      ~RegistryModel.update_local_version_attribute
+      ~RegistryModel.update_ttl
+   
+   
