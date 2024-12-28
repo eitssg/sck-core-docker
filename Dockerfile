@@ -45,7 +45,7 @@ RUN source /home/core/.venv/bin/activate && python -m pip install --upgrade pip
 RUN source /home/core/.venv/bin/activate && pip install poetry poetry-dynamic-versioning
 
 ENV NEXUS_SERVER=https://monster-jj.jvj28.com:9091
-ENV PIP_INDEX_URL=${NEXUS_SERVER}/repository/pypi/simple
+ENV PIP_INDEX_URL=${NEXUS_SERVER}/repository/pypi/simple/
 
 # Ensure the virtual environment is activated for the core user
 RUN echo "source /home/core/.venv/bin/activate" >> /home/core/.bashrc
