@@ -1,0 +1,22 @@
+2025-01-31 09:51:46 [core_api.handler_proxy.handler_proxy] [INFO] Executing action
+    action: GET:/api/v1/registry/client/{client}
+    correlation_id: 4b84004a-5e45-414b-a68c-264d039f1ec2
+2025-01-31 09:51:46 [core_api.handler_proxy.handler_proxy] [INFO] Action complete
+    action: GET:/api/v1/registry/client/{client}
+    correlation_id: 4b84004a-5e45-414b-a68c-264d039f1ec2
+    result:
+      status: ok
+      code: 200
+      data:
+        ArtefactBucketName: tx-eits-core-automation-master
+        AutomationAccount: '154798051514'
+        BucketName: tx-eits-core-automation-master
+        BucketRegion: ap-southeast-1
+        Client: eits
+        ClientRegion: ap-southeast-1
+        MasterRegion: ap-southeast-1
+        OrganizationAccount: '154798051514'
+        OrganizationEmail: jbarwick@me.com
+        OrganizationId: o-t73gu32ai5
+        OrganizationName: eits-billing
+        Scope: tx-
