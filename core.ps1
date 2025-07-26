@@ -4,6 +4,10 @@ $currentDir = Get-Location
 $LOCAL_DIR = "$currentDir/local"
 $AWS_DIR = "$Env:USERPROFILE/.aws"
 
+# create a vairable with the docker publisher name
+$dockerPublisher = "monster-jj.jvj28.com:9092"
+$packageName = "core-docker-amd64"
+
 # Run the Docker image, mount the local folder "local" to the container folder "/mnt/core",
 # and mount the ~/.aws folder to the /home/core/.aws folder in the container,
 # and pass command-line arguments to core.sh
@@ -21,5 +25,5 @@ docker run --rm -it `
     -e CONSOLE="interactive" `
     -e CONSOLE_LOG="false" `
     -e LOG_LEVEL="DEBUG" `
-    core-docker:latest core $args
+    ${dockerPublisher}/${packageName}:latest /bin/bash
 
