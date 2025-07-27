@@ -1,0 +1,18 @@
+services:
+  core-automation:
+    image: monster-jj.jvj28.com:9092/sck-core-docker-amd64:latest
+    ports:
+      - "3000:3000"
+      - "8000:8000"
+    environment:
+      - CLIENT=eits
+      - AUTOMATION_ACCOUNT=154798051514
+      - REGION=ap-southeast-1
+      - LOG_LEVEL=DEBUG
+    volumes:
+      - core-automation-pv:/mnt/core
+      - $USERPROFILE/.aws:/home/core/.aws
+
+volumes:
+  core-automation-pv:
+    driver: local

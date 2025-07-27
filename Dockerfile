@@ -37,6 +37,16 @@ USER core
 # Copy the docs folder from the current folder to /home/core/docs
 COPY docs /home/core/docs
 
+# Add environment variables to the core user's .bashrc
+RUN echo 'export PIP_INDEX_URL=${PIP_INDEX_URL}' >> /home/core/.bashrc
+RUN echo 'export NODE_ENV=production' >> /home/core/.bashrc
+RUN echo 'export LOCAL_MODE="true"' >> /home/core/.bashrc
+RUN echo 'export VOLUME="/mnt/core"' >> /home/core/.bashrc
+RUN echo 'export LOG_DIR="/mnt/core/logs"' >> /home/core/.bashrc
+RUN echo 'export CONSOLE="interactive"' >> /home/core/.bashrc
+RUN echo 'export CONSOLE_LOG="false"' >> /home/core/.bashrc
+RUN echo 'export LOG_LEVEL="INFO"' >> /home/core/.bashrc
+
 # Add the AWS CLI to the PATH
 RUN echo 'export PATH=$PATH:/usr/local/bin/aws' >> /home/core/.bashrc
 
