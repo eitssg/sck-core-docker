@@ -92,7 +92,7 @@
         <span class="n">Label</span><span class="o">=</span><span class="s2">&quot;action-definition-label&quot;</span><span class="p">,</span>
         <span class="n">Type</span><span class="o">=</span><span class="s2">&quot;SYSTEM::SetVariables&quot;</span><span class="p">,</span>
         <span class="n">DependsOn</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;put-a-label-here&quot;</span><span class="p">],</span>
-        <span class="n">Params</span><span class="o">=</span><span class="n">ActionParams</span><span class="p">(</span>
+        <span class="n">Spec</span><span class="o">=</span><span class="n">ActionParams</span><span class="p">(</span>
             <span class="n">Variables</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;any&quot;</span><span class="p">:</span> <span class="s2">&quot;The variables to set (required)&quot;</span><span class="p">},</span>
         <span class="p">),</span>
         <span class="n">Scope</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
@@ -111,7 +111,7 @@
 
 <span class="sd">    Attributes:</span>
 <span class="sd">        Type: Use the value: ``SYSTEM::SetVariables``</span>
-<span class="sd">        Params.Variables: The variables to set (required)</span>
+<span class="sd">        Spec.Variables: The variables to set (required)</span>
 
 <span class="sd">    .. rubric: ActionDefinition:</span>
 
@@ -121,7 +121,7 @@
 
 <span class="sd">            - Label: action-system-setvariables-label</span>
 <span class="sd">                Type: &quot;SYSTEM::SetVariables&quot;</span>
-<span class="sd">                Params:</span>
+<span class="sd">                Spec:</span>
 <span class="sd">                    Variables:</span>
 <span class="sd">                        Name: &quot;John Smith&quot;</span>
 <span class="sd">                        Age: &quot;25&quot;</span>

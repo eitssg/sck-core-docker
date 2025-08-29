@@ -100,7 +100,7 @@
         <span class="n">Label</span><span class="o">=</span><span class="s2">&quot;action-definition-label&quot;</span><span class="p">,</span>
         <span class="n">Type</span><span class="o">=</span><span class="s2">&quot;AWS::CreateStack&quot;</span><span class="p">,</span>
         <span class="n">DependsOn</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;put-a-label-here&quot;</span><span class="p">],</span>
-        <span class="n">Params</span><span class="o">=</span><span class="n">ActionParams</span><span class="p">(</span>
+        <span class="n">Spec</span><span class="o">=</span><span class="n">ActionParams</span><span class="p">(</span>
             <span class="n">Account</span><span class="o">=</span><span class="s2">&quot;The account to use for the action (required)&quot;</span><span class="p">,</span>
             <span class="n">Region</span><span class="o">=</span><span class="s2">&quot;The region to create the stack in (required)&quot;</span><span class="p">,</span>
             <span class="n">StackName</span><span class="o">=</span><span class="s2">&quot;The name of the stack to create (required)&quot;</span><span class="p">,</span>
@@ -131,15 +131,15 @@
 
 <span class="sd">    Attributes:</span>
 <span class="sd">        Type: Use the value: ``AWS::CreateStack``</span>
-<span class="sd">        Params.Account: The account where CloudFormation is located</span>
-<span class="sd">        Params.Region: The region where CloudFormation is located</span>
-<span class="sd">        Params.StackName: The name of the stack to create (required)</span>
-<span class="sd">        Params.TemplateUrl: The URL of the CloudFormation template (required)</span>
-<span class="sd">        Params.StackParameters: The parameters to pass to the stack (optional)</span>
-<span class="sd">        Params.OnFailure: The action to take on failure (optional)</span>
-<span class="sd">        Params.TimeoutInMinutes: The time to wait for the stack to complete (optional)</span>
-<span class="sd">        Params.Tags: The tags to apply to the stack (optional)</span>
-<span class="sd">        Params.StackPolicy: A policy statement to use within the stack deployment as needed (optional) (converted to JSON)</span>
+<span class="sd">        Spec.Account: The account where CloudFormation is located</span>
+<span class="sd">        Spec.Region: The region where CloudFormation is located</span>
+<span class="sd">        Spec.StackName: The name of the stack to create (required)</span>
+<span class="sd">        Spec.TemplateUrl: The URL of the CloudFormation template (required)</span>
+<span class="sd">        Spec.StackParameters: The parameters to pass to the stack (optional)</span>
+<span class="sd">        Spec.OnFailure: The action to take on failure (optional)</span>
+<span class="sd">        Spec.TimeoutInMinutes: The time to wait for the stack to complete (optional)</span>
+<span class="sd">        Spec.Tags: The tags to apply to the stack (optional)</span>
+<span class="sd">        Spec.StackPolicy: A policy statement to use within the stack deployment as needed (optional) (converted to JSON)</span>
 
 <span class="sd">    .. rubric:: ActionDefinition:</span>
 
@@ -149,7 +149,7 @@
 
 <span class="sd">            - Label: action-aws-createstack-label</span>
 <span class="sd">              Type: &quot;AWS::CreateStack&quot;</span>
-<span class="sd">              Params:</span>
+<span class="sd">              Spec:</span>
 <span class="sd">                Account: &quot;154798051514&quot;</span>
 <span class="sd">                StackName: &quot;my-applicatin-stack&quot;</span>
 <span class="sd">                Region: &quot;ap-southeast-1&quot;</span>

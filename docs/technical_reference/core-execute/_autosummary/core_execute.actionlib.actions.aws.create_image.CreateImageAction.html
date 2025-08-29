@@ -126,26 +126,26 @@
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="core_execute.actionlib.actions.aws.create_image.CreateImageAction.Params.Account">
-<span class="sig-prename descclassname"><span class="pre">Params.</span></span><span class="sig-name descname"><span class="pre">Account</span></span><a class="headerlink" href="#core_execute.actionlib.actions.aws.create_image.CreateImageAction.Params.Account" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.aws.create_image.CreateImageAction.Spec.Account">
+<span class="sig-prename descclassname"><span class="pre">Spec.</span></span><span class="sig-name descname"><span class="pre">Account</span></span><a class="headerlink" href="#core_execute.actionlib.actions.aws.create_image.CreateImageAction.Spec.Account" title="Link to this definition"></a></dt>
 <dd><p>The accoutn where KMS keys are centraly stored</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="core_execute.actionlib.actions.aws.create_image.CreateImageAction.Params.Region">
-<span class="sig-prename descclassname"><span class="pre">Params.</span></span><span class="sig-name descname"><span class="pre">Region</span></span><a class="headerlink" href="#core_execute.actionlib.actions.aws.create_image.CreateImageAction.Params.Region" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.aws.create_image.CreateImageAction.Spec.Region">
+<span class="sig-prename descclassname"><span class="pre">Spec.</span></span><span class="sig-name descname"><span class="pre">Region</span></span><a class="headerlink" href="#core_execute.actionlib.actions.aws.create_image.CreateImageAction.Spec.Region" title="Link to this definition"></a></dt>
 <dd><p>The region where KMS keys are located</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="core_execute.actionlib.actions.aws.create_image.CreateImageAction.Params.InstanceId">
-<span class="sig-prename descclassname"><span class="pre">Params.</span></span><span class="sig-name descname"><span class="pre">InstanceId</span></span><a class="headerlink" href="#core_execute.actionlib.actions.aws.create_image.CreateImageAction.Params.InstanceId" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.aws.create_image.CreateImageAction.Spec.InstanceId">
+<span class="sig-prename descclassname"><span class="pre">Spec.</span></span><span class="sig-name descname"><span class="pre">InstanceId</span></span><a class="headerlink" href="#core_execute.actionlib.actions.aws.create_image.CreateImageAction.Spec.InstanceId" title="Link to this definition"></a></dt>
 <dd><p>The instance ID to create an image from.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="core_execute.actionlib.actions.aws.create_image.CreateImageAction.Params.ImageName">
-<span class="sig-prename descclassname"><span class="pre">Params.</span></span><span class="sig-name descname"><span class="pre">ImageName</span></span><a class="headerlink" href="#core_execute.actionlib.actions.aws.create_image.CreateImageAction.Params.ImageName" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.aws.create_image.CreateImageAction.Spec.ImageName">
+<span class="sig-prename descclassname"><span class="pre">Spec.</span></span><span class="sig-name descname"><span class="pre">ImageName</span></span><a class="headerlink" href="#core_execute.actionlib.actions.aws.create_image.CreateImageAction.Spec.ImageName" title="Link to this definition"></a></dt>
 <dd><p>The name of the source image (required)</p>
 </dd></dl>
 
@@ -154,7 +154,7 @@
 <p>s3:/&lt;bucket&gt;/artfacts/&lt;deployment_details&gt;/{task}.actions:</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Label</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">action-aws-createimage-label</span>
 <span class="w">  </span><span class="nt">Type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;AWS::KMS::CreateImage&quot;</span>
-<span class="w">  </span><span class="nt">Params</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">Spec</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">Account</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;123456789012&quot;</span>
 <span class="w">    </span><span class="nt">Region</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ap-southeast-1&quot;</span>
 <span class="w">    </span><span class="nt">InstanceId</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;i-1234567890abcdef0&quot;</span>

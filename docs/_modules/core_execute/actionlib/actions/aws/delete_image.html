@@ -97,7 +97,7 @@
         <span class="n">Label</span><span class="o">=</span><span class="s2">&quot;action-definition-label&quot;</span><span class="p">,</span>
         <span class="n">Type</span><span class="o">=</span><span class="s2">&quot;AWS::DeleteImage&quot;</span><span class="p">,</span>
         <span class="n">DependsOn</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;put-a-label-here&quot;</span><span class="p">],</span>
-        <span class="n">Params</span><span class="o">=</span><span class="n">ActionParams</span><span class="p">(</span>
+        <span class="n">Spec</span><span class="o">=</span><span class="n">ActionParams</span><span class="p">(</span>
             <span class="n">Account</span><span class="o">=</span><span class="s2">&quot;The account to use for the action (required)&quot;</span><span class="p">,</span>
             <span class="n">Region</span><span class="o">=</span><span class="s2">&quot;The region to create the stack in (required)&quot;</span><span class="p">,</span>
             <span class="n">ImageName</span><span class="o">=</span><span class="s2">&quot;The name of the image to delete (required)&quot;</span><span class="p">,</span>
@@ -118,9 +118,9 @@
 
 <span class="sd">    Attributes:</span>
 <span class="sd">        Type: Use the value: ``AWS::DeleteImage``</span>
-<span class="sd">        Params.Account: The account where the image is located</span>
-<span class="sd">        Params.Region: The region where the image is located</span>
-<span class="sd">        Params.ImageName: The name of the image to delete (required)</span>
+<span class="sd">        Spec.Account: The account where the image is located</span>
+<span class="sd">        Spec.Region: The region where the image is located</span>
+<span class="sd">        Spec.ImageName: The name of the image to delete (required)</span>
 
 <span class="sd">    .. rubric: ActionDefinition:</span>
 
@@ -130,7 +130,7 @@
 
 <span class="sd">            - Label: action-aws-deleteimage-label</span>
 <span class="sd">              Type: &quot;AWS::DeleteImage&quot;</span>
-<span class="sd">              Params:</span>
+<span class="sd">              Spec:</span>
 <span class="sd">                Account: &quot;154798051514&quot;</span>
 <span class="sd">                Region: &quot;ap-southeast-1&quot;</span>
 <span class="sd">                ImageName: &quot;my-image-name&quot;</span>

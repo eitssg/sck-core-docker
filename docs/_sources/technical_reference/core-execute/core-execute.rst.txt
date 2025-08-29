@@ -49,14 +49,14 @@ The actions file is YAML file which contains a list of actions that is executed 
 
    - Label: action-system-noop1-label
      Type: "SYSTEM::NoOp"
-     Params:
+     Spec:
         Account: "154798051514"
         Region: "ap-southeast-1"
      Scope: "build"
    - Label: action-system-noop2-label
      Type: "SYSTEM::NoOp"
      DependsOn: ["action-system-noop1-label"]
-     Params:
+     Spec:
         Account: "154798051514"
         Region: "ap-southeast-1"
      Scope: "build"

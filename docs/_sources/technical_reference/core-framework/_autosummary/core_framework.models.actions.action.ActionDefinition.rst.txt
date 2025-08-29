@@ -22,7 +22,7 @@ core\_framework.models.actions.action.ActionDefinition
       ~ActionDefinition.Label
       ~ActionDefinition.Type
       ~ActionDefinition.DependsOn
-      ~ActionDefinition.Params
+      ~ActionDefinition.Spec
       ~ActionDefinition.Scope
       ~ActionDefinition.Condition
       ~ActionDefinition.Before

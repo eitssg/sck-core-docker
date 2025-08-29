@@ -120,26 +120,26 @@
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="core_execute.actionlib.actions.aws.put_metric_data.PutMetricDataAction.Params.Account">
-<span class="sig-prename descclassname"><span class="pre">Params.</span></span><span class="sig-name descname"><span class="pre">Account</span></span><a class="headerlink" href="#core_execute.actionlib.actions.aws.put_metric_data.PutMetricDataAction.Params.Account" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.aws.put_metric_data.PutMetricDataAction.Spec.Account">
+<span class="sig-prename descclassname"><span class="pre">Spec.</span></span><span class="sig-name descname"><span class="pre">Account</span></span><a class="headerlink" href="#core_execute.actionlib.actions.aws.put_metric_data.PutMetricDataAction.Spec.Account" title="Link to this definition"></a></dt>
 <dd><p>The account where the metric data is to be recorded</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="core_execute.actionlib.actions.aws.put_metric_data.PutMetricDataAction.Params.Region">
-<span class="sig-prename descclassname"><span class="pre">Params.</span></span><span class="sig-name descname"><span class="pre">Region</span></span><a class="headerlink" href="#core_execute.actionlib.actions.aws.put_metric_data.PutMetricDataAction.Params.Region" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.aws.put_metric_data.PutMetricDataAction.Spec.Region">
+<span class="sig-prename descclassname"><span class="pre">Spec.</span></span><span class="sig-name descname"><span class="pre">Region</span></span><a class="headerlink" href="#core_execute.actionlib.actions.aws.put_metric_data.PutMetricDataAction.Spec.Region" title="Link to this definition"></a></dt>
 <dd><p>The region where the metric data is to be recorded</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="core_execute.actionlib.actions.aws.put_metric_data.PutMetricDataAction.Params.Namespace">
-<span class="sig-prename descclassname"><span class="pre">Params.</span></span><span class="sig-name descname"><span class="pre">Namespace</span></span><a class="headerlink" href="#core_execute.actionlib.actions.aws.put_metric_data.PutMetricDataAction.Params.Namespace" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.aws.put_metric_data.PutMetricDataAction.Spec.Namespace">
+<span class="sig-prename descclassname"><span class="pre">Spec.</span></span><span class="sig-name descname"><span class="pre">Namespace</span></span><a class="headerlink" href="#core_execute.actionlib.actions.aws.put_metric_data.PutMetricDataAction.Spec.Namespace" title="Link to this definition"></a></dt>
 <dd><p>The namespace for the metric data (required)</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="core_execute.actionlib.actions.aws.put_metric_data.PutMetricDataAction.Params.Metrics">
-<span class="sig-prename descclassname"><span class="pre">Params.</span></span><span class="sig-name descname"><span class="pre">Metrics</span></span><a class="headerlink" href="#core_execute.actionlib.actions.aws.put_metric_data.PutMetricDataAction.Params.Metrics" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.aws.put_metric_data.PutMetricDataAction.Spec.Metrics">
+<span class="sig-prename descclassname"><span class="pre">Spec.</span></span><span class="sig-name descname"><span class="pre">Metrics</span></span><a class="headerlink" href="#core_execute.actionlib.actions.aws.put_metric_data.PutMetricDataAction.Spec.Metrics" title="Link to this definition"></a></dt>
 <dd><p>A list of metrics to record (required)</p>
 </dd></dl>
 
@@ -148,7 +148,7 @@
 <p>s3:/&lt;bucket&gt;/artfacts/&lt;deployment_details&gt;/{task}.actions:</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Label</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">action-aws-putmetricdata-label</span>
 <span class="w">  </span><span class="nt">Type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;AWS::PutMetricData&quot;</span>
-<span class="w">  </span><span class="nt">Params</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">Spec</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">Account</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;154798051514&quot;</span>
 <span class="w">    </span><span class="nt">Region</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ap-southeast-1&quot;</span>
 <span class="w">    </span><span class="nt">Namespace</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;The</span><span class="nv"> </span><span class="s">namespace</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">metric</span><span class="nv"> </span><span class="s">data</span><span class="nv"> </span><span class="s">(required)&quot;</span>

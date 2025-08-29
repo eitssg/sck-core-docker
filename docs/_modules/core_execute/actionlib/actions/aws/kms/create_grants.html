@@ -97,7 +97,7 @@
         <span class="n">Label</span><span class="o">=</span><span class="s2">&quot;action-definition-label&quot;</span><span class="p">,</span>
         <span class="n">Type</span><span class="o">=</span><span class="s2">&quot;AWS::KMS::CreateGrants&quot;</span><span class="p">,</span>
         <span class="n">DependsOn</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;put-a-label-here&quot;</span><span class="p">],</span>
-        <span class="n">Params</span><span class="o">=</span><span class="n">ActionParams</span><span class="p">(</span>
+        <span class="n">Spec</span><span class="o">=</span><span class="n">ActionParams</span><span class="p">(</span>
             <span class="n">Account</span><span class="o">=</span><span class="s2">&quot;The account to use for the action (required)&quot;</span><span class="p">,</span>
             <span class="n">Region</span><span class="o">=</span><span class="s2">&quot;The region to create the stack in (required)&quot;</span><span class="p">,</span>
             <span class="n">KmsKeyId</span><span class="o">=</span><span class="s2">&quot;The ID of the KMS key to create grants for (optionally required)&quot;</span><span class="p">,</span>
@@ -123,13 +123,13 @@
 <span class="sd">    Attributes:</span>
 <span class="sd">        Label: Enter a label to define this action instance</span>
 <span class="sd">        Type: Use the value: ``AWS::KMS::CreateGrants``</span>
-<span class="sd">        Params.Account: The accoutn where KMS keys are centraly stored</span>
-<span class="sd">        Params.Region: The region where KMS keys are located</span>
-<span class="sd">        Params.KmsKeyArn: The ID of the KMS key to create grants for (required if KmsKeyId is not provided)</span>
-<span class="sd">        Params.KmsKeyId: The ARN of the KMS key to create grants for (required if KmsKeyArn is not provided)</span>
-<span class="sd">        Params.GranteePrincipals: The principals to grant access to (required)</span>
-<span class="sd">        Params.Operations: The operations to grant access for (required)</span>
-<span class="sd">        Params.IgnoreFailedGrants: If true, ignore failed grants, otherwise fail the action if a grant fails</span>
+<span class="sd">        Spec.Account: The accoutn where KMS keys are centraly stored</span>
+<span class="sd">        Spec.Region: The region where KMS keys are located</span>
+<span class="sd">        Spec.KmsKeyArn: The ID of the KMS key to create grants for (required if KmsKeyId is not provided)</span>
+<span class="sd">        Spec.KmsKeyId: The ARN of the KMS key to create grants for (required if KmsKeyArn is not provided)</span>
+<span class="sd">        Spec.GranteePrincipals: The principals to grant access to (required)</span>
+<span class="sd">        Spec.Operations: The operations to grant access for (required)</span>
+<span class="sd">        Spec.IgnoreFailedGrants: If true, ignore failed grants, otherwise fail the action if a grant fails</span>
 
 <span class="sd">    .. rubric: ActionDefinition:</span>
 
@@ -139,7 +139,7 @@
 
 <span class="sd">            - Label: action-aws-kms-creategrants-label</span>
 <span class="sd">              Type: &quot;AWS::KMS::CreateGrants&quot;</span>
-<span class="sd">              Params:</span>
+<span class="sd">              Spec:</span>
 <span class="sd">                Account: &quot;123456789012&quot;</span>
 <span class="sd">                Region: &quot;ap-southeast-1&quot;</span>
 <span class="sd">                KmsKeyArn: &quot;arn:aws:kms:ap-southeast-1:123456789012:key/your-kms-key-id&quot;</span>

@@ -135,14 +135,14 @@ what actions to execute for a task are located in the Deployment Details aretefa
 <p>The actions file is YAML file which contains a list of actions that is executed by the state machine.</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Label</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">action-system-noop1-label</span>
 <span class="w">  </span><span class="nt">Type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;SYSTEM::NoOp&quot;</span>
-<span class="w">  </span><span class="nt">Params</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">Spec</span><span class="p">:</span>
 <span class="w">     </span><span class="nt">Account</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;154798051514&quot;</span>
 <span class="w">     </span><span class="nt">Region</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ap-southeast-1&quot;</span>
 <span class="w">  </span><span class="nt">Scope</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;build&quot;</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Label</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">action-system-noop2-label</span>
 <span class="w">  </span><span class="nt">Type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;SYSTEM::NoOp&quot;</span>
 <span class="w">  </span><span class="nt">DependsOn</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;action-system-noop1-label&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">  </span><span class="nt">Params</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">Spec</span><span class="p">:</span>
 <span class="w">     </span><span class="nt">Account</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;154798051514&quot;</span>
 <span class="w">     </span><span class="nt">Region</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ap-southeast-1&quot;</span>
 <span class="w">  </span><span class="nt">Scope</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;build&quot;</span>

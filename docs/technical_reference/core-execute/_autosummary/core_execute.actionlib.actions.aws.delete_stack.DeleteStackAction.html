@@ -121,26 +121,26 @@
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="core_execute.actionlib.actions.aws.delete_stack.DeleteStackAction.Params.Account">
-<span class="sig-prename descclassname"><span class="pre">Params.</span></span><span class="sig-name descname"><span class="pre">Account</span></span><a class="headerlink" href="#core_execute.actionlib.actions.aws.delete_stack.DeleteStackAction.Params.Account" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.aws.delete_stack.DeleteStackAction.Spec.Account">
+<span class="sig-prename descclassname"><span class="pre">Spec.</span></span><span class="sig-name descname"><span class="pre">Account</span></span><a class="headerlink" href="#core_execute.actionlib.actions.aws.delete_stack.DeleteStackAction.Spec.Account" title="Link to this definition"></a></dt>
 <dd><p>The account where the stack is located</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="core_execute.actionlib.actions.aws.delete_stack.DeleteStackAction.Params.Region">
-<span class="sig-prename descclassname"><span class="pre">Params.</span></span><span class="sig-name descname"><span class="pre">Region</span></span><a class="headerlink" href="#core_execute.actionlib.actions.aws.delete_stack.DeleteStackAction.Params.Region" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.aws.delete_stack.DeleteStackAction.Spec.Region">
+<span class="sig-prename descclassname"><span class="pre">Spec.</span></span><span class="sig-name descname"><span class="pre">Region</span></span><a class="headerlink" href="#core_execute.actionlib.actions.aws.delete_stack.DeleteStackAction.Spec.Region" title="Link to this definition"></a></dt>
 <dd><p>The region where the stack is located</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="core_execute.actionlib.actions.aws.delete_stack.DeleteStackAction.Params.StackName">
-<span class="sig-prename descclassname"><span class="pre">Params.</span></span><span class="sig-name descname"><span class="pre">StackName</span></span><a class="headerlink" href="#core_execute.actionlib.actions.aws.delete_stack.DeleteStackAction.Params.StackName" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.aws.delete_stack.DeleteStackAction.Spec.StackName">
+<span class="sig-prename descclassname"><span class="pre">Spec.</span></span><span class="sig-name descname"><span class="pre">StackName</span></span><a class="headerlink" href="#core_execute.actionlib.actions.aws.delete_stack.DeleteStackAction.Spec.StackName" title="Link to this definition"></a></dt>
 <dd><p>The name of the stack to delete (required)</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="core_execute.actionlib.actions.aws.delete_stack.DeleteStackAction.Params.SuccessStatuses">
-<span class="sig-prename descclassname"><span class="pre">Params.</span></span><span class="sig-name descname"><span class="pre">SuccessStatuses</span></span><a class="headerlink" href="#core_execute.actionlib.actions.aws.delete_stack.DeleteStackAction.Params.SuccessStatuses" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="core_execute.actionlib.actions.aws.delete_stack.DeleteStackAction.Spec.SuccessStatuses">
+<span class="sig-prename descclassname"><span class="pre">Spec.</span></span><span class="sig-name descname"><span class="pre">SuccessStatuses</span></span><a class="headerlink" href="#core_execute.actionlib.actions.aws.delete_stack.DeleteStackAction.Spec.SuccessStatuses" title="Link to this definition"></a></dt>
 <dd><p>The stack statuses that indicate success (optional).  Defaults to []</p>
 </dd></dl>
 
@@ -150,7 +150,7 @@
 <p>s3:/&lt;bucket&gt;/artfacts/&lt;deployment_details&gt;/{task}.actions:</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Label</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">action-aws-deletestack-label</span>
 <span class="w">  </span><span class="nt">Type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;AWS::DeleteStack&quot;</span>
-<span class="w">  </span><span class="nt">Params</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">Spec</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">Account</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;154798051514&quot;</span>
 <span class="w">    </span><span class="nt">Region</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ap-southeast-1&quot;</span>
 <span class="w">    </span><span class="nt">StackName</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;my-appication-stack-name&quot;</span>

@@ -96,7 +96,7 @@
         <span class="n">Label</span><span class="o">=</span><span class="s2">&quot;action-definition-label&quot;</span><span class="p">,</span>
         <span class="n">Type</span><span class="o">=</span><span class="s2">&quot;AWS::CreateCloudFrontInvalidation&quot;</span><span class="p">,</span>
         <span class="n">DependsOn</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;put-a-label-here&quot;</span><span class="p">],</span>
-        <span class="n">Params</span><span class="o">=</span><span class="n">ActionParams</span><span class="p">(</span>
+        <span class="n">Spec</span><span class="o">=</span><span class="n">ActionParams</span><span class="p">(</span>
             <span class="n">Account</span><span class="o">=</span><span class="s2">&quot;The account to use for the action (required)&quot;</span><span class="p">,</span>
             <span class="n">Region</span><span class="o">=</span><span class="s2">&quot;The region to copy the image to (required)&quot;</span><span class="p">,</span>
             <span class="n">DistributionId</span><span class="o">=</span><span class="s2">&quot;The CloudFront distribution ID (required)&quot;</span><span class="p">,</span>
@@ -118,10 +118,10 @@
 
 <span class="sd">    Attributes:</span>
 <span class="sd">        Type: Use the value: ``AWS::CreateCloudFrontInvalidation``</span>
-<span class="sd">        Params.Account: The account where CloudFront is located</span>
-<span class="sd">        Params.Region: The region where CloudFront is located</span>
-<span class="sd">        Params.DistributionId: The ID of the CloudFront distribution to invalidate (required)</span>
-<span class="sd">        Params.Paths: The paths to invalidate (optional).  Defaults to [&#39;*&#39;]</span>
+<span class="sd">        Spec.Account: The account where CloudFront is located</span>
+<span class="sd">        Spec.Region: The region where CloudFront is located</span>
+<span class="sd">        Spec.DistributionId: The ID of the CloudFront distribution to invalidate (required)</span>
+<span class="sd">        Spec.Paths: The paths to invalidate (optional).  Defaults to [&#39;*&#39;]</span>
 
 <span class="sd">    .. rubric:: ActionDefinition:</span>
 
@@ -131,7 +131,7 @@
 
 <span class="sd">            - Label: action-aws-createcloudfrontinvalidation-label</span>
 <span class="sd">              Type: &quot;AWS::CreateCloudFrontInvalidation&quot;</span>
-<span class="sd">              Params:</span>
+<span class="sd">              Spec:</span>
 <span class="sd">                  Account: &quot;123456789012&quot;</span>
 <span class="sd">                  Region: &quot;ap-southeast-1&quot;</span>
 <span class="sd">                  DistributionId: &quot;E1234567890&quot;</span>

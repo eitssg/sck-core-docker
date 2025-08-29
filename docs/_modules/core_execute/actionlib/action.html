@@ -95,7 +95,7 @@
 <span class="n">ACT_CONDITION</span> <span class="o">=</span> <span class="s2">&quot;Condition&quot;</span>
 <span class="n">ACT_BEFORE</span> <span class="o">=</span> <span class="s2">&quot;Before&quot;</span>
 <span class="n">ACT_AFTER</span> <span class="o">=</span> <span class="s2">&quot;After&quot;</span>
-<span class="n">ACT_PARAMS</span> <span class="o">=</span> <span class="s2">&quot;Params&quot;</span>
+<span class="n">ACT_PARAMS</span> <span class="o">=</span> <span class="s2">&quot;Spec&quot;</span>
 <span class="n">ACT_LIFECYCLE_HOOKS</span> <span class="o">=</span> <span class="s2">&quot;LifecycleHooks&quot;</span>
 <span class="n">ACT_SAVE_OUTPUTS</span> <span class="o">=</span> <span class="s2">&quot;SaveOutputs&quot;</span>
 <span class="n">ACT_DEPENDS_ON</span> <span class="o">=</span> <span class="s2">&quot;DependsOn&quot;</span>
@@ -224,7 +224,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">condition</span> <span class="o">=</span> <span class="n">definition</span><span class="o">.</span><span class="n">Condition</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">before</span> <span class="o">=</span> <span class="n">definition</span><span class="o">.</span><span class="n">Before</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">after</span> <span class="o">=</span> <span class="n">definition</span><span class="o">.</span><span class="n">After</span> <span class="o">+</span> <span class="n">definition</span><span class="o">.</span><span class="n">DependsOn</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="n">definition</span><span class="o">.</span><span class="n">Params</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params</span> <span class="o">=</span> <span class="n">definition</span><span class="o">.</span><span class="n">Spec</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lifecycle_hooks</span> <span class="o">=</span> <span class="n">definition</span><span class="o">.</span><span class="n">LifecycleHooks</span>
 
         <span class="n">log</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="s2">&quot;BaseAction.__init__() - complete&quot;</span><span class="p">)</span>

@@ -95,7 +95,7 @@
         <span class="n">Label</span><span class="o">=</span><span class="s2">&quot;action-definition-label&quot;</span><span class="p">,</span>
         <span class="n">Type</span><span class="o">=</span><span class="s2">&quot;AWS::RDS::ModifyDbInstance&quot;</span><span class="p">,</span>
         <span class="n">DependsOn</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;put-a-label-here&quot;</span><span class="p">],</span>
-        <span class="n">Params</span><span class="o">=</span><span class="n">ActionParams</span><span class="p">(</span>
+        <span class="n">Spec</span><span class="o">=</span><span class="n">ActionParams</span><span class="p">(</span>
             <span class="n">Account</span><span class="o">=</span><span class="s2">&quot;The account to use for the action (required)&quot;</span><span class="p">,</span>
             <span class="n">Region</span><span class="o">=</span><span class="s2">&quot;The region to create the stack in (required)&quot;</span><span class="p">,</span>
             <span class="n">ApiParams</span><span class="o">=</span><span class="p">{</span>
@@ -118,9 +118,9 @@
 
 <span class="sd">    Attributes:</span>
 <span class="sd">        Type: Use the value: ``AWS::RDS::ModifyDbInstance``</span>
-<span class="sd">        Params.Account: The account where your RDS instance is located</span>
-<span class="sd">        Params.Region: The region where your RDS instance is located</span>
-<span class="sd">        Params.ApiParams: The parameters to pass to the modify_db_instance call (required).  See AWS docuemntation for more infomration on the parameters.</span>
+<span class="sd">        Spec.Account: The account where your RDS instance is located</span>
+<span class="sd">        Spec.Region: The region where your RDS instance is located</span>
+<span class="sd">        Spec.ApiParams: The parameters to pass to the modify_db_instance call (required).  See AWS docuemntation for more infomration on the parameters.</span>
 
 <span class="sd">    .. rubric: ActionDefinition:</span>
 
@@ -130,7 +130,7 @@
 
 <span class="sd">            - Label: action-aws-rds-modifydbinstance-label</span>
 <span class="sd">              Type: &quot;AWS::RDS::ModifyDbInstance&quot;</span>
-<span class="sd">              Params:</span>
+<span class="sd">              Spec:</span>
 <span class="sd">                Account: &quot;123456789012&quot;</span>
 <span class="sd">                Region: &quot;ap-southeast-1&quot;</span>
 <span class="sd">                ApiParams:</span>

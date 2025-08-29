@@ -84,9 +84,9 @@
 <span class="p">)</span>
 
 
-<div class="viewcode-block" id="TableException">
-<a class="viewcode-back" href="../../technical_reference/core-db/_autosummary/core_db.exceptions.TableException.html#core_db.exceptions.TableException">[docs]</a>
-<span class="k">class</span> <span class="nc">TableException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<div class="viewcode-block" id="OperationException">
+<a class="viewcode-back" href="../../technical_reference/core-db/_autosummary/core_db.exceptions.OperationException.html#core_db.exceptions.OperationException">[docs]</a>
+<span class="k">class</span> <span class="nc">OperationException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Base exception class for DB table operation errors.</span>
 
 <span class="sd">    This class is used to raise exceptions when a table operation fails.</span>
@@ -115,10 +115,10 @@
 
 <div class="viewcode-block" id="NotFoundException">
 <a class="viewcode-back" href="../../technical_reference/core-db/_autosummary/core_db.exceptions.NotFoundException.html#core_db.exceptions.NotFoundException">[docs]</a>
-<span class="k">class</span> <span class="nc">NotFoundException</span><span class="p">(</span><span class="n">TableException</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">NotFoundException</span><span class="p">(</span><span class="n">OperationException</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Exception raised when a resource is not found code 404</span>
 
-<span class="sd">    Extends: :class:`TableException`</span>
+<span class="sd">    Extends: :class:`OperationException`</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        message (str): Human readable error description</span>
@@ -132,10 +132,10 @@
 
 <div class="viewcode-block" id="ForbiddenException">
 <a class="viewcode-back" href="../../technical_reference/core-db/_autosummary/core_db.exceptions.ForbiddenException.html#core_db.exceptions.ForbiddenException">[docs]</a>
-<span class="k">class</span> <span class="nc">ForbiddenException</span><span class="p">(</span><span class="n">TableException</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">ForbiddenException</span><span class="p">(</span><span class="n">OperationException</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Exception raised when a resource is not found code 403</span>
 
-<span class="sd">    Extends: :class:`TableException`</span>
+<span class="sd">    Extends: :class:`OperationException`</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        message (str): Human readable error description</span>
@@ -149,10 +149,10 @@
 
 <div class="viewcode-block" id="UnauthorizedException">
 <a class="viewcode-back" href="../../technical_reference/core-db/_autosummary/core_db.exceptions.UnauthorizedException.html#core_db.exceptions.UnauthorizedException">[docs]</a>
-<span class="k">class</span> <span class="nc">UnauthorizedException</span><span class="p">(</span><span class="n">TableException</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">UnauthorizedException</span><span class="p">(</span><span class="n">OperationException</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Exception raised when a resource is not found code 401</span>
 
-<span class="sd">    Extends: :class:`TableException`</span>
+<span class="sd">    Extends: :class:`OperationException`</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        message (str): Human readable error description</span>
@@ -166,10 +166,10 @@
 
 <div class="viewcode-block" id="ConflictException">
 <a class="viewcode-back" href="../../technical_reference/core-db/_autosummary/core_db.exceptions.ConflictException.html#core_db.exceptions.ConflictException">[docs]</a>
-<span class="k">class</span> <span class="nc">ConflictException</span><span class="p">(</span><span class="n">TableException</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">ConflictException</span><span class="p">(</span><span class="n">OperationException</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Exception raised when a resource is not found code 409</span>
 
-<span class="sd">    Extends: :class:`TableException`</span>
+<span class="sd">    Extends: :class:`OperationException`</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        message (str): Human readable error description</span>
@@ -183,10 +183,10 @@
 
 <div class="viewcode-block" id="BadRequestException">
 <a class="viewcode-back" href="../../technical_reference/core-db/_autosummary/core_db.exceptions.BadRequestException.html#core_db.exceptions.BadRequestException">[docs]</a>
-<span class="k">class</span> <span class="nc">BadRequestException</span><span class="p">(</span><span class="n">TableException</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">BadRequestException</span><span class="p">(</span><span class="n">OperationException</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Exception raised when a resource is not found code 400</span>
 
-<span class="sd">    Extends: :class:`TableException`</span>
+<span class="sd">    Extends: :class:`OperationException`</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        message (str): Human readable error description</span>
@@ -200,10 +200,10 @@
 
 <div class="viewcode-block" id="UnknownException">
 <a class="viewcode-back" href="../../technical_reference/core-db/_autosummary/core_db.exceptions.UnknownException.html#core_db.exceptions.UnknownException">[docs]</a>
-<span class="k">class</span> <span class="nc">UnknownException</span><span class="p">(</span><span class="n">TableException</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">UnknownException</span><span class="p">(</span><span class="n">OperationException</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Exception raised when a resource is not found code 500</span>
 
-<span class="sd">    Extends: :class:`TableException`</span>
+<span class="sd">    Extends: :class:`OperationException`</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        message (str): Human readable error description</span>
