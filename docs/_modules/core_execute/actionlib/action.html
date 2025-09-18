@@ -81,7 +81,7 @@
 <span class="kn">import</span> <span class="nn">enum</span>
 <span class="kn">import</span> <span class="nn">core_logging</span> <span class="k">as</span> <span class="nn">log</span>
 
-<span class="kn">from</span> <span class="nn">core_framework.models</span> <span class="kn">import</span> <span class="n">ActionDefinition</span><span class="p">,</span> <span class="n">DeploymentDetails</span><span class="p">,</span> <span class="n">ActionParams</span>
+<span class="kn">from</span> <span class="nn">core_framework.models</span> <span class="kn">import</span> <span class="n">ActionDefinition</span><span class="p">,</span> <span class="n">DeploymentDetails</span><span class="p">,</span> <span class="n">ActionSpec</span>
 
 <span class="kn">from</span> <span class="nn">core_renderer</span> <span class="kn">import</span> <span class="n">Jinja2Renderer</span>
 
@@ -153,8 +153,8 @@
     <span class="n">after</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;list[str]: The actions that should be perfomed after this action.&quot;&quot;&quot;</span>
 
-    <span class="n">params</span><span class="p">:</span> <span class="n">ActionParams</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;ActionParams: The parameters of the action.&quot;&quot;&quot;</span>
+    <span class="n">params</span><span class="p">:</span> <span class="n">ActionSpec</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;ActionSpec: The parameters of the action.&quot;&quot;&quot;</span>
 
     <span class="n">lifecycle_hooks</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;list[dict[str, Any]]: The lifecycle hooks of the action.&quot;&quot;&quot;</span>

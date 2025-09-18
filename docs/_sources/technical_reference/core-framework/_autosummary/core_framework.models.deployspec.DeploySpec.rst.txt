@@ -19,7 +19,7 @@ core\_framework.models.deployspec.DeploySpec
       ~DeploySpec.model_extra
       ~DeploySpec.model_fields
       ~DeploySpec.model_fields_set
-      ~DeploySpec.action_specs
+      ~DeploySpec.actions
    
    
 

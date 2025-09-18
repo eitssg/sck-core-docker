@@ -19,8 +19,8 @@ core_framework.models.deployspec
       :toctree:
       :template: custom-class-template.rst
    
-      ActionSpec
-      ActionSpecParams
+      ActionResource
+      ActionResourceParams
       DeploySpec
    
    

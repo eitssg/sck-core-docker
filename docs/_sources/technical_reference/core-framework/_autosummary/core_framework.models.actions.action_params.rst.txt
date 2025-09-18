@@ -1,7 +1,7 @@
-core_framework.models.actions.action_params
+core_framework.models.actions.action_spec
 ===========================================
 
-.. automodule:: core_framework.models.actions.action_params
+.. automodule:: core_framework.models.actions.action_spec
 
    
    
@@ -33,7 +33,7 @@ core_framework.models.actions.action_params
       :toctree:
       :template: custom-class-template.rst
    
-      ActionParams
+      ActionSpec
    
    
 

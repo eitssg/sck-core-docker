@@ -1,9 +1,9 @@
-core\_framework.models.actions.action\_params.ActionParams
+core\_framework.models.actions.action\_params.ActionSpec
 ==========================================================
 
-.. currentmodule:: core_framework.models.actions.action_params
+.. currentmodule:: core_framework.models.actions.action_spec
 
-.. autoclass:: ActionParams
+.. autoclass:: ActionSpec
    :members:
    :show-inheritance:
    :inherited-members:
@@ -14,48 +14,48 @@ core\_framework.models.actions.action\_params.ActionParams
 
    .. autosummary::
    
-      ~ActionParams.model_computed_fields
-      ~ActionParams.model_config
-      ~ActionParams.model_extra
-      ~ActionParams.model_fields
-      ~ActionParams.model_fields_set
-      ~ActionParams.Account
-      ~ActionParams.StackName
-      ~ActionParams.Region
-      ~ActionParams.TemplateUrl
-      ~ActionParams.TimeoutInMinutes
-      ~ActionParams.OnFailure
-      ~ActionParams.StackParameters
-      ~ActionParams.Tags
-      ~ActionParams.StackPolicy
-      ~ActionParams.UserName
-      ~ActionParams.DestinationImageName
-      ~ActionParams.ImageName
-      ~ActionParams.KmsKeyArn
-      ~ActionParams.KmsKeyId
-      ~ActionParams.GranteePrincipals
-      ~ActionParams.Operations
-      ~ActionParams.IgnoreFailedGrants
-      ~ActionParams.Variables
-      ~ActionParams.DistributionId
-      ~ActionParams.Paths
-      ~ActionParams.InstanceId
-      ~ActionParams.RepositoryName
-      ~ActionParams.SecurityGroupId
-      ~ActionParams.SuccessStatuses
-      ~ActionParams.AccountsToShare
-      ~ActionParams.Siblings
-      ~ActionParams.BucketName
-      ~ActionParams.OutputName
-      ~ActionParams.Type
-      ~ActionParams.Status
-      ~ActionParams.Message
-      ~ActionParams.Identity
-      ~ActionParams.Namespace
-      ~ActionParams.Metrics
-      ~ActionParams.LoadBalancer
-      ~ActionParams.Prefix
-      ~ActionParams.ApiParams
+      ~ActionSpec.model_computed_fields
+      ~ActionSpec.model_config
+      ~ActionSpec.model_extra
+      ~ActionSpec.model_fields
+      ~ActionSpec.model_fields_set
+      ~ActionSpec.Account
+      ~ActionSpec.StackName
+      ~ActionSpec.Region
+      ~ActionSpec.TemplateUrl
+      ~ActionSpec.TimeoutInMinutes
+      ~ActionSpec.OnFailure
+      ~ActionSpec.StackParameters
+      ~ActionSpec.Tags
+      ~ActionSpec.StackPolicy
+      ~ActionSpec.UserName
+      ~ActionSpec.DestinationImageName
+      ~ActionSpec.ImageName
+      ~ActionSpec.KmsKeyArn
+      ~ActionSpec.KmsKeyId
+      ~ActionSpec.GranteePrincipals
+      ~ActionSpec.Operations
+      ~ActionSpec.IgnoreFailedGrants
+      ~ActionSpec.Variables
+      ~ActionSpec.DistributionId
+      ~ActionSpec.Paths
+      ~ActionSpec.InstanceId
+      ~ActionSpec.RepositoryName
+      ~ActionSpec.SecurityGroupId
+      ~ActionSpec.SuccessStatuses
+      ~ActionSpec.AccountsToShare
+      ~ActionSpec.Siblings
+      ~ActionSpec.BucketName
+      ~ActionSpec.OutputName
+      ~ActionSpec.Type
+      ~ActionSpec.Status
+      ~ActionSpec.Message
+      ~ActionSpec.Identity
+      ~ActionSpec.Namespace
+      ~ActionSpec.Metrics
+      ~ActionSpec.LoadBalancer
+      ~ActionSpec.Prefix
+      ~ActionSpec.ApiParams
    
    
 
@@ -65,30 +65,30 @@ core\_framework.models.actions.action\_params.ActionParams
 
    .. autosummary::
    
-      ~ActionParams.__init__
-      ~ActionParams.construct
-      ~ActionParams.copy
-      ~ActionParams.dict
-      ~ActionParams.from_orm
-      ~ActionParams.json
-      ~ActionParams.model_construct
-      ~ActionParams.model_copy
-      ~ActionParams.model_dump
-      ~ActionParams.model_dump_json
-      ~ActionParams.model_json_schema
-      ~ActionParams.model_parametrized_name
-      ~ActionParams.model_post_init
-      ~ActionParams.model_rebuild
-      ~ActionParams.model_validate
-      ~ActionParams.model_validate_json
-      ~ActionParams.model_validate_strings
-      ~ActionParams.parse_file
-      ~ActionParams.parse_obj
-      ~ActionParams.parse_raw
-      ~ActionParams.schema
-      ~ActionParams.schema_json
-      ~ActionParams.ser_model
-      ~ActionParams.update_forward_refs
-      ~ActionParams.validate
+      ~ActionSpec.__init__
+      ~ActionSpec.construct
+      ~ActionSpec.copy
+      ~ActionSpec.dict
+      ~ActionSpec.from_orm
+      ~ActionSpec.json
+      ~ActionSpec.model_construct
+      ~ActionSpec.model_copy
+      ~ActionSpec.model_dump
+      ~ActionSpec.model_dump_json
+      ~ActionSpec.model_json_schema
+      ~ActionSpec.model_parametrized_name
+      ~ActionSpec.model_post_init
+      ~ActionSpec.model_rebuild
+      ~ActionSpec.model_validate
+      ~ActionSpec.model_validate_json
+      ~ActionSpec.model_validate_strings
+      ~ActionSpec.parse_file
+      ~ActionSpec.parse_obj
+      ~ActionSpec.parse_raw
+      ~ActionSpec.schema
+      ~ActionSpec.schema_json
+      ~ActionSpec.ser_model
+      ~ActionSpec.update_forward_refs
+      ~ActionSpec.validate
    
    

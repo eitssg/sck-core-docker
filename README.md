@@ -2,6 +2,8 @@
 
 The docker image contains the docker image build repository.
 
+> Copilot: See [local instructions](.github/copilot-instructions.md) and [root guidance](../../.github/copilot-instructions.md) for precedence and module rules.
+
 ## Building
 
 Run the build command

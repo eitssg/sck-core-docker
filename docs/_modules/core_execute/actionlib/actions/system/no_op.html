@@ -79,7 +79,7 @@
 
 <span class="kn">import</span> <span class="nn">core_logging</span> <span class="k">as</span> <span class="nn">log</span>
 
-<span class="kn">from</span> <span class="nn">core_framework.models</span> <span class="kn">import</span> <span class="n">DeploymentDetails</span><span class="p">,</span> <span class="n">ActionDefinition</span><span class="p">,</span> <span class="n">ActionParams</span>
+<span class="kn">from</span> <span class="nn">core_framework.models</span> <span class="kn">import</span> <span class="n">DeploymentDetails</span><span class="p">,</span> <span class="n">ActionDefinition</span><span class="p">,</span> <span class="n">ActionSpec</span>
 
 <span class="kn">from</span> <span class="nn">core_execute.actionlib.action</span> <span class="kn">import</span> <span class="n">BaseAction</span>
 
@@ -93,7 +93,7 @@
         <span class="n">Label</span><span class="o">=</span><span class="s2">&quot;action-definition-label&quot;</span><span class="p">,</span>
         <span class="n">Type</span><span class="o">=</span><span class="s2">&quot;SYSTEM::NoOp&quot;</span><span class="p">,</span>
         <span class="n">DependsOn</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;put-a-label-here&quot;</span><span class="p">],</span>
-        <span class="n">Spec</span><span class="o">=</span><span class="n">ActionParams</span><span class="p">(),</span>
+        <span class="n">Spec</span><span class="o">=</span><span class="n">ActionSpec</span><span class="p">(),</span>
         <span class="n">Scope</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
     <span class="p">)</span>
 

@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>core_framework.models.actions.action_params &mdash; SCK Core Automation 1 documentation</title>
+  <title>core_framework.models.actions.action_spec &mdash; SCK Core Automation 1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=a3c9731c" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/custom.css?v=45d66dd6" />
@@ -62,7 +62,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">core_framework.models.actions.action_params</li>
+      <li class="breadcrumb-item active">core_framework.models.actions.action_spec</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -71,8 +71,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>Source code for core_framework.models.actions.action_params</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot; The params module contains the ActionParams class which provides a model for how parameters are to</span>
+  <h1>Source code for core_framework.models.actions.action_spec</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; The params module contains the ActionSpec class which provides a model for how parameters are to</span>
 <span class="sd">be based to actions in the ActionLib library &quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span>
@@ -140,11 +140,11 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 
-<div class="viewcode-block" id="ActionParams">
-<a class="viewcode-back" href="../../../../technical_reference/core-framework/_autosummary/core_framework.models.actions.action_params.ActionParams.html#core_framework.models.actions.action_params.ActionParams">[docs]</a>
-<span class="k">class</span> <span class="nc">ActionParams</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="viewcode-block" id="ActionSpec">
+<a class="viewcode-back" href="../../../../technical_reference/core-framework/_autosummary/core_framework.models.actions.action_spec.ActionSpec.html#core_framework.models.actions.action_spec.ActionSpec">[docs]</a>
+<span class="k">class</span> <span class="nc">ActionSpec</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    ActionParams is a model for the parameters that are passed to the BaseAction object in the ActionLib library.</span>
+<span class="sd">    ActionSpec is a model for the parameters that are passed to the BaseAction object in the ActionLib library.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">populate_by_name</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>

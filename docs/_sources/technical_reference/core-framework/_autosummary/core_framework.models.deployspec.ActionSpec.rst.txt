@@ -1,9 +1,9 @@
-core\_framework.models.deployspec.ActionSpec
+core\_framework.models.deployspec.ActionResource
 ============================================
 
 .. currentmodule:: core_framework.models.deployspec
 
-.. autoclass:: ActionSpec
+.. autoclass:: ActionResource
    :members:
    :show-inheritance:
    :inherited-members:
@@ -14,17 +14,17 @@ core\_framework.models.deployspec.ActionSpec
 
    .. autosummary::
    
-      ~ActionSpec.model_computed_fields
-      ~ActionSpec.model_config
-      ~ActionSpec.model_extra
-      ~ActionSpec.model_fields
-      ~ActionSpec.model_fields_set
-      ~ActionSpec.label
-      ~ActionSpec.type
-      ~ActionSpec.action
-      ~ActionSpec.scope
-      ~ActionSpec.params
-      ~ActionSpec.depends_on
+      ~ActionResource.model_computed_fields
+      ~ActionResource.model_config
+      ~ActionResource.model_extra
+      ~ActionResource.model_fields
+      ~ActionResource.model_fields_set
+      ~ActionResource.label
+      ~ActionResource.type
+      ~ActionResource.action
+      ~ActionResource.scope
+      ~ActionResource.params
+      ~ActionResource.depends_on
    
    
 
@@ -34,36 +34,36 @@ core\_framework.models.deployspec.ActionSpec
 
    .. autosummary::
    
-      ~ActionSpec.__init__
-      ~ActionSpec.construct
-      ~ActionSpec.copy
-      ~ActionSpec.dict
-      ~ActionSpec.from_orm
-      ~ActionSpec.get_exucutor_list
-      ~ActionSpec.get_scope_list
-      ~ActionSpec.get_type_list
-      ~ActionSpec.json
-      ~ActionSpec.model_construct
-      ~ActionSpec.model_copy
-      ~ActionSpec.model_dump
-      ~ActionSpec.model_dump_json
-      ~ActionSpec.model_json_schema
-      ~ActionSpec.model_parametrized_name
-      ~ActionSpec.model_post_init
-      ~ActionSpec.model_rebuild
-      ~ActionSpec.model_validate
-      ~ActionSpec.model_validate_json
-      ~ActionSpec.model_validate_strings
-      ~ActionSpec.parse_file
-      ~ActionSpec.parse_obj
-      ~ActionSpec.parse_raw
-      ~ActionSpec.schema
-      ~ActionSpec.schema_json
-      ~ActionSpec.update_forward_refs
-      ~ActionSpec.validate
-      ~ActionSpec.validate_action_type
-      ~ActionSpec.validate_depends_on
-      ~ActionSpec.validate_depends_on_labels
-      ~ActionSpec.validate_scope
+      ~ActionResource.__init__
+      ~ActionResource.construct
+      ~ActionResource.copy
+      ~ActionResource.dict
+      ~ActionResource.from_orm
+      ~ActionResource.get_exucutor_list
+      ~ActionResource.get_scope_list
+      ~ActionResource.get_type_list
+      ~ActionResource.json
+      ~ActionResource.model_construct
+      ~ActionResource.model_copy
+      ~ActionResource.model_dump
+      ~ActionResource.model_dump_json
+      ~ActionResource.model_json_schema
+      ~ActionResource.model_parametrized_name
+      ~ActionResource.model_post_init
+      ~ActionResource.model_rebuild
+      ~ActionResource.model_validate
+      ~ActionResource.model_validate_json
+      ~ActionResource.model_validate_strings
+      ~ActionResource.parse_file
+      ~ActionResource.parse_obj
+      ~ActionResource.parse_raw
+      ~ActionResource.schema
+      ~ActionResource.schema_json
+      ~ActionResource.update_forward_refs
+      ~ActionResource.validate
+      ~ActionResource.validate_action_type
+      ~ActionResource.validate_depends_on
+      ~ActionResource.validate_depends_on_labels
+      ~ActionResource.validate_scope
    
    

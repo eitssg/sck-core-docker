@@ -78,9 +78,9 @@
 <span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span><span class="p">,</span> <span class="n">model_validator</span><span class="p">,</span> <span class="n">field_validator</span><span class="p">,</span> <span class="n">ConfigDict</span>
 
 
-<div class="viewcode-block" id="ActionSpecParams">
-<a class="viewcode-back" href="../../../technical_reference/core-framework/_autosummary/core_framework.models.deployspec.ActionSpecParams.html#core_framework.models.deployspec.ActionSpecParams">[docs]</a>
-<span class="k">class</span> <span class="nc">ActionSpecParams</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="viewcode-block" id="ActionResourceParams">
+<a class="viewcode-back" href="../../../technical_reference/core-framework/_autosummary/core_framework.models.deployspec.ActionResourceParams.html#core_framework.models.deployspec.ActionResourceParams">[docs]</a>
+<span class="k">class</span> <span class="nc">ActionResourceParams</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Parameters for the DeploySpec.  This inclukdes tempalte locations and CloudFormation parameters.</span>
 
@@ -207,8 +207,8 @@
         <span class="k">return</span> <span class="n">value</span>
 
     <span class="c1"># Override</span>
-<div class="viewcode-block" id="ActionSpecParams.model_dump">
-<a class="viewcode-back" href="../../../technical_reference/core-framework/_autosummary/core_framework.models.deployspec.ActionSpecParams.html#core_framework.models.deployspec.ActionSpecParams.model_dump">[docs]</a>
+<div class="viewcode-block" id="ActionResourceParams.model_dump">
+<a class="viewcode-back" href="../../../technical_reference/core-framework/_autosummary/core_framework.models.deployspec.ActionResourceParams.html#core_framework.models.deployspec.ActionResourceParams.model_dump">[docs]</a>
     <span class="k">def</span> <span class="nf">model_dump</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">if</span> <span class="s2">&quot;exclude_none&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
             <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;exclude_none&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
@@ -217,11 +217,11 @@
 
 
 
-<div class="viewcode-block" id="ActionSpec">
-<a class="viewcode-back" href="../../../technical_reference/core-framework/_autosummary/core_framework.models.deployspec.ActionSpec.html#core_framework.models.deployspec.ActionSpec">[docs]</a>
-<span class="k">class</span> <span class="nc">ActionSpec</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="viewcode-block" id="ActionResource">
+<a class="viewcode-back" href="../../../technical_reference/core-framework/_autosummary/core_framework.models.deployspec.ActionResource.html#core_framework.models.deployspec.ActionResource">[docs]</a>
+<span class="k">class</span> <span class="nc">ActionResource</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Defines the ActionSpec that will be used to generate the final Actions to perform for this deployment.</span>
+<span class="sd">    Defines the ActionResource that will be used to generate the final Actions to perform for this deployment.</span>
 
 <span class="sd">    The &quot;action to perform&quot; is described in the &quot;action&quot; attribute and will ultimately generate an :class:`ActionDefinition` object.</span>
 
@@ -249,7 +249,7 @@
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The scope of the action (optional). Examples: portfolio, app, branch, or build.&quot;</span><span class="p">,</span>
         <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="n">params</span><span class="p">:</span> <span class="n">ActionSpecParams</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+    <span class="n">params</span><span class="p">:</span> <span class="n">ActionResourceParams</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The parameters for the action.  This is a dictionary of parameters that the action requires&quot;</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">depends_on</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
@@ -316,8 +316,8 @@
         <span class="p">}</span>
 
     <span class="c1"># Override</span>
-<div class="viewcode-block" id="ActionSpec.model_dump">
-<a class="viewcode-back" href="../../../technical_reference/core-framework/_autosummary/core_framework.models.deployspec.ActionSpec.html#core_framework.models.deployspec.ActionSpec.model_dump">[docs]</a>
+<div class="viewcode-block" id="ActionResource.model_dump">
+<a class="viewcode-back" href="../../../technical_reference/core-framework/_autosummary/core_framework.models.deployspec.ActionResource.html#core_framework.models.deployspec.ActionResource.model_dump">[docs]</a>
     <span class="k">def</span> <span class="nf">model_dump</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">if</span> <span class="s2">&quot;exclude_none&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
             <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;exclude_none&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
@@ -330,7 +330,7 @@
 <a class="viewcode-back" href="../../../technical_reference/core-framework/_autosummary/core_framework.models.deployspec.DeploySpec.html#core_framework.models.deployspec.DeploySpec">[docs]</a>
 <span class="k">class</span> <span class="nc">DeploySpec</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 
-    <span class="n">action_specs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ActionSpec</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">alias</span><span class="o">=</span><span class="s2">&quot;actions&quot;</span><span class="p">,</span> <span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="p">[])</span>
+    <span class="n">actions</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">ActionResource</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">alias</span><span class="o">=</span><span class="s2">&quot;actions&quot;</span><span class="p">,</span> <span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="p">[])</span>
 
     <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;before&quot;</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">validate_actions</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
@@ -351,7 +351,7 @@
 <span class="sd">            ValueError: if there are duplicate stack names</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">names</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">action</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_specs</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">action</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">actions</span><span class="p">:</span>
 
             <span class="c1"># Only do this if we are referencing a stack (user action specs will not have a stack name necessrily)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">action</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">stack_name</span><span class="p">:</span>

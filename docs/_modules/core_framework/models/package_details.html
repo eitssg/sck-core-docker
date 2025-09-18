@@ -207,9 +207,9 @@
         <span class="n">deployspec</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;deployspec&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span>
             <span class="n">deployspec</span><span class="p">,</span> <span class="nb">dict</span>
-        <span class="p">):</span>  <span class="c1"># You accidentally used a ActionSpec instead of a DeploySpec object</span>
+        <span class="p">):</span>  <span class="c1"># You accidentally used a ActionResource instead of a DeploySpec object</span>
             <span class="n">deployspec</span> <span class="o">=</span> <span class="p">[</span><span class="n">deployspec</span><span class="p">]</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">deployspec</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>  <span class="c1"># A deployspec object is a list[ActionSpec]</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">deployspec</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>  <span class="c1"># A deployspec object is a list[ActionResource]</span>
             <span class="n">deployspec</span> <span class="o">=</span> <span class="n">DeploySpecClass</span><span class="p">(</span><span class="n">actions</span><span class="o">=</span><span class="n">deployspec</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">deployspec</span><span class="p">,</span> <span class="n">DeploySpecClass</span><span class="p">):</span>
             <span class="n">deployspec</span> <span class="o">=</span> <span class="kc">None</span>

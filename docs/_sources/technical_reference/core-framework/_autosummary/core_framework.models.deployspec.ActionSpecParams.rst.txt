@@ -1,9 +1,9 @@
-core\_framework.models.deployspec.ActionSpecParams
+core\_framework.models.deployspec.ActionResourceParams
 ==================================================
 
 .. currentmodule:: core_framework.models.deployspec
 
-.. autoclass:: ActionSpecParams
+.. autoclass:: ActionResourceParams
    :members:
    :show-inheritance:
    :inherited-members:
@@ -14,20 +14,20 @@ core\_framework.models.deployspec.ActionSpecParams
 
    .. autosummary::
    
-      ~ActionSpecParams.model_computed_fields
-      ~ActionSpecParams.model_config
-      ~ActionSpecParams.model_extra
-      ~ActionSpecParams.model_fields
-      ~ActionSpecParams.model_fields_set
-      ~ActionSpecParams.template
-      ~ActionSpecParams.stack_name
-      ~ActionSpecParams.parameters
-      ~ActionSpecParams.accounts
-      ~ActionSpecParams.regions
-      ~ActionSpecParams.stack_policy
-      ~ActionSpecParams.user_name
-      ~ActionSpecParams.account
-      ~ActionSpecParams.region
+      ~ActionResourceParams.model_computed_fields
+      ~ActionResourceParams.model_config
+      ~ActionResourceParams.model_extra
+      ~ActionResourceParams.model_fields
+      ~ActionResourceParams.model_fields_set
+      ~ActionResourceParams.template
+      ~ActionResourceParams.stack_name
+      ~ActionResourceParams.parameters
+      ~ActionResourceParams.accounts
+      ~ActionResourceParams.regions
+      ~ActionResourceParams.stack_policy
+      ~ActionResourceParams.user_name
+      ~ActionResourceParams.account
+      ~ActionResourceParams.region
    
    
 
@@ -37,35 +37,35 @@ core\_framework.models.deployspec.ActionSpecParams
 
    .. autosummary::
    
-      ~ActionSpecParams.__init__
-      ~ActionSpecParams.construct
-      ~ActionSpecParams.copy
-      ~ActionSpecParams.dict
-      ~ActionSpecParams.from_orm
-      ~ActionSpecParams.json
-      ~ActionSpecParams.model_construct
-      ~ActionSpecParams.model_copy
-      ~ActionSpecParams.model_dump
-      ~ActionSpecParams.model_dump_json
-      ~ActionSpecParams.model_json_schema
-      ~ActionSpecParams.model_parametrized_name
-      ~ActionSpecParams.model_post_init
-      ~ActionSpecParams.model_rebuild
-      ~ActionSpecParams.model_validate
-      ~ActionSpecParams.model_validate_json
-      ~ActionSpecParams.model_validate_strings
-      ~ActionSpecParams.parse_file
-      ~ActionSpecParams.parse_obj
-      ~ActionSpecParams.parse_raw
-      ~ActionSpecParams.schema
-      ~ActionSpecParams.schema_json
-      ~ActionSpecParams.update_forward_refs
-      ~ActionSpecParams.validate
-      ~ActionSpecParams.validate_account
-      ~ActionSpecParams.validate_accounts
-      ~ActionSpecParams.validate_params
-      ~ActionSpecParams.validate_region
-      ~ActionSpecParams.validate_regions
-      ~ActionSpecParams.validate_template
+      ~ActionResourceParams.__init__
+      ~ActionResourceParams.construct
+      ~ActionResourceParams.copy
+      ~ActionResourceParams.dict
+      ~ActionResourceParams.from_orm
+      ~ActionResourceParams.json
+      ~ActionResourceParams.model_construct
+      ~ActionResourceParams.model_copy
+      ~ActionResourceParams.model_dump
+      ~ActionResourceParams.model_dump_json
+      ~ActionResourceParams.model_json_schema
+      ~ActionResourceParams.model_parametrized_name
+      ~ActionResourceParams.model_post_init
+      ~ActionResourceParams.model_rebuild
+      ~ActionResourceParams.model_validate
+      ~ActionResourceParams.model_validate_json
+      ~ActionResourceParams.model_validate_strings
+      ~ActionResourceParams.parse_file
+      ~ActionResourceParams.parse_obj
+      ~ActionResourceParams.parse_raw
+      ~ActionResourceParams.schema
+      ~ActionResourceParams.schema_json
+      ~ActionResourceParams.update_forward_refs
+      ~ActionResourceParams.validate
+      ~ActionResourceParams.validate_account
+      ~ActionResourceParams.validate_accounts
+      ~ActionResourceParams.validate_params
+      ~ActionResourceParams.validate_region
+      ~ActionResourceParams.validate_regions
+      ~ActionResourceParams.validate_template
    
    

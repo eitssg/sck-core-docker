@@ -29,6 +29,6 @@ core_framework.models.actions
    :recursive:
    
       action
-      action_params
+      action_spec
 
 
