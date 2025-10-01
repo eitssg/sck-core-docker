@@ -16,7 +16,7 @@
         ClientRegion: ap-southeast-1
         MasterRegion: ap-southeast-1
         OrganizationAccount: '154798051514'
-        OrganizationEmail: jbarwick@me.com
+        OrganizationEmail: jbarwick@eits.com.sg
         OrganizationId: o-t73gu32ai5
         OrganizationName: eits-billing
         Scope: tx-
