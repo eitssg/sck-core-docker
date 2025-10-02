@@ -8,7 +8,7 @@ by using pytest
 .. code-block:: bash
 
     # need to install the requirements
-    poetry install
+    uv sync --all-extgras
 
     pytest ./tests
 
