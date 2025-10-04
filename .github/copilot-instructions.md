@@ -1,5 +1,8 @@
 # Copilot Instructions (Submodule: sck-core-docker)
 
+## Plan → Approval → Execute (Mandatory)
+Before altering Dockerfiles, compose files, or build scripts, provide a plan and wait for approval.
+
 - Tech: Docker images/build contexts.
 - Precedence: Local first; then root `../../.github/...`.
 - Conventions: Keep Dockerfiles minimal, pinned, and reproducible. Prefer multi-stage builds and small base images.
